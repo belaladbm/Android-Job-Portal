@@ -14,6 +14,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class RegistrationTest {
@@ -54,4 +55,21 @@ public class RegistrationTest {
 
         onView(withId(R.id.editTextText5)).check(matches(hasErrorText("Passwords do not match")));
     }
+
+    @Test
+    public void testSuccessfulRegistration() {
+        onView(withId(R.id.editTextText)).perform(typeText("Abeed"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText2)).perform(typeText("Mulla"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText3)).perform(typeText("abeed.mulla@dal.ca"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText4)).perform(typeText("Password123"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText5)).perform(typeText("Password123"), closeSoftKeyboard());
+
+        onView(withId(R.id.spinner)).perform(click());
+        onView(withText("Employee")).perform(click());
+
+        onView(withId(R.id.button)).perform(click());
+
+        onView(withId(R.id.editTextText3)).check(matches(withText("abeed.mulla@dal.ca")));
+    }
+
 }
