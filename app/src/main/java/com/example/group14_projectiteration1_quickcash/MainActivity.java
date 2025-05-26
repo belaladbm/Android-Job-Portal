@@ -1,5 +1,6 @@
 package com.example.group14_projectiteration1_quickcash;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         dbref.push().setValue(user).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                redirectingToLogin();
             } else {
                 Toast.makeText(this, "Registration Failed!", Toast.LENGTH_SHORT).show();
             }
@@ -148,5 +150,10 @@ public class MainActivity extends AppCompatActivity {
         );
         spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         roleSpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void redirectingToLogin() {
+        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+        startActivity(intent);
     }
 }
