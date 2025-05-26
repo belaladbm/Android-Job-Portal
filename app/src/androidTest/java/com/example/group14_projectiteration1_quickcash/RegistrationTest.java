@@ -12,6 +12,8 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.hasErrorText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 
 @RunWith(AndroidJUnit4.class)
 public class RegistrationTest {
@@ -25,5 +27,18 @@ public class RegistrationTest {
         onView(withId(R.id.button)).perform(click());
 
         onView(withId(R.id.editTextText)).check(matches(hasErrorText("First name is required")));
+    }
+
+    @Test
+    public void testInvalidEmail() {
+        onView(withId(R.id.editTextText)).perform(typeText("abeed"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText2)).perform(typeText("mulla"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText3)).perform(typeText("invalidemail"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText4)).perform(typeText("Password123"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText5)).perform(typeText("Password123"), closeSoftKeyboard());
+
+        onView(withId(R.id.button)).perform(click());
+
+        onView(withId(R.id.editTextText3)).check(matches(hasErrorText("Enter a valid email")));
     }
 }
