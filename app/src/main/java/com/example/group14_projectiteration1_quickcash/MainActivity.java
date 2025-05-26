@@ -85,26 +85,32 @@ public class MainActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(firstName.getText().toString())) {
             firstName.setError("First name is required");
+            Toast.makeText(this, "Registration Failed!, First name is required", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(lastName.getText().toString())) {
             lastName.setError("Last name is required");
+            Toast.makeText(this, "Registration Failed!, Last name is required", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(email.getText().toString())) {
             email.setError("Email is required");
+            Toast.makeText(this, "Registration Failed!, email is required", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!email.getText().toString().contains("@")) {
             email.setError("Enter a valid email");
+            Toast.makeText(this, "Registration Failed!, Invalid email", Toast.LENGTH_SHORT).show();
             return;
         }
         if (password.getText().toString().isEmpty()) {
             password.setError("Password is required");
+            Toast.makeText(this, "Registration Failed!, Password is required", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
             confirmPassword.setError("Passwords do not match");
+            Toast.makeText(this, "Registration Failed!, Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
 
