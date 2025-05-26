@@ -8,7 +8,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseDatabase firebaseDatabase;
+
+    private DatabaseReference dbref;
+
+    private static final String FIREBASE_URL = "https://group-14-project-quickca-c43bd-default-rtdb.firebaseio.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,5 +29,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+
+    private void connectFirebase(){
+        firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
+        dbref = firebaseDatabase.getReference("User details");
     }
 }

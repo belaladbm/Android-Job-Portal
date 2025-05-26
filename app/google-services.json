@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "389835729914",
+    "firebase_url": "https://group-14-project-quickca-c43bd-default-rtdb.firebaseio.com",
+    "project_id": "group-14-project-quickca-c43bd",
+    "storage_bucket": "group-14-project-quickca-c43bd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389835729914:android:ea7744fd1450d822b71243",
+        "android_client_info": {
+          "package_name": "com.example.group14_projectiteration1_quickcash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHs0N1l65LCRyEYf76ek1QUBrg6rI6t30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389835729914:android:527910019b8aff22b71243",
+        "android_client_info": {
+          "package_name": "com.example.group_14_project_quickcash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHs0N1l65LCRyEYf76ek1QUBrg6rI6t30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
