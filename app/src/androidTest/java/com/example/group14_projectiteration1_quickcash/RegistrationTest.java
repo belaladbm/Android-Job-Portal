@@ -41,4 +41,17 @@ public class RegistrationTest {
 
         onView(withId(R.id.editTextText3)).check(matches(hasErrorText("Enter a valid email")));
     }
+
+    @Test
+    public void testPasswordsDoNotMatch() {
+        onView(withId(R.id.editTextText)).perform(typeText("abeed"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText2)).perform(typeText("mulla"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText3)).perform(typeText("abeed.mulla@dal.ca"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText4)).perform(typeText("Password123"), closeSoftKeyboard());
+        onView(withId(R.id.editTextText5)).perform(typeText("password"), closeSoftKeyboard());
+
+        onView(withId(R.id.button)).perform(click());
+
+        onView(withId(R.id.editTextText5)).check(matches(hasErrorText("Passwords do not match")));
+    }
 }
