@@ -27,12 +27,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Firebase database instance and reference
     private FirebaseDatabase firebaseDatabase;
 
     private DatabaseReference dbref;
 
+    // Firebase URL
     private static final String FIREBASE_URL = "https://group-14-project-quickca-c43bd-default-rtdb.firebaseio.com";
 
+    // Registration page UI elements.
     private Spinner roleSpinner;
 
     private EditText firstName;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Initializing the spinner for role selection.
         roleSpinner = findViewById(R.id.spinner);
 
         RoleSpinner();
@@ -67,14 +71,18 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connectFirebase();
-                writeRegistration();
+                connectFirebase();  // Initializing firebase connection
+                writeRegistration(); // registering user.
             }
         });
 
 
     }
 
+    /**
+     * Validates user input, creates a User object, and saves it to Firebase.
+     * Displays toast messages for successful or failed registrations.
+     */
     private void writeRegistration(){
 
         firstName = findViewById(R.id.editTextText);
@@ -83,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextText4);
         confirmPassword = findViewById(R.id.editTextText5);
 
+        // Input validation
         if (TextUtils.isEmpty(firstName.getText().toString())) {
             firstName.setError("First name is required");
             Toast.makeText(this, "Registration Failed!, First name is required", Toast.LENGTH_SHORT).show();
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        //Creating a user object with the input data
         User user = new User(
                 firstName.getText().toString(),
                 lastName.getText().toString(),
@@ -123,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 roleSpinner.getSelectedItem().toString()
         );
 
-
+        // Saving the user to database.
         dbref.push().setValue(user).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
@@ -137,11 +147,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Connects to Firebase Database and initializes the database reference.
+     */
     private void connectFirebase(){
         firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
         dbref = firebaseDatabase.getReference("User details");
     }
 
+    /**
+     * Populates the role spinner with the roles: "Employee", and "Employer".
+     */
     private void RoleSpinner() {
         List<String> roles = Arrays.asList(
                 "Select your role",
@@ -158,6 +174,9 @@ public class MainActivity extends AppCompatActivity {
         roleSpinner.setAdapter(spinnerAdapter);
     }
 
+    /**
+     * Redirects the user to the login page after successful registration.
+     */
     private void redirectingToLogin() {
         Intent intent = new Intent(MainActivity.this, LogInActivity.class);
         startActivity(intent);

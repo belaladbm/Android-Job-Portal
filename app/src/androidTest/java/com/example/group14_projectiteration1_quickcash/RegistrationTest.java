@@ -22,6 +22,7 @@ public class RegistrationTest {
     @Rule
     public ActivityScenarioRule<MainActivity> activityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
 
+    // Test case 1: Checking error message when all fields are empty
     @Test
     public void testEmptyFields() {
 
@@ -30,6 +31,7 @@ public class RegistrationTest {
         onView(withId(R.id.editTextText)).check(matches(hasErrorText("First name is required")));
     }
 
+    // Test case 2: Check error message when an invalid email is entered
     @Test
     public void testInvalidEmail() {
         onView(withId(R.id.editTextText)).perform(typeText("abeed"), closeSoftKeyboard());
@@ -43,6 +45,7 @@ public class RegistrationTest {
         onView(withId(R.id.editTextText3)).check(matches(hasErrorText("Enter a valid email")));
     }
 
+    // Test case 3: Check error message when passwords do not match
     @Test
     public void testPasswordsDoNotMatch() {
         onView(withId(R.id.editTextText)).perform(typeText("abeed"), closeSoftKeyboard());
@@ -56,6 +59,7 @@ public class RegistrationTest {
         onView(withId(R.id.editTextText5)).check(matches(hasErrorText("Passwords do not match")));
     }
 
+    // Test case 4: Check successful registration
     @Test
     public void testSuccessfulRegistration() {
         onView(withId(R.id.editTextText)).perform(typeText("Abeed"), closeSoftKeyboard());
