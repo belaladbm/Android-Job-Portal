@@ -82,6 +82,30 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.editTextText4);
         confirmPassword = findViewById(R.id.editTextText5);
 
+        if (TextUtils.isEmpty(firstName.getText().toString())) {
+            firstName.setError("First name is required");
+            return;
+        }
+        if (TextUtils.isEmpty(lastName.getText().toString())) {
+            lastName.setError("Last name is required");
+            return;
+        }
+        if (TextUtils.isEmpty(email.getText().toString())) {
+            email.setError("Email is required");
+            return;
+        }
+        if (!email.getText().toString().contains("@")) {
+            email.setError("Enter a valid email");
+            return;
+        }
+        if (password.getText().toString().isEmpty()) {
+            password.setError("Password is required");
+            return;
+        }
+        if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError("Passwords do not match");
+            return;
+        }
 
         User user = new User(
                 firstName.getText().toString(),
