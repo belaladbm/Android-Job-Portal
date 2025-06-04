@@ -1,4 +1,4 @@
-package com.example.group14_projectiteration1_quickcash;
+package com.example.group14_projectiteration1_quickcash.model;
 
 public class User {
     public String firstName;

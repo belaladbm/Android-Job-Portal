@@ -1,4 +1,4 @@
-package com.example.group14_projectiteration1_quickcash;
+package com.example.group14_projectiteration1_quickcash.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
+import com.example.group14_projectiteration1_quickcash.R;
+import com.example.group14_projectiteration1_quickcash.model.User;
 
 import java.util.Arrays;
 import java.util.List;

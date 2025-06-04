@@ -13,10 +13,13 @@
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
         <activity
-            android:name=".LogInActivity"
+            android:name=".DashBoardActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.LogInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
