@@ -16,6 +16,8 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import com.example.group14_projectiteration1_quickcash.view.MainActivity;
+
 @RunWith(AndroidJUnit4.class)
 public class RegistrationTest {
 

@@ -1,4 +1,4 @@
-package com.example.group14_projectiteration1_quickcash;
+package com.example.group14_projectiteration1_quickcash.view;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.group14_projectiteration1_quickcash.R;
 
 public class LogInActivity extends AppCompatActivity {
 

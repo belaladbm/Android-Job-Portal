@@ -1,10 +1,9 @@
-package com.example.group14_projectiteration1_quickcash;
+package com.example.group14_projectiteration1_quickcash.view;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,23 +16,16 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
-import com.google.firebase.Firebase;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.example.group14_projectiteration1_quickcash.model.User;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Firebase database instance and reference
-    private FirebaseDatabase firebaseDatabase;
-
-    private DatabaseReference dbref;
-
-    // Firebase URL
-    private static final String FIREBASE_URL = "https://group-14-project-quickca-c43bd-default-rtdb.firebaseio.com";
+    private firebaseHelper firebase_helper;
 
     // Registration page UI elements.
     private Spinner roleSpinner;
@@ -47,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
 
     private EditText confirmPassword;
-
-    private Button signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         // Initializing the spinner for role selection.
         roleSpinner = findViewById(R.id.spinner);
 
+        //making new object of firebaseHelper class
+        firebase_helper = new firebaseHelper();
+
         RoleSpinner();
 
         Button b = findViewById(R.id.button);
@@ -71,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connectFirebase();  // Initializing firebase connection
+                firebase_helper.connectFirebase();  // Initializing firebase connection
                 writeRegistration(); // registering user.
             }
         });
@@ -134,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Saving the user to database.
-        dbref.push().setValue(user).addOnCompleteListener(task -> {
+        firebase_helper.dbref.push().setValue(user).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                 redirectingToLogin();
@@ -145,14 +138,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    }
-
-    /**
-     * Connects to Firebase Database and initializes the database reference.
-     */
-    private void connectFirebase(){
-        firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
-        dbref = firebaseDatabase.getReference("User details");
     }
 
     /**

@@ -3,6 +3,8 @@ package com.example.group14_projectiteration1_quickcash;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import com.example.group14_projectiteration1_quickcash.model.User;
+
 public class RegistrationJunitTest {
 
     @Test
