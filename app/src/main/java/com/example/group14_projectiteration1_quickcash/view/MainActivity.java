@@ -116,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        String selectedRole = roleSpinner.getSelectedItem().toString();
+        if (selectedRole.equals("Select your role")) {
+            Toast.makeText(this, "Registration Failed!, Please select a role", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         //Creating a user object with the input data
         User user = new User(
                 firstName.getText().toString(),
