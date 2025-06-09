@@ -8,5 +8,17 @@
     tools:context=".view.DashboardActivity">
 
 
-
+    <TextView
+        android:id="@+id/dashboardText"
+        android:layout_width="261dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="75dp"
+        android:layout_marginBottom="585dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
