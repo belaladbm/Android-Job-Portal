@@ -69,7 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    public String getMessage(String firstName, String role){
+    public static String getMessage(String firstName, String role){
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 }
