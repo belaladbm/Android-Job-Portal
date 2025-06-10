@@ -6,7 +6,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import android.content.Intent;
+
 import androidx.test.core.app.ActivityScenario;
+import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
@@ -33,5 +36,13 @@ public class DashboardTest {
 
         onView(withId(R.id.dashboardText))
                 .check(matches(withText("Welcome to QuickCash :)")));
+    }
+
+    //Test to check if default welcome message is displayed if no email is there
+    @Test
+    public void defaultWelcomeMessageIsDisplayedWhenNoEmail(){
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), DashboardActivity.class);
+        ActivityScenario.launch(intent);
+        onView(withId(R.id.dashboardText)).check(matches(withText("Welcome to QuickCash!")));
     }
 }
