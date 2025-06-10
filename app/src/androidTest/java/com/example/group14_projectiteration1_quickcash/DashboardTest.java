@@ -32,6 +32,6 @@ public class DashboardTest {
         ActivityScenario.launch(DashboardActivity.class);
 
         onView(withId(R.id.dashboardText))
-                .check(matches(withText("Welcome to QuickCash!")));
+                .check(matches(withText("Welcome to QuickCash :)")));
     }
 }
