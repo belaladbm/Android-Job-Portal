@@ -35,15 +35,16 @@ public class DashboardActivity extends AppCompatActivity {
         //getting database reference
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
 
-        // getting user email
+        // making query
         Query userQuery = dbRef.orderByChild("email").equalTo(email);
 
+        //executing query
         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //if user found
                 if (dataSnapshot.exists()) {
-                    //looping through dataset
+                    //looping through database
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                         //getting data
                         String firstName = userSnapshot.child("firstName").getValue(String.class);
@@ -52,21 +53,21 @@ public class DashboardActivity extends AppCompatActivity {
                         //setting the welcome message
                         welcomeText.setText(getMessage(firstName, role));
                     }
-                } else {
+                }
+                //if user is not found
+                else {
                     //default welcome message
-                    welcomeText.setText("Welcome to QuickCash!");
+                    welcomeText.setText("Welcome to QuickCash :)");
                 }
             }
 
-            //if any error are there
+            //if any error are there while extracting data from firebase database
             @Override
             public void onCancelled(DatabaseError error) {
-                // 12. Handle errors
-                welcomeText.setText("Welcome to QuickCash!");
-                Toast.makeText(DashboardActivity.this, "Database error", Toast.LENGTH_SHORT).show();
+                welcomeText.setText("Welcome to QuickCash :)");
+                Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     public static String getMessage(String firstName, String role){
