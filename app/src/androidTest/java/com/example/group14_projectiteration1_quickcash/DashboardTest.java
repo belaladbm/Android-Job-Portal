@@ -6,6 +6,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static org.hamcrest.CoreMatchers.not;
+
 import android.content.Intent;
 
 import androidx.test.core.app.ActivityScenario;
@@ -41,8 +43,23 @@ public class DashboardTest {
     //Test to check if default welcome message is displayed if no email is there
     @Test
     public void defaultWelcomeMessageIsDisplayedWhenNoEmail(){
+        //ApplicationProvider referred from android studio docs
+        //URL: https://developer.android.com/reference/androidx/test/core/app/ApplicationProvider
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), DashboardActivity.class);
         ActivityScenario.launch(intent);
         onView(withId(R.id.dashboardText)).check(matches(withText("Welcome to QuickCash :)")));
+    }
+
+    //Test to check if default welcome message is displayed if email is there
+    @Test
+    public void welcomeMessageIsSDisplayedWhenEmailExists(){
+        //ApplicationProvider referred from android studio docs
+        //URL: https://developer.android.com/reference/androidx/test/core/app/ApplicationProvider
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), DashboardActivity.class);
+        intent.putExtra("user_email", "testingnow@gmail.com");
+        ActivityScenario.launch(intent);
+
+        onView(withId(R.id.dashboardText)).check(matches(isDisplayed())).check(matches(not(withText(""))));
+
     }
 }
