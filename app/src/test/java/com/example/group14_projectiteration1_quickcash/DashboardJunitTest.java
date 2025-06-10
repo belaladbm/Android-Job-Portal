@@ -13,4 +13,10 @@ public class DashboardJunitTest {
         String role = "Employee";
         assertEquals("Welcome, Testing! Your role is Employee!", DashboardActivity.getMessage(firstName, role));
     }
+
+    @Test
+    public void checkIfDefaultWelcomeMessageIsCorrect(){
+        String defaultWelcomeMessage = "Welcome to QuickCash :)";
+        assertEquals(defaultWelcomeMessage, DashboardActivity.getDefaultMessage());
+    }
 }
