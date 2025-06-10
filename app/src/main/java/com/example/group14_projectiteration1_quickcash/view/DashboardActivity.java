@@ -29,7 +29,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         //if there is not email
         if(email == null || email.isEmpty()) {
-            welcomeText.setText("Welcome to QuickCash :)");
+            welcomeText.setText(getDefaultMessage());
         }
 
         //getting database reference
@@ -57,14 +57,14 @@ public class DashboardActivity extends AppCompatActivity {
                 //if user is not found
                 else {
                     //default welcome message
-                    welcomeText.setText("Welcome to QuickCash :)");
+                    welcomeText.setText(getDefaultMessage());
                 }
             }
 
             //if any error are there while extracting data from firebase database
             @Override
             public void onCancelled(DatabaseError error) {
-                welcomeText.setText("Welcome to QuickCash :)");
+                welcomeText.setText(getDefaultMessage());
                 Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -72,5 +72,9 @@ public class DashboardActivity extends AppCompatActivity {
 
     public static String getMessage(String firstName, String role){
         return "Welcome, " + firstName + "! Your role is " + role + "!";
+    }
+
+    public static String getDefaultMessage(){
+        return "Welcome to QuickCash :)";
     }
 }
