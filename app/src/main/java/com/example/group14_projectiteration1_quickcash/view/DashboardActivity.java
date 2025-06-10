@@ -38,6 +38,37 @@ public class DashboardActivity extends AppCompatActivity {
         // getting user email
         Query userQuery = dbRef.orderByChild("email").equalTo(email);
 
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //if user found
+                if (dataSnapshot.exists()) {
+                    //looping through dataset
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        //getting data
+                        String firstName = userSnapshot.child("firstName").getValue(String.class);
+                        String role = userSnapshot.child("role").getValue(String.class);
+
+                        //setting the welcome message
+                        welcomeText.setText(getMessage(firstName, role));
+                    }
+                } else {
+                    //default welcome message
+                    welcomeText.setText("Welcome to QuickCash!");
+                }
+            }
+
+            //if any error are there
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // 12. Handle errors
+                welcomeText.setText("Welcome to QuickCash!");
+                Toast.makeText(DashboardActivity.this, "Database error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     public String getMessage(String firstName, String role){
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
