@@ -43,6 +43,6 @@ public class DashboardTest {
     public void defaultWelcomeMessageIsDisplayedWhenNoEmail(){
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), DashboardActivity.class);
         ActivityScenario.launch(intent);
-        onView(withId(R.id.dashboardText)).check(matches(withText("Welcome to QuickCash!")));
+        onView(withId(R.id.dashboardText)).check(matches(withText("Welcome to QuickCash :)")));
     }
 }

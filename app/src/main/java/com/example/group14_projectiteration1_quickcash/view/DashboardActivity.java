@@ -17,7 +17,13 @@ public class DashboardActivity extends AppCompatActivity {
 
         welcomeText = findViewById(R.id.dashboardText);
 
-        welcomeText.setText("Welcome to QuickCash :)");
+        //extracting email passed through intent
+        String email = getIntent().getStringExtra("userEmail");
+
+        //if there is not email
+        if(email == null || email.isEmpty()) {
+            welcomeText.setText("Welcome to QuickCash :)");
+        }
 
     }
 }
