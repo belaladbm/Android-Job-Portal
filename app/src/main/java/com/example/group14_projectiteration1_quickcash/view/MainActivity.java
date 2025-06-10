@@ -78,11 +78,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void writeRegistration(){
 
-        firstName = findViewById(R.id.editTextText);
-        lastName = findViewById(R.id.editTextText2);
-        email = findViewById(R.id.editTextText3);
-        password = findViewById(R.id.editTextText4);
-        confirmPassword = findViewById(R.id.editTextText5);
+        initializeUIElements();
 
         // Input validation
         if (TextUtils.isEmpty(firstName.getText().toString())) {
@@ -144,6 +140,17 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    /**
+     * Initializing the registration page UI elements.
+     */
+    private void initializeUIElements() {
+        firstName = findViewById(R.id.editTextText);
+        lastName = findViewById(R.id.editTextText2);
+        email = findViewById(R.id.editTextText3);
+        password = findViewById(R.id.editTextText4);
+        confirmPassword = findViewById(R.id.editTextText5);
     }
 
     /**
