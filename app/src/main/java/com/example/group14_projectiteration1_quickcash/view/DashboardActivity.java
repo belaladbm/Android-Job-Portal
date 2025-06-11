@@ -1,6 +1,8 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +21,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
@@ -30,6 +33,13 @@ public class DashboardActivity extends AppCompatActivity {
         //if there is not email
         if(email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
+            Button settingsButton = findViewById(R.id.settingsButton);
+            settingsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(DashboardActivity.this, com.example.group14_projectiteration1_quickcash.view.SettingsActivity.class);
+                startActivity(intent);
+            });
+
+
         }
 
         //getting database reference
