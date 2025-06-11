@@ -1,6 +1,5 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;

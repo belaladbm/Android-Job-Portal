@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 public class DashboardActivity extends AppCompatActivity {
 
     private TextView welcomeText;
+    private Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,21 +26,18 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        //initializing dashboard page UI elements
         welcomeText = findViewById(R.id.dashboardText);
+        settingsButton = findViewById(R.id.settingsButton);
 
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
 
+        moveToSettingsPage(settingsButton);
+
         //if there is not email
         if(email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
-            Button settingsButton = findViewById(R.id.settingsButton);
-            settingsButton.setOnClickListener(v -> {
-                Intent intent = new Intent(DashboardActivity.this, com.example.group14_projectiteration1_quickcash.view.SettingsActivity.class);
-                startActivity(intent);
-            });
-
-
         }
 
         //getting database reference
@@ -86,5 +84,12 @@ public class DashboardActivity extends AppCompatActivity {
 
     public static String getDefaultMessage(){
         return "Welcome to QuickCash :)";
+    }
+
+    public void moveToSettingsPage(Button settingsPageButton){
+        settingsPageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
     }
 }
