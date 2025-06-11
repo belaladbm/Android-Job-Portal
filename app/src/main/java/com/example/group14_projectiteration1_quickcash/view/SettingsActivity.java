@@ -1,5 +1,6 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,8 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
     private Button updateRoleButton;
     private Spinner roleSpinner;
     private DatabaseReference dbRef;
-     private String currentUserEmail;
-
+    private String currentUserEmail;
+    private Button backToDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +42,16 @@ public class SettingsActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logoutButton);
         updateRoleButton = findViewById(R.id.updateRoleButton);
         roleSpinner = findViewById(R.id.roleSpinner);
+        backToDashboard = findViewById(R.id.backButton);
 
         // Get email passed from Dashboard
         currentUserEmail = getIntent().getStringExtra("userEmail");
+
+        backToDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, DashboardActivity.class);
+            intent.putExtra("userEmail", currentUserEmail);
+            startActivity(intent);
+        });
 
         // Safety check and log
         if (currentUserEmail == null || currentUserEmail.trim().isEmpty()) {
@@ -64,6 +72,8 @@ public class SettingsActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(view -> showLogoutDialog());
         updateRoleButton.setOnClickListener(v -> updateRole());
     }
+
+
 
     // Role update logic
     private void updateRole() {
