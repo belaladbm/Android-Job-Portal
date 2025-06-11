@@ -87,6 +87,9 @@ public class SettingsActivity extends AppCompatActivity {
                                             Toast.makeText(SettingsActivity.this,
                                                     "Role updated to " + selectedRole,
                                                     Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SettingsActivity.this, DashboardActivity.class);
+                                            intent.putExtra("userEmail", currentUserEmail);
+                                            startActivity(intent);
                                         });
                             }
                         } else {
