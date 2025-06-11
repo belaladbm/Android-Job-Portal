@@ -12,4 +12,6 @@ public class SettingsUnitTest {
         isLoggedIn = false;
         assertFalse("User should be logged out", isLoggedIn);
     }
+
+
 }

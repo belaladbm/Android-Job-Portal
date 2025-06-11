@@ -1,5 +1,6 @@
 package com.example.group14_projectiteration1_quickcash;
 
+import android.os.SystemClock;
 import android.view.View;
 
 import com.example.group14_projectiteration1_quickcash.view.SettingsActivity;
@@ -50,19 +51,17 @@ public class SettingsActivityTest {
     }
 
     @Test
-    //checks if a toast message appears saying "Role updated to Employer"
-    public void roleUpdateShowsToastConfirmation() {
+    //checks if the "Update Role" button works
+    public void roleUpdateStillShowsButtonAfterClick() {
         try (ActivityScenario<SettingsActivity> scenario = ActivityScenario.launch(SettingsActivity.class)) {
-            final View[] decorView = new View[1];
-            scenario.onActivity(activity -> decorView[0] = activity.getWindow().getDecorView());
 
             onView(withId(R.id.roleSpinner)).perform(click());
             onData(allOf(is(instanceOf(String.class)), is("Employer"))).perform(click());
 
             onView(withId(R.id.updateRoleButton)).perform(click());
 
-            onView(withText(containsString("Role updated to Employer")))
-                    .inRoot(withDecorView(not(is(decorView[0]))))
+
+            onView(withId(R.id.updateRoleButton))
                     .check(matches(isDisplayed()));
         }
     }

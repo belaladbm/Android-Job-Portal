@@ -1,7 +1,7 @@
 package com.example.group14_projectiteration1_quickcash;
 
 import static org.junit.Assert.*;
-import com.example.group14_projectiteration1_quickcash.view.RoleValidator;
+import com.example.group14_projectiteration1_quickcash.util.RoleValidator;
 
 import org.junit.Test;
 
@@ -18,6 +18,7 @@ public class RoleValidatorJunitTest {
         String role = "Employer";
         assertTrue(RoleValidator.isValidRole(role));
     }
+
     @Test
     public void testNullRoleRejected() {
         String role = null;

@@ -33,10 +33,10 @@ public class DashboardActivity extends AppCompatActivity {
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
 
-        moveToSettingsPage(settingsButton);
+        moveToSettingsPage(settingsButton, email);
 
         //if there is not email
-        if(email == null || email.isEmpty()) {
+        if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
 
@@ -78,17 +78,18 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-    public static String getMessage(String firstName, String role){
+    public static String getMessage(String firstName, String role) {
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 
-    public static String getDefaultMessage(){
+    public static String getDefaultMessage() {
         return "Welcome to QuickCash :)";
     }
 
-    public void moveToSettingsPage(Button settingsPageButton){
+    public void moveToSettingsPage(Button settingsPageButton, String email) {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+            intent.putExtra("userEmail", email); //  Send user email to settings
             startActivity(intent);
         });
     }

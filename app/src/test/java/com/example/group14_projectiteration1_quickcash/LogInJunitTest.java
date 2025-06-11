@@ -50,4 +50,6 @@ public class LogInJunitTest {
     private boolean isPasswordEmpty(String password) {
         return password == null || password.trim().isEmpty();
     }
+
+
 }

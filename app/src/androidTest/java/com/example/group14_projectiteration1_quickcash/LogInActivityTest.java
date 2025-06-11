@@ -71,4 +71,5 @@ public class LogInActivityTest {
     public void testLoginButtonText() {
         onView(withId(R.id.buttonLogin)).check(matches(withText("Login")));
     }
+
 }
