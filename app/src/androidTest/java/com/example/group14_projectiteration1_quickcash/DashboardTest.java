@@ -24,14 +24,18 @@ public class DashboardTest {
     @Rule
     public ActivityScenarioRule<DashboardActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(DashboardActivity.class);
 
-    //Test to check if dashboard Text view is being displayed
+    /**
+     * Test to check if dashboard Text view is being displayed.
+     * */
     @Test
     public void dashboardTextExists(){
         ActivityScenario.launch(DashboardActivity.class);
         onView(withId(R.id.dashboardText)).check(matches(isDisplayed()));
     }
 
-    //Test to check if default welcome message is displayed
+    /**
+     * Test to check if default welcome message is displayed.
+     * */
     @Test
     public void defaultWelcomeMessageIsDisplayed() {
         ActivityScenario.launch(DashboardActivity.class);
@@ -40,7 +44,9 @@ public class DashboardTest {
                 .check(matches(withText("Welcome to QuickCash :)")));
     }
 
-    //Test to check if default welcome message is displayed if no email is there
+    /**
+     * Test to check if default welcome message is displayed if no email is there.
+     * */
     @Test
     public void defaultWelcomeMessageIsDisplayedWhenNoEmail(){
         //ApplicationProvider referred from android studio docs
@@ -50,7 +56,9 @@ public class DashboardTest {
         onView(withId(R.id.dashboardText)).check(matches(withText("Welcome to QuickCash :)")));
     }
 
-    //Test to check if default welcome message is displayed if email is there
+    /**
+     * Test to check if default welcome message is displayed if email is there.
+     * */
     @Test
     public void welcomeMessageIsSDisplayedWhenEmailExists(){
         //ApplicationProvider referred from android studio docs

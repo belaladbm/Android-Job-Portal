@@ -24,20 +24,27 @@ public class ResetPasswordAndSwitchRoleActivityTest {
     @Rule
     public ActivityScenarioRule<ResetPasswordAndSwitchRoleActivity> activityRule =
             new ActivityScenarioRule<>(ResetPasswordAndSwitchRoleActivity.class);
-    //check error message for when email field is empty
+
+    /**
+     * check error message for when email field is empty.
+     * */
     @Test
     public void testEmptyEmailField() {
         onView(withId(R.id.resetButton)).perform(click());
         onView(withId(R.id.your_email)).check(matches(hasErrorText("please type in your correct registered email")));
     }
-    //check error message for invalid email (without @)
+    /**
+     * check error message for invalid email (without @).
+     * */
     @Test
     public void testInvalidEmail() {
         onView(withId(R.id.your_email)).perform(typeText("invalidEmail"), closeSoftKeyboard());
         onView(withId(R.id.resetButton)).perform(click());
         onView(withId(R.id.your_email)).check(matches(hasErrorText("please type in your correct registered email")));
     }
-    //check valid input
+    /**
+     * check valid input.
+     * */
     @Test
     public void testValidEmail() {
         onView(withId(R.id.your_email)).perform(typeText("user@example.com"), closeSoftKeyboard());

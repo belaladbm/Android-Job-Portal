@@ -28,6 +28,8 @@ public class LogInActivityTest {
     public ActivityScenarioRule<LogInActivity> activityRule =
             new ActivityScenarioRule<>(LogInActivity.class);
 
+    /**
+     * Checking if login page UI elements are visible.*/
     @Test
     public void testEmailPasswordFieldsAndLoginButtonAreVisible() {
         onView(withId(R.id.editTextEmail)).check(matches(isDisplayed()));
@@ -35,12 +37,18 @@ public class LogInActivityTest {
         onView(withId(R.id.buttonLogin)).check(matches(isDisplayed()));
     }
 
+    /**
+     * Checking if error message is shown when there is no email.
+     * */
     @Test
     public void testErrorShownWhenEmailIsEmpty() {
         onView(withId(R.id.buttonLogin)).perform(click());
         onView(withId(R.id.editTextEmail)).check(matches(hasErrorText("Enter a valid email")));
     }
 
+    /**
+     * Checking if error message is shown when email's format is incorrect.
+     * */
     @Test
     public void testErrorShownForInvalidEmailFormat() {
         onView(withId(R.id.editTextEmail))
@@ -49,6 +57,9 @@ public class LogInActivityTest {
         onView(withId(R.id.editTextEmail)).check(matches(hasErrorText("Enter a valid email")));
     }
 
+    /**
+     * Checking if error message is shown when there is no password.
+     * */
     @Test
     public void testErrorShownWhenPasswordIsEmpty() {
         onView(withId(R.id.editTextEmail))
@@ -57,6 +68,9 @@ public class LogInActivityTest {
         onView(withId(R.id.editTextPassword)).check(matches(hasErrorText("Enter your password")));
     }
 
+    /**
+     * Checking if everything works if there is correct email and password.
+     * */
     @Test
     public void testValidInputPerformsLoginAttempt() {
         onView(withId(R.id.editTextEmail))
@@ -67,6 +81,9 @@ public class LogInActivityTest {
 
     }
 
+    /**
+     * Checking if login button is shown.
+     * */
     @Test
     public void testLoginButtonText() {
         onView(withId(R.id.buttonLogin)).check(matches(withText("Login")));

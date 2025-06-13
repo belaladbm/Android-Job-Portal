@@ -23,14 +23,19 @@ public class NewPasswordActivityTest {
 
     @Rule
     public ActivityScenarioRule<NewPasswordActivity> activityRule = new ActivityScenarioRule<>(NewPasswordActivity.class);
-    //check error message for when password field is empty
+    /**
+     * check error message for when password field is empty.
+     * */
     @Test
     public void testEmptyPasswordField() {
         onView(withId(R.id.submitButton)).perform(click());
         onView(withId(R.id.your_new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
         onView(withId(R.id.confirm_your_new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
     }
-    //check error message for invalid password (passwords don't match)
+
+    /**
+     * check error message for invalid password (passwords don't match).
+     * */
     @Test
     public void testMismatchedPasswordsShowError() {
         onView(withId(R.id.your_new_password)).perform(typeText("Password123"), closeSoftKeyboard());
@@ -39,14 +44,18 @@ public class NewPasswordActivityTest {
 
         onView(withId(R.id.confirm_your_new_password)).check(matches(hasErrorText("passwords don't match")));
     }
-    //check valid input
+    /**
+     * check valid input.
+     * */
     @Test
     public void testValidPasswordsTriggersUpdate() {
         onView(withId(R.id.your_new_password)).perform(typeText("Password123"), closeSoftKeyboard());
         onView(withId(R.id.confirm_your_new_password)).perform(typeText("Password123"), closeSoftKeyboard());
         onView(withId(R.id.submitButton)).perform(click());
     }
-    //check submit button text
+    /**
+     * check submit button text.
+     * */
     @Test
     public void testSubmitdButtonText() {
         onView(withId(R.id.submitButton)).check(matches(withText("Submit")));

@@ -29,18 +29,27 @@ public class SettingsActivityTest {
         ActivityScenario.launch(intent);
     }
 
+    /**
+     * Check is logout dialogue appears and is correct.
+     * */
     @Test
     public void logoutDialogAppearsAndConfirms() {
         onView(withId(R.id.logoutButton)).perform(click());
         onView(withText("Yes")).perform(click());
     }
 
+    /**
+     * Check is logout dialogue appears and is correct.
+     * */
     @Test
     public void logoutDialogCancelsProperly() {
         onView(withId(R.id.logoutButton)).perform(click());
         onView(withText("Cancel")).perform(click());
     }
 
+    /**
+     * Checks if reset password button is shown.
+     * */
     @Test
     public void testResetPasswordButtonText() {
         onView(withId(R.id.resetButton)).check(matches(withText("Reset Password")));
