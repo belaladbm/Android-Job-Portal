@@ -16,6 +16,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
 
+/**
+ * Handles both password reset and role switch process.*/
+
 public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
     private EditText yourEmail;
     private Button resetButton;
@@ -57,6 +60,9 @@ public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
         resetButton.setOnClickListener(view -> checkEmail());
     }
 
+    /**
+     * Validates user's email from firebase database.
+     * */
     private void checkEmail() {
         String email = yourEmail.getText().toString().trim();
 
@@ -95,22 +101,19 @@ public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
             }
         });
     }
-            private void switchUserRole (DataSnapshot snap){
-                for (DataSnapshot userSnapshot : snap.getChildren()) {
-                    userSnapshot.getRef().child("role").setValue(roleToSwitch)
-                            .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this,
-                                        "Role successfully changed to " + roleToSwitch,
-                                        Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ResetPasswordAndSwitchRoleActivity.this, DashboardActivity.class);
-                                intent.putExtra("userEmail", userEmail);
-                                startActivity(intent);
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this,
-                                        "Failed to update role!", Toast.LENGTH_SHORT).show();
-                            });
-                }
-            }
+
+    /**
+     * Switches user role.
+     * */
+    private void switchUserRole (DataSnapshot snap){
+        for (DataSnapshot userSnapshot : snap.getChildren()) {
+            userSnapshot.getRef().child("role").setValue(roleToSwitch).addOnSuccessListener(aVoid -> {
+                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "Role successfully changed to " + roleToSwitch, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ResetPasswordAndSwitchRoleActivity.this, DashboardActivity.class);intent.putExtra("userEmail", userEmail);
+                startActivity(intent);
+                finish();
+            }).addOnFailureListener(e -> {Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "Failed to update role!", Toast.LENGTH_SHORT).show();
+            });
+        }
+    }
 }

@@ -24,6 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Handles users Login process.
+ * */
 public class LogInActivity extends AppCompatActivity {
 
     private Button loginButton;
@@ -53,6 +56,9 @@ public class LogInActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Initialize all Login page UI elements.
+     * */
     private void initializeViews() {
         emailInput = findViewById(R.id.editTextEmail);
         passwordInput = findViewById(R.id.editTextPassword);
@@ -60,6 +66,9 @@ public class LogInActivity extends AppCompatActivity {
         signupPageLink = findViewById(R.id.signupPageLink);
     }
 
+    /**
+     * If user attempts Login.
+     * */
     private void attemptLogin() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
@@ -77,10 +86,20 @@ public class LogInActivity extends AppCompatActivity {
         checkCredentials(email, password);
     }
 
+    /**
+     * Validates user email.
+     * @param email User's email
+     * @return true if is valid otherwise false.
+     * */
     private boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    /**
+     * Verify credentials given by the user.
+     * @param email User's email
+     * @param password User's password
+     * */
     private void checkCredentials(String email, String password) {
         Query emailQuery = firebaseHelper.dbref.orderByChild("email").equalTo(email);
 
@@ -109,6 +128,9 @@ public class LogInActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * If login process is successful.
+     * */
     private void onLoginSuccess(String email) {
         showToast("Login successful");
         Intent intent = new Intent(LogInActivity.this, DashboardActivity.class);
@@ -117,15 +139,23 @@ public class LogInActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Just to show toast.
+     * */
     private void showToast(String message) {
         Toast.makeText(LogInActivity.this, message, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Redirects user to Signup Page.*/
     private void redirectToSignup() {
         Intent intent = new Intent(LogInActivity.this, RegistrationActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * If user clicks on signup page link on login page.
+     * */
     private void goToSignUpThroughLink(TextView signupPageLink){
         signupPageLink.setOnClickListener(new View.OnClickListener() {
             @Override

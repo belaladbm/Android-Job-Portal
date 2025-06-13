@@ -24,6 +24,10 @@ import com.example.group14_projectiteration1_quickcash.model.User;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Handles registration(signup) process.
+ * */
+
 public class RegistrationActivity extends AppCompatActivity {
 
     private firebaseHelper firebase_helper;

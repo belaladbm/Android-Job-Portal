@@ -15,6 +15,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * After successfully login user gets redirected to dashboard.
+ * */
+
 public class DashboardActivity extends AppCompatActivity {
 
     private TextView welcomeText;
@@ -78,14 +82,28 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Generated customized welcome message
+     * @param firstName User's first name
+     * @param role User's current role
+     * @return Customized welcome message String.
+     * */
     public static String getMessage(String firstName, String role) {
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 
+    /**
+     * @return Default Welcome message
+     * */
     public static String getDefaultMessage() {
         return "Welcome to QuickCash :)";
     }
 
+    /**
+     * Moves the user to settings page
+     * @param settingsPageButton Button to take user to settings page
+     * @param email User's email
+     * */
     public void moveToSettingsPage(Button settingsPageButton, String email) {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);

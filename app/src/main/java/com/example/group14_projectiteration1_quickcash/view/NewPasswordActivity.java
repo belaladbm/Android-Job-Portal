@@ -15,6 +15,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
 
+/**
+ * Handles new(reset) password process.
+ * */
+
 public class NewPasswordActivity extends AppCompatActivity{
     private EditText yourNewPassword;
     private EditText confirmYourNewPassword;
@@ -36,6 +40,10 @@ public class NewPasswordActivity extends AppCompatActivity{
 
         submitButton.setOnClickListener(view-> resetPassword());
     }
+
+    /**
+     * Resets password after validating.
+     * */
     private void resetPassword(){
         String password = yourNewPassword.getText().toString().trim();
         String confirmedPassword = confirmYourNewPassword.getText().toString().trim();

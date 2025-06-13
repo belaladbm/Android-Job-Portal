@@ -8,11 +8,10 @@ import android.widget.Toast;
 
 //🔽 AT-3 requires these imports
 import com.google.firebase.database.DataSnapshot;
- import com.google.firebase.database.DatabaseError;
- import com.google.firebase.database.DatabaseReference;
- import com.google.firebase.database.FirebaseDatabase;
- import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.group14_projectiteration1_quickcash.R;
 
+/**
+ * Provides user with settings options such as logout, reset password, role switch.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     Button logoutButton;
@@ -62,15 +64,16 @@ public class SettingsActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(view -> showLogoutDialog());
         switchRoleButton.setOnClickListener(v -> switchRole());
         //redirecting to reset password page after clicking on the appropriate button
-        resetPasswordButton.setOnClickListener(view ->{
+        resetPasswordButton.setOnClickListener(view -> {
             Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
             startActivity(intent);
         });
     }
 
 
-
-    // Role update logic
+    /***
+     * Handles role switching process.
+     * */
     private void switchRole() {
 
         dbRef.orderByChild("email").equalTo(currentUserEmail)
@@ -83,9 +86,9 @@ public class SettingsActivity extends AppCompatActivity {
                                 String currRoleInDB = userSnapshot.child("role").getValue(String.class);
                                 String userName = userSnapshot.child("firstName").getValue(String.class);
                                 String switchToRole;
-                                if(currRoleInDB.equals("Employee")){
+                                if (currRoleInDB.equals("Employee")) {
                                     switchToRole = "Employer";
-                                }else{
+                                } else {
                                     switchToRole = "Employee";
                                 }
 
@@ -112,6 +115,9 @@ public class SettingsActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Displays logout popup.
+     */
     private void showLogoutDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Logout")
@@ -121,8 +127,10 @@ public class SettingsActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Executes logout procedure.
+     */
     private void performLogout() {
-        // Optional: FirebaseAuth.getInstance().signOut();
         Toast.makeText(SettingsActivity.this, "Logout successful!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
