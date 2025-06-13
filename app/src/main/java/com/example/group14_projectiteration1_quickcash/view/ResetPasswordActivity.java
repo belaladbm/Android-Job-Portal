@@ -33,7 +33,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         resetButton.setOnClickListener(view -> checkEmail());
     }
     private void checkEmail() {
-        Toast.makeText(this, "Checking email...", Toast.LENGTH_SHORT).show();
         String email = yourEmail.getText().toString().trim();
 
         // check email is entered in correctly
@@ -47,6 +46,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    Toast.makeText(ResetPasswordActivity.this, "Request submitted.", Toast.LENGTH_SHORT).show();
                     // if the email exists in the db we redeirect the user to newpassword page
                     Intent intent = new Intent(ResetPasswordActivity.this, NewPasswordActivity.class);
                     intent.putExtra("email", email);
