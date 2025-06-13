@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,6 +30,8 @@ public class LogInActivity extends AppCompatActivity {
     private EditText emailInput, passwordInput;
     private firebaseHelper firebaseHelper;
 
+    private TextView signupPageLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,8 @@ public class LogInActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(view -> attemptLogin());
 
+        goToSignUpThroughLink(signupPageLink);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -51,6 +57,7 @@ public class LogInActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.editTextEmail);
         passwordInput = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.buttonLogin);
+        signupPageLink = findViewById(R.id.signupPageLink);
     }
 
     private void attemptLogin() {
@@ -112,5 +119,19 @@ public class LogInActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(LogInActivity.this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void redirectToSignup() {
+        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToSignUpThroughLink(TextView signupPageLink){
+        signupPageLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectToSignup();
+            }
+        });
     }
 }
