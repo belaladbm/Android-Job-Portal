@@ -28,8 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     Button logoutButton;
     Button resetPasswordButton;
 
-    private Button updateRoleButton;
-    private Spinner roleSpinner;
+    private Button switchRoleButton;
     private DatabaseReference dbRef;
     private String currentUserEmail;
     private Button backToDashboard;
@@ -40,8 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         logoutButton = findViewById(R.id.logoutButton);
-        updateRoleButton = findViewById(R.id.updateRoleButton);
-        roleSpinner = findViewById(R.id.roleSpinner);
+        switchRoleButton = findViewById(R.id.switchRoleButton);
         backToDashboard = findViewById(R.id.backButton);
         resetPasswordButton = findViewById(R.id.resetButton);
 
@@ -63,15 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         dbRef = FirebaseDatabase.getInstance().getReference("User details");
 
-        // Setup dropdown
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.roles, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        roleSpinner.setAdapter(adapter);
-
         // Setup button actions
         logoutButton.setOnClickListener(view -> showLogoutDialog());
-        updateRoleButton.setOnClickListener(v -> updateRole());
+        switchRoleButton.setOnClickListener(v -> switchRole());
         //redirecting to reset password page after clicking on the appropriate button
         resetPasswordButton.setOnClickListener(view ->{
             Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
@@ -82,13 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     // Role update logic
-    private void updateRole() {
-        String selectedRole = roleSpinner.getSelectedItem().toString();
-
-        if (selectedRole.equals("Select your role")) {
-            Toast.makeText(this, "Please select a valid role", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    private void switchRole() {
 
         dbRef.orderByChild("email").equalTo(currentUserEmail)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -97,16 +83,20 @@ public class SettingsActivity extends AppCompatActivity {
                         if (snapshot.exists()) {
                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                                 String emailInDB = userSnapshot.child("email").getValue(String.class);
+                                String currRoleInDB = userSnapshot.child("role").getValue(String.class);
+                                String switchToRole;
+                                if(currRoleInDB.equals("Employee")){
+                                    switchToRole = "Employer";
+                                }else{
+                                    switchToRole = "Employee";
+                                }
 
-                                userSnapshot.getRef().child("role").setValue(selectedRole)
-                                        .addOnSuccessListener(aVoid -> {
-                                            Toast.makeText(SettingsActivity.this,
-                                                    "Role updated to " + selectedRole,
-                                                    Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(SettingsActivity.this, DashboardActivity.class);
-                                            intent.putExtra("userEmail", currentUserEmail);
-                                            startActivity(intent);
-                                        });
+                                Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
+                                intent.putExtra("objective", "roleSwitch");
+                                intent.putExtra("userEmail", emailInDB);
+                                intent.putExtra("currUserRole", currRoleInDB);
+                                intent.putExtra("switchToRole", switchToRole);
+                                startActivity(intent);
                             }
                         } else {
                             Toast.makeText(SettingsActivity.this,
