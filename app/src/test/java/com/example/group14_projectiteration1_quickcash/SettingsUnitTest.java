@@ -6,6 +6,9 @@ import org.junit.Test;
 
 public class SettingsUnitTest {
 
+    /**
+     * Checks if user is logged out.
+     * */
     @Test
     public void testLogoutFlagChange() {
         boolean isLoggedIn = true;

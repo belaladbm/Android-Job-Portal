@@ -7,6 +7,10 @@ import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
 import org.junit.Test;
 
 public class DashboardJunitTest {
+
+    /**
+     * Checks if welcome message is correct.
+     * */
     @Test
     public void checkIfWelcomeMessageIsCorrect(){
         String firstName = "Testing";
@@ -14,6 +18,9 @@ public class DashboardJunitTest {
         assertEquals("Welcome, Testing! Your role is Employee!", DashboardActivity.getMessage(firstName, role));
     }
 
+    /**
+     * Checks if default welcome message is correct.
+     * */
     @Test
     public void checkIfDefaultWelcomeMessageIsCorrect(){
         String defaultWelcomeMessage = "Welcome to QuickCash :)";
