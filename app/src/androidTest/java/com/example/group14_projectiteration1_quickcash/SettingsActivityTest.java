@@ -67,6 +67,6 @@ public class SettingsActivityTest {
     }
     @Test
     public void testResetPasswordButtonText() {
-        onView(withId(R.id.resetPasswordButton)).check(matches(withText("Reset Password")));
+        onView(withId(R.id.resetButton)).check(matches(withText("Reset Password")));
     }
 }
