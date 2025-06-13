@@ -27,17 +27,17 @@ public class NewPasswordActivityTest {
     @Test
     public void testEmptyPasswordField() {
         onView(withId(R.id.submitButton)).perform(click());
-        onView(withId(R.id.new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
-        onView(withId(R.id.confirm_new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
+        onView(withId(R.id.your_new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
+        onView(withId(R.id.confirm_your_new_password)).check(matches(hasErrorText("please fill in all the blank fields")));
     }
     //check error message for invalid password (passwords don't match)
     @Test
     public void testMismatchedPasswordsShowError() {
         onView(withId(R.id.your_new_password)).perform(typeText("Password123"), closeSoftKeyboard());
-        onView(withId(R.id.confirm_new_password)).perform(typeText("Password321"), closeSoftKeyboard());
+        onView(withId(R.id.confirm_your_new_password)).perform(typeText("Password321"), closeSoftKeyboard());
         onView(withId(R.id.submitButton)).perform(click());
 
-        onView(withId(R.id.confirm_your_new_password)).check(matches(hasErrorText("Passwords don't match")));
+        onView(withId(R.id.confirm_your_new_password)).check(matches(hasErrorText("passwords don't match")));
     }
     //check valid input
     @Test
