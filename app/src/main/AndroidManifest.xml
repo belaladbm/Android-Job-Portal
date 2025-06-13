@@ -16,6 +16,10 @@
         <activity
             android:name=".view.SettingsActivity" />
         <activity
+            android:name=".view.ResetPasswordActivity" />
+        <activity
+            android:name=".view.NewPasswordActivity" />
+        <activity
             android:name=".view.DashboardActivity"
             android:exported="true" />
         <activity

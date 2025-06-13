@@ -26,7 +26,7 @@ import com.example.group14_projectiteration1_quickcash.R;
 public class SettingsActivity extends AppCompatActivity {
 
     Button logoutButton;
-
+    Button resetPasswordButton;
 
     private Button updateRoleButton;
     private Spinner roleSpinner;
@@ -43,6 +43,7 @@ public class SettingsActivity extends AppCompatActivity {
         updateRoleButton = findViewById(R.id.updateRoleButton);
         roleSpinner = findViewById(R.id.roleSpinner);
         backToDashboard = findViewById(R.id.backButton);
+        resetPasswordButton = findViewById(R.id.resetButton);
 
         // Get email passed from Dashboard
         currentUserEmail = getIntent().getStringExtra("userEmail");
@@ -71,6 +72,11 @@ public class SettingsActivity extends AppCompatActivity {
         // Setup button actions
         logoutButton.setOnClickListener(view -> showLogoutDialog());
         updateRoleButton.setOnClickListener(v -> updateRole());
+        //redirecting to reset password page after clicking on the appropriate button
+        resetPasswordButton.setOnClickListener(view ->{
+            Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
 
