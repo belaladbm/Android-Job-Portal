@@ -115,4 +115,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <TextView
+        android:id="@+id/loginPageLink"
+        android:layout_width="188dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="112dp"
+        android:layout_marginBottom="198dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Already a user? Login."
+        android:textStyle="bold"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

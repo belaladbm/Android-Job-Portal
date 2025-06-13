@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText confirmPassword;
 
+    private TextView loginPageLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +57,14 @@ public class MainActivity extends AppCompatActivity {
         // Initializing the spinner for role selection.
         roleSpinner = findViewById(R.id.spinner);
 
+        loginPageLink = findViewById(R.id.loginPageLink);
+
         //making new object of firebaseHelper class
         firebase_helper = new firebaseHelper();
 
         RoleSpinner();
+
+        goToLoginThroughLink(loginPageLink);
 
         Button b = findViewById(R.id.button);
 
@@ -178,5 +185,16 @@ public class MainActivity extends AppCompatActivity {
     private void redirectingToLogin() {
         Intent intent = new Intent(MainActivity.this, LogInActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Redirects the user to the login page if user clicks on go to login page link*/
+    private void goToLoginThroughLink(TextView loginPageLink){
+        loginPageLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectingToLogin();
+            }
+        });
     }
 }
