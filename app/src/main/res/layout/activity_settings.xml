@@ -7,13 +7,6 @@
     android:gravity="center"
     android:padding="24dp">
 
-
-    <Spinner
-        android:id="@+id/roleSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:entries="@array/roles" />
-
     <Button
         android:id="@+id/switchRoleButton"
         android:layout_width="match_parent"
@@ -21,8 +14,8 @@
         android:text="Switch Roles" />
 
     <Button
-         android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/logoutButton"
+        android:layout_width="362dp"
         android:layout_height="wrap_content"
         android:text="Logout" />
 
