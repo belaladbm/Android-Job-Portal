@@ -122,7 +122,7 @@ public class LogInActivity extends AppCompatActivity {
     }
 
     private void redirectToSignup() {
-        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        Intent intent = new Intent(LogInActivity.this, RegistrationActivity.class);
         startActivity(intent);
     }
 

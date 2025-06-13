@@ -1,6 +1,5 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +7,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 //🔽 AT-3 requires these imports
- import android.widget.Spinner;
- import android.widget.ArrayAdapter;
- import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DataSnapshot;
  import com.google.firebase.database.DatabaseError;
  import com.google.firebase.database.DatabaseReference;
  import com.google.firebase.database.FirebaseDatabase;
@@ -66,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         switchRoleButton.setOnClickListener(v -> switchRole());
         //redirecting to reset password page after clicking on the appropriate button
         resetPasswordButton.setOnClickListener(view ->{
-            Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
             startActivity(intent);
         });
     }
@@ -92,7 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
                                     switchToRole = "Employee";
                                 }
 
-                                Intent intent = new Intent(SettingsActivity.this, ResetPasswordActivity.class);
+                                Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
                                 intent.putExtra("objective", "roleSwitch");
                                 intent.putExtra("userEmail", emailInDB);
                                 intent.putExtra("currUserRole", currRoleInDB);

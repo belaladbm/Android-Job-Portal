@@ -24,7 +24,7 @@ import com.example.group14_projectiteration1_quickcash.model.User;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity {
 
     private firebaseHelper firebase_helper;
 
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
      * Redirects the user to the login page after successful registration.
      */
     private void redirectingToLogin() {
-        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+        Intent intent = new Intent(RegistrationActivity.this, LogInActivity.class);
         startActivity(intent);
     }
 

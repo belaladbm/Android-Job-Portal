@@ -16,13 +16,13 @@ import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import com.example.group14_projectiteration1_quickcash.view.MainActivity;
+import com.example.group14_projectiteration1_quickcash.view.RegistrationActivity;
 
 @RunWith(AndroidJUnit4.class)
 public class RegistrationTest {
 
     @Rule
-    public ActivityScenarioRule<MainActivity> activityScenarioRule = new ActivityScenarioRule<>(MainActivity.class);
+    public ActivityScenarioRule<RegistrationActivity> activityScenarioRule = new ActivityScenarioRule<>(RegistrationActivity.class);
 
     // Test case 1: Checking error message when all fields are empty
     @Test

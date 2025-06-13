@@ -16,7 +16,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseError;
 
-public class ResetPasswordActivity extends AppCompatActivity {
+public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
     private EditText yourEmail;
     private Button resetButton;
     private firebaseHelper firebaseHelper;
@@ -73,25 +73,25 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     if ("roleSwitch".equals(objective)) {
                         if (!email.equals(userEmail)) {
-                            Toast.makeText(ResetPasswordActivity.this, "The email in incorrect!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "The email in incorrect!", Toast.LENGTH_LONG).show();
                         } else {
                             switchUserRole(snapshot);
                         }
                     } else {
-                        Toast.makeText(ResetPasswordActivity.this, "Request submitted.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "Request submitted.", Toast.LENGTH_SHORT).show();
                         // if the email exists in the db we redeirect the user to newpassword page
-                        Intent intent = new Intent(ResetPasswordActivity.this, NewPasswordActivity.class);
+                        Intent intent = new Intent(ResetPasswordAndSwitchRoleActivity.this, NewPasswordActivity.class);
                         intent.putExtra("email", email);
                         startActivity(intent);
                     }
                 } else {
-                    Toast.makeText(ResetPasswordActivity.this, "The email you entered doesn't exist in our records.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "The email you entered doesn't exist in our records.", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                Toast.makeText(ResetPasswordActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -99,16 +99,16 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : snap.getChildren()) {
                     userSnapshot.getRef().child("role").setValue(roleToSwitch)
                             .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(ResetPasswordActivity.this,
+                                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this,
                                         "Role successfully changed to " + roleToSwitch,
                                         Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(ResetPasswordActivity.this, DashboardActivity.class);
+                                Intent intent = new Intent(ResetPasswordAndSwitchRoleActivity.this, DashboardActivity.class);
                                 intent.putExtra("userEmail", userEmail);
                                 startActivity(intent);
                                 finish();
                             })
                             .addOnFailureListener(e -> {
-                                Toast.makeText(ResetPasswordActivity.this,
+                                Toast.makeText(ResetPasswordAndSwitchRoleActivity.this,
                                         "Failed to update role!", Toast.LENGTH_SHORT).show();
                             });
                 }

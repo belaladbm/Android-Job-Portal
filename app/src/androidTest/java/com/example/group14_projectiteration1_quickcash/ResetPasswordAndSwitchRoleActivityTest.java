@@ -3,7 +3,7 @@ package com.example.group14_projectiteration1_quickcash;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.group14_projectiteration1_quickcash.view.ResetPasswordActivity;
+import com.example.group14_projectiteration1_quickcash.view.ResetPasswordAndSwitchRoleActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,11 +19,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
-public class ResetPasswordActivityTest {
+public class ResetPasswordAndSwitchRoleActivityTest {
 
     @Rule
-    public ActivityScenarioRule<ResetPasswordActivity> activityRule =
-            new ActivityScenarioRule<>(ResetPasswordActivity.class);
+    public ActivityScenarioRule<ResetPasswordAndSwitchRoleActivity> activityRule =
+            new ActivityScenarioRule<>(ResetPasswordAndSwitchRoleActivity.class);
     //check error message for when email field is empty
     @Test
     public void testEmptyEmailField() {
