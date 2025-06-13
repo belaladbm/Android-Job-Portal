@@ -15,10 +15,10 @@
         android:entries="@array/roles" />
 
     <Button
-        android:id="@+id/updateRoleButton"
+        android:id="@+id/switchRoleButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/update_role" />
+        android:text="Switch Roles" />
 
     <Button
          android:id="@+id/logoutButton"
