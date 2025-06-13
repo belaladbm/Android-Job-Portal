@@ -84,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                             for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                                 String emailInDB = userSnapshot.child("email").getValue(String.class);
                                 String currRoleInDB = userSnapshot.child("role").getValue(String.class);
+                                String userName = userSnapshot.child("firstName").getValue(String.class);
                                 String switchToRole;
                                 if(currRoleInDB.equals("Employee")){
                                     switchToRole = "Employer";
@@ -95,6 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 intent.putExtra("objective", "roleSwitch");
                                 intent.putExtra("userEmail", emailInDB);
                                 intent.putExtra("currUserRole", currRoleInDB);
+                                intent.putExtra("userName", userName);
                                 intent.putExtra("switchToRole", switchToRole);
                                 startActivity(intent);
                             }
