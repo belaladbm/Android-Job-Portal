@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -23,7 +24,11 @@ import com.example.group14_projectiteration1_quickcash.model.User;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+/**
+ * Handles registration(signup) process.
+ * */
+
+public class RegistrationActivity extends AppCompatActivity {
 
     private firebaseHelper firebase_helper;
 
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText confirmPassword;
 
+    private TextView loginPageLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
         // Initializing the spinner for role selection.
         roleSpinner = findViewById(R.id.spinner);
 
+        loginPageLink = findViewById(R.id.loginPageLink);
+
         //making new object of firebaseHelper class
         firebase_helper = new firebaseHelper();
 
         RoleSpinner();
+
+        goToLoginThroughLink(loginPageLink);
 
         Button b = findViewById(R.id.button);
 
@@ -78,11 +89,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void writeRegistration(){
 
-        firstName = findViewById(R.id.editTextText);
-        lastName = findViewById(R.id.editTextText2);
-        email = findViewById(R.id.editTextText3);
-        password = findViewById(R.id.editTextText4);
-        confirmPassword = findViewById(R.id.editTextText5);
+        initializeUIElements();
 
         // Input validation
         if (TextUtils.isEmpty(firstName.getText().toString())) {
@@ -147,6 +154,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Initializing the registration page UI elements.
+     */
+    private void initializeUIElements() {
+        firstName = findViewById(R.id.editTextText);
+        lastName = findViewById(R.id.editTextText2);
+        email = findViewById(R.id.editTextText3);
+        password = findViewById(R.id.editTextText4);
+        confirmPassword = findViewById(R.id.editTextText5);
+    }
+
+    /**
      * Populates the role spinner with the roles: "Employee", and "Employer".
      */
     private void RoleSpinner() {
@@ -169,7 +187,18 @@ public class MainActivity extends AppCompatActivity {
      * Redirects the user to the login page after successful registration.
      */
     private void redirectingToLogin() {
-        Intent intent = new Intent(MainActivity.this, LogInActivity.class);
+        Intent intent = new Intent(RegistrationActivity.this, LogInActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Redirects the user to the login page if user clicks on go to login page link*/
+    private void goToLoginThroughLink(TextView loginPageLink){
+        loginPageLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                redirectingToLogin();
+            }
+        });
     }
 }

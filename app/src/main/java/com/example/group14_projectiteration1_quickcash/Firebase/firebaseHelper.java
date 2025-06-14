@@ -3,6 +3,9 @@ package com.example.group14_projectiteration1_quickcash.Firebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Helper firebase class to provide firebase database connection
+ * */
 public class firebaseHelper {
 
     //constructor

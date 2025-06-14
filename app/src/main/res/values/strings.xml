@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Group14_ProjectIteration1_QuickCash</string>
+
+    <string-array name="roles">
+        <item>Select your role</item>
+        <item>Employee</item>
+        <item>Employer</item>
+    </string-array>
+
+    <string name="update_role">Update Role</string>
+    <string name="logout">Logout</string>
+
 </resources>
