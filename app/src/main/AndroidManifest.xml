@@ -16,17 +16,13 @@
         <activity
             android:name=".view.SettingsActivity" />
         <activity
-            android:name=".view.ResetPasswordAndSwitchRoleActivity" />
-        <activity
-            android:name=".view.NewPasswordActivity" />
-        <activity
-            android:name=".view.DashboardActivity"
-            android:exported="true" />
+            android:name=".DashBoardActivity"
+            android:exported="false" />
         <activity
             android:name=".view.LogInActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
-            android:name=".view.RegistrationActivity"
+            android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

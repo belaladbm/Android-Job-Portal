@@ -4,46 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:padding="24dp">
 
-    <TextView
-        android:id="@+id/settingsTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Settings"
-        android:textAlignment="center"
-        android:textSize="33sp"
-        android:textStyle="bold" />
-
     <Button
-        android:id="@+id/switchRoleButton"
-        android:layout_width="match_parent"
+         android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27mm"
-        android:layout_marginBottom="6dp"
-        android:text="Switch Roles" />
-
-    <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="362dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
         android:text="Logout" />
-
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:text="Reset Password" />
-
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:text="Back to Dashboard" />
-
-
 </LinearLayout>

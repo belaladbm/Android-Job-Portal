@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-06-13T04:06:19.828822Z">
+        <DropdownSelection timestamp="2025-05-30T23:02:19.301600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=/Users/sidhantkumar/.android/avd/Pixel_2_Google_Play.avd" />
@@ -16,13 +16,10 @@
       <SelectionState runConfigName="SettingsActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="NewPasswordActivityTest">
+      <SelectionState runConfigName="RegistrationTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ResetPasswordAndSwitchRoleActivityTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="DashboardTest">
+      <SelectionState runConfigName="SettingsActivityTest (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
