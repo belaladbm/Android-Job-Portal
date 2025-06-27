@@ -117,7 +117,7 @@ public class DashboardActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
+                getLocation(location);
             }
         };
     }
@@ -174,6 +174,33 @@ public class DashboardActivity extends AppCompatActivity {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
+    }
+
+    /**
+     * This gets the current location of user using geocoder
+     * URL: https://developer.android.com/reference/android/location/Geocoder
+     * */
+    public void getLocation(Location loc) {
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+            //getfromlocation referred from android studio docs
+            //URL: https://developer.android.com/reference/android/location/Geocoder
+            List<Address> adds = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
+
+            if(!adds.isEmpty()){
+                Address add = adds.get(0);
+                String userAddress = add.getAddressLine(0);
+                locationText.setText("Your Location : " + userAddress);
+            }
+            else{
+                locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
+            }
+        }
+        catch (IOException e){
+            locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
+        }
+
     }
 
     /**
