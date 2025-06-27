@@ -70,4 +70,24 @@ public class DashboardTest {
         onView(withId(R.id.dashboardText)).check(matches(isDisplayed())).check(matches(not(withText(""))));
 
     }
+
+    /**
+     * Test to check if the location text view exists
+     */
+
+    @Test
+    public void checkIfLocationTextViewExists(){
+        ActivityScenario.launch(DashboardActivity.class);
+        onView(withId(R.id.locationTextView)).check(matches(isDisplayed()));
+    }
+
+    @Test
+    /**
+     * Test to check if location text view displays default text
+     * */
+    public void checkIfLocationTextViewShowsDefaultText(){
+        ActivityScenario.launch(DashboardActivity.class);
+        onView(withId(R.id.locationTextView)).check.matches(withText("Your Location : Searching..."));
+    }
+
 }
