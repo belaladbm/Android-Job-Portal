@@ -19,8 +19,8 @@
     <TextView
 
         android:id="@+id/dashboardText"
-        android:layout_width="261dp"
-        android:layout_height="90dp"
+        android:layout_width="287dp"
+        android:layout_height="70dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="75dp"
@@ -30,4 +30,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/locationTextView"
+        android:layout_width="371dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="543dp"
+        android:text="Your Location : Searching..."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dashboardText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

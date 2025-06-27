@@ -87,7 +87,7 @@ public class DashboardTest {
      * */
     public void checkIfLocationTextViewShowsDefaultText(){
         ActivityScenario.launch(DashboardActivity.class);
-        onView(withId(R.id.locationTextView)).check.matches(withText("Your Location : Searching..."));
+        onView(withId(R.id.locationTextView)).check(matches(withText("Your Location : Searching...")));
     }
 
 }
