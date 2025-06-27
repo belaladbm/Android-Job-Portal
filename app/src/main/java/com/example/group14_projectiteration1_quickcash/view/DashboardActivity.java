@@ -1,7 +1,13 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -9,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * After successfully login user gets redirected to dashboard.
@@ -28,6 +40,9 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView locationText;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    LocationManager locationManager;
+    LocationListener locationListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +57,12 @@ public class DashboardActivity extends AppCompatActivity {
 
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
+
+        // Initialize location manager
+        //Referred from Tutorial 6 - GoogleMaps
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        initializeLocationListener();
+        checkLocationPermissionAndStartUpdates();
 
         moveToSettingsPage(settingsButton, email);
 
@@ -89,6 +110,19 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     /**
+     * Initialize Location Listener
+     * Referred from Tutorial 6 - GoogleMaps
+     * */
+    public void initializeLocationListener(){
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+        };
+    }
+
+    /**
      * Generated customized welcome message
      * @param firstName User's first name
      * @param role User's current role
@@ -118,20 +152,56 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Check permissions and start location updates
+     * Referred from Tutorial 6 - GoogleMaps
+     * */
+    private void checkLocationPermissionAndStartUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        } else {
+            startLocationUpdates();
+        }
+    }
+
+    /**
+     * Start Receiving location updates
+     * Referred from Tutorial 6 - GoogleMaps
+     * */
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
+    }
+
     /**
      *  Handles the result of location permission request
+     *  Referred from Tutorial 6 - GoogleMaps
      * */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                startLocationUpdates();
             }
             else{
                 Toast.makeText(this, "Unable to detect location. Please enable GPS to see nearby jobs.", Toast.LENGTH_LONG).show();
                 locationText.setText("GPS Permission Denied! Please enable GPS to see nearby jobs.");
             }
+        }
+    }
+
+    /**
+     * Referred from Tutorial 6 - GoogleMaps
+     * */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (locationListener != null) {
+            locationManager.removeUpdates(locationListener);
         }
     }
 
