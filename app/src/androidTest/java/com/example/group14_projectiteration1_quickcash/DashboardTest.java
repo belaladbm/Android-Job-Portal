@@ -105,7 +105,7 @@ public class DashboardTest {
             activity.onRequestPermissionsResult(1, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, new int[]{PackageManager.PERMISSION_DENIED});
 
             TextView locationText = activity.findViewById(R.id.locationTextView);
-            assertEquals("Your Location : Permission denied! Please enable GPS.", locationText.getText().toString());
+            assertEquals("GPS Permission Denied! Please enable GPS to see nearby jobs.", locationText.getText().toString());
         });
     }
 

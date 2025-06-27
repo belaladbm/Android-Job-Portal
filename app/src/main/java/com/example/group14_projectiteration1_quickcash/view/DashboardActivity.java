@@ -1,11 +1,13 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +26,8 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView welcomeText;
     private Button settingsButton;
     private TextView locationText;
+
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,4 +117,22 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
+    /**
+     *  Handles the result of location permission request
+     * */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            }
+            else{
+                Toast.makeText(this, "Unable to detect location. Please enable GPS to see nearby jobs.", Toast.LENGTH_LONG).show();
+                locationText.setText("GPS Permission Denied! Please enable GPS to see nearby jobs.");
+            }
+        }
+    }
+
 }
