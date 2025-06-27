@@ -39,6 +39,8 @@ public class DashboardActivity extends AppCompatActivity {
     private Button settingsButton;
     private TextView locationText;
 
+    private String userLocationCity;
+
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     LocationManager locationManager;
     LocationListener locationListener;
@@ -191,7 +193,8 @@ public class DashboardActivity extends AppCompatActivity {
             if(!adds.isEmpty()){
                 Address add = adds.get(0);
                 String userAddress = add.getAddressLine(0);
-                locationText.setText("Your Location : " + userAddress);
+                userLocationCity = add.getLocality();
+                locationText.setText("Your Location : " + userLocationCity);
             }
             else{
                 locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
