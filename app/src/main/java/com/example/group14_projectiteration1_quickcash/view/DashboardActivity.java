@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.group14_projectiteration1_quickcash.R;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +41,10 @@ public class DashboardActivity extends AppCompatActivity {
     private Button settingsButton;
     private TextView locationText;
 
+    private TextView nearbyJobsText;
+
+    private RecyclerView jobsDisplay;
+
     private String userLocationCity;
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
@@ -57,6 +62,9 @@ public class DashboardActivity extends AppCompatActivity {
         welcomeText = findViewById(R.id.dashboardText);
         settingsButton = findViewById(R.id.settingsButton);
         locationText = findViewById(R.id.locationTextView);
+        nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
+        jobsDisplay = findViewById(R.id.jobsDisplayView);
+
 
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
@@ -96,6 +104,8 @@ public class DashboardActivity extends AppCompatActivity {
                         welcomeText.setText(getMessage(firstName, role));
 
                         //this would show different display for both roles
+                        //View Visible referred from android studio docs
+                        //URL: https://developer.android.com/reference/android/view/View
                         if("Employee".equals(role)){
                             locationText.setVisibility(View.VISIBLE);
                         }
