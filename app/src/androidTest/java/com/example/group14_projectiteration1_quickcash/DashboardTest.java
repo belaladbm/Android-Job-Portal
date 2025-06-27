@@ -7,8 +7,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertEquals;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -88,6 +92,21 @@ public class DashboardTest {
     public void checkIfLocationTextViewShowsDefaultText(){
         ActivityScenario.launch(DashboardActivity.class);
         onView(withId(R.id.locationTextView)).check(matches(withText("Your Location : Searching...")));
+    }
+
+    @Test
+    /**
+     * Test to check if location text view displays correct text when gps permission is denied
+     * */
+    public void locationTextViewWhenPermissionDenied(){
+        ActivityScenario<DashboardActivity> scenario = ActivityScenario.launch(DashboardActivity.class);
+
+        scenario.onActivity(activity -> {
+            activity.onRequestPermissionsResult(1, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, new int[]{PackageManager.PERMISSION_DENIED});
+
+            TextView locationText = activity.findViewById(R.id.locationTextView);
+            assertEquals("Your Location : Permission denied! Please enable GPS.", locationText.getText().toString());
+        });
     }
 
 }

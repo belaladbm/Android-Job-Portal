@@ -23,6 +23,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private TextView welcomeText;
     private Button settingsButton;
+    private TextView locationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class DashboardActivity extends AppCompatActivity {
         //initializing dashboard page UI elements
         welcomeText = findViewById(R.id.dashboardText);
         settingsButton = findViewById(R.id.settingsButton);
+        locationText = findViewById(R.id.locationTextView);
 
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
