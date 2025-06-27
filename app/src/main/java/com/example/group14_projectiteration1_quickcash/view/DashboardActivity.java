@@ -108,9 +108,13 @@ public class DashboardActivity extends AppCompatActivity {
                         //URL: https://developer.android.com/reference/android/view/View
                         if("Employee".equals(role)){
                             locationText.setVisibility(View.VISIBLE);
+                            nearbyJobsText.setVisibility(View.VISIBLE);
+                            jobsDisplay.setVisibility(View.VISIBLE);
                         }
                         else if("Employer".equals(role)){
                             locationText.setVisibility(View.GONE);
+                            nearbyJobsText.setVisibility(View.GONE);
+                            jobsDisplay.setVisibility(View.GONE);
                         }
                     }
                 }
