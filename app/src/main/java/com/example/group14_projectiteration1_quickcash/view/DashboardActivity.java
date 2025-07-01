@@ -112,12 +112,13 @@ public class DashboardActivity extends AppCompatActivity {
                             locationText.setVisibility(View.VISIBLE);
                             nearbyJobsText.setVisibility(View.VISIBLE);
                             jobsDisplay.setVisibility(View.VISIBLE);
-                            postJobButton.setVisibility(View.VISIBLE);
+                            postJobButton.setVisibility(View.GONE);
                         }
                         else if("Employer".equals(role)){
                             locationText.setVisibility(View.GONE);
                             nearbyJobsText.setVisibility(View.GONE);
                             jobsDisplay.setVisibility(View.GONE);
+                            postJobButton.setVisibility(View.VISIBLE);
                             moveToPostJobPage(postJobButton);
                         }
                     }
