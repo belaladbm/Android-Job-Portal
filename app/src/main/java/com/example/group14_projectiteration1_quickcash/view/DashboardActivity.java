@@ -184,10 +184,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     /**
      * Moves the user to post job page
-     * @param JobPost Button to take user to settings page
+     * @param postJobButton Button to take user to settings page
      * */
-    public void moveToPostJobPage(Button JobPost) {
-        JobPost.setOnClickListener(v -> {
+    public void moveToPostJobPage(Button postJobButton) {
+        postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
             startActivity(intent);
         });

@@ -9,7 +9,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
+import com.example.group14_projectiteration1_quickcash.view.JobPostActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,20 +19,18 @@ import org.junit.runner.RunWith;
 public class JobPostActivityTest {
 
     @Rule
-    public ActivityScenarioRule<DashboardActivity> rule =
-            new ActivityScenarioRule<>(DashboardActivity.class);
+    public ActivityScenarioRule<JobPostActivity> rule =
+            new ActivityScenarioRule<>(JobPostActivity.class);
 
     // The Job post button opens the form screen.
     @Test
     public void postJobButton_opensJobPostForm() {
-        onView(withId(R.id.postJobButton)).perform(click());
         onView(withId(R.id.jobNameEditText)).check(matches(isDisplayed()));
     }
 
     // The form fields are available.
     @Test
     public void jobPostFormFields_areDisplayed() {
-        onView(withId(R.id.postJobButton)).perform(click());
 
         onView(withId(R.id.jobNameEditText)).check(matches(isDisplayed()));
         onView(withId(R.id.jobDescriptionEditText)).check(matches(isDisplayed()));
