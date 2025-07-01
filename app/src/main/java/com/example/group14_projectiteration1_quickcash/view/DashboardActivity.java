@@ -50,6 +50,7 @@ public class DashboardActivity extends AppCompatActivity {
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     LocationManager locationManager;
     LocationListener locationListener;
+    private Button postJobButton;
 
 
     @Override
@@ -64,6 +65,7 @@ public class DashboardActivity extends AppCompatActivity {
         locationText = findViewById(R.id.locationTextView);
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
         jobsDisplay = findViewById(R.id.jobsDisplayView);
+        postJobButton = findViewById(R.id.postJobButton);
 
 
         //extracting email passed through intent
@@ -110,11 +112,13 @@ public class DashboardActivity extends AppCompatActivity {
                             locationText.setVisibility(View.VISIBLE);
                             nearbyJobsText.setVisibility(View.VISIBLE);
                             jobsDisplay.setVisibility(View.VISIBLE);
+                            postJobButton.setVisibility(View.VISIBLE);
                         }
                         else if("Employer".equals(role)){
                             locationText.setVisibility(View.GONE);
                             nearbyJobsText.setVisibility(View.GONE);
                             jobsDisplay.setVisibility(View.GONE);
+                            moveToPostJobPage(postJobButton);
                         }
                     }
                 }
@@ -173,6 +177,17 @@ public class DashboardActivity extends AppCompatActivity {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
             intent.putExtra("userEmail", email); //  Send user email to settings
+            startActivity(intent);
+        });
+    }
+
+    /**
+     * Moves the user to post job page
+     * @param JobPost Button to take user to settings page
+     * */
+    public void moveToPostJobPage(Button JobPost) {
+        JobPost.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
             startActivity(intent);
         });
     }
