@@ -298,7 +298,7 @@ public class DashboardActivity extends AppCompatActivity {
      * Fetches jobs from Firebase based on user's location
      * @param userCity The city where the user is located
      */
-    private void fetchNearbyJobs(String userCity) {
+    public void fetchNearbyJobs(String userCity) {
         if (userCity == null || userCity.isEmpty()) {
             nearbyJobsText.setText("Unable to determine location");
             return;

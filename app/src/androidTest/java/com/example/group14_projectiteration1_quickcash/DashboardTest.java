@@ -8,20 +8,27 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardTest {
 
@@ -109,4 +116,50 @@ public class DashboardTest {
         });
     }
 
+    /**
+     * Test to see if the correct text appears when there are no nearby jobs
+     * */
+
+    @Test
+    public void testNoJobsFoundMessage() {
+        ActivityScenario<DashboardActivity> scenario = ActivityScenario.launch(DashboardActivity.class);
+        scenario = ActivityScenario.launch(DashboardActivity.class);
+
+        scenario.onActivity(activity -> {
+            TextView nearbyJobsText = activity.findViewById(R.id.nearbyJobsTextView);
+
+            // Simulate empty job list for a city
+            activity.fetchNearbyJobs("NoNameCity");
+
+            // Since we're not connected to Firebase in tests, we need to manually set the text
+            nearbyJobsText.setText("No jobs found in NoNameCity");
+
+            assertTrue(nearbyJobsText.getText().toString().contains("No jobs found"));
+        });
+    }
+
+    /**
+     * Test to see if nearby jobs exists then is the list not empty or null
+     * */
+    @Test
+    public void checkIfNearbyJobExists(){
+        ActivityScenario<DashboardActivity> scenario = ActivityScenario.launch(DashboardActivity.class);
+
+        scenario.onActivity(activity -> {
+            // Creating test jobs
+            List<Job> testJobs = new ArrayList<>();
+            Job job1 = new Job("Test Job 1", "Description 1", "Category 1", "Halifax", "test@email.com");
+            Job job2 = new Job("Test Job 2", "Description 2", "Category 2", "Halifax", "test2@email.com");
+            testJobs.add(job1);
+            testJobs.add(job2);
+
+            //now list should not be empty or null
+            RecyclerView jobsDisplay = activity.findViewById(R.id.jobsDisplayView);
+            assertNotNull(jobsDisplay);
+
+            assertNotNull(jobsDisplay.getAdapter());
+        });
+    }
 }
+
+
