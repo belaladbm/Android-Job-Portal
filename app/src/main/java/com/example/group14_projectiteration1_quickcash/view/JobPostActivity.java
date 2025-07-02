@@ -1,5 +1,6 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -66,30 +67,34 @@ public class JobPostActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(jobNameEditText.getText().toString().trim())) {
             jobNameEditText.setError("Job title is required");
-            Toast.makeText(this, "Please enter a job title", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Job Posting Failed!, Please enter a job title", Toast.LENGTH_SHORT).show();
             return;
         }
 
         /* 2. Description */
         if (TextUtils.isEmpty(jobDescriptionEditText.getText().toString().trim())) {
             jobDescriptionEditText.setError("Description is required");
-            Toast.makeText(this, "Please enter a job description", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Job Posting Failed!, Please enter a job description", Toast.LENGTH_SHORT).show();
             return;
         }
 
         /* 3. Category */
         String category = categorySpinner.getSelectedItem().toString();
         if (category.equals("Select job category")) {
-            Toast.makeText(this, "Please select a category", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Job Posting Failed!, Please select a category", Toast.LENGTH_SHORT).show();
             return;
         }
 
         /* 4. Location */
         if (TextUtils.isEmpty(locationEditText.getText().toString().trim())) {
             locationEditText.setError("Location is required");
-            Toast.makeText(this, "Please enter a location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Job Posting Failed!, Please enter a location", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Toast.makeText(this, "Job Posted Successfully", Toast.LENGTH_SHORT).show();
+        redirectingToDashboard();
+
     }
 
     /**
@@ -123,5 +128,10 @@ public class JobPostActivity extends AppCompatActivity {
         );
         spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(spinnerAdapter);
+    }
+
+    private void redirectingToDashboard() {
+        Intent intent = new Intent(JobPostActivity.this, DashboardActivity.class);
+        startActivity(intent);
     }
 }
