@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,9 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.group14_projectiteration1_quickcash.R;
+import com.example.group14_projectiteration1_quickcash.adapter.JobAdapter;
+import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,6 +56,8 @@ public class DashboardActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     private Button postJobButton;
+    private JobAdapter jobAdapter;
+    private List<Job> jobList;
 
 
     @Override
@@ -67,6 +74,11 @@ public class DashboardActivity extends AppCompatActivity {
         jobsDisplay = findViewById(R.id.jobsDisplayView);
         postJobButton = findViewById(R.id.postJobButton);
 
+        // Initializing RecyclerView for jobs
+        jobList = new ArrayList<>();
+        jobAdapter = new JobAdapter(jobList);
+        jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
+        jobsDisplay.setAdapter(jobAdapter);
 
         //extracting email passed through intent
         String email = getIntent().getStringExtra("userEmail");
@@ -236,6 +248,9 @@ public class DashboardActivity extends AppCompatActivity {
                 String userAddress = add.getAddressLine(0);
                 userLocationCity = add.getLocality();
                 locationText.setText("Your Location : " + userLocationCity);
+
+                //calling nearby jobs method after getting user's location
+                fetchNearbyJobs(userLocationCity);
             }
             else{
                 locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
@@ -261,6 +276,9 @@ public class DashboardActivity extends AppCompatActivity {
             else{
                 Toast.makeText(this, "Unable to detect location. Please enable GPS to see nearby jobs.", Toast.LENGTH_LONG).show();
                 locationText.setText("GPS Permission Denied! Please enable GPS to see nearby jobs.");
+                nearbyJobsText.setText("Unable to detect location. Please enable GPS to see nearby jobs.");
+                jobList.clear();
+                jobAdapter.updateJobs(jobList);
             }
         }
     }
@@ -274,6 +292,50 @@ public class DashboardActivity extends AppCompatActivity {
         if (locationListener != null) {
             locationManager.removeUpdates(locationListener);
         }
+    }
+
+    /**
+     * Fetches jobs from Firebase based on user's location
+     * @param userCity The city where the user is located
+     */
+    private void fetchNearbyJobs(String userCity) {
+        if (userCity == null || userCity.isEmpty()) {
+            nearbyJobsText.setText("Unable to determine location");
+            return;
+        }
+
+        DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("User details/Jobs:");
+
+        jobsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                jobList.clear();
+                boolean jobsFound = false;
+
+                for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
+                    Job job = jobSnapshot.getValue(Job.class);
+
+                    if (job != null && job.location != null &&
+                            job.location.toLowerCase().contains(userCity.toLowerCase())) {
+                        jobList.add(job);
+                        jobsFound = true;
+                    }
+                }
+
+                if (jobsFound) {
+                    jobAdapter.updateJobs(jobList);
+                    nearbyJobsText.setText("Nearby Jobs in " + userCity);
+                } else {
+                    nearbyJobsText.setText("No jobs found in " + userCity);
+                    jobAdapter.updateJobs(jobList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(DashboardActivity.this, "Error fetching jobs: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

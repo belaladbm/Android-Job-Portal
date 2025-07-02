@@ -48,6 +48,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         return jobList.size();
     }
 
+    public void updateJobs(List<Job> newJobs) {
+        this.jobList = newJobs;
+
+        //notifyDataSetChanged referred from android studio docs
+        // URL: https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter#notifyDataSetChanged()
+        notifyDataSetChanged();
+    }
+
     // ViewHolder class
     public static class JobViewHolder extends RecyclerView.ViewHolder {
         TextView jobTitle;
