@@ -37,6 +37,8 @@ public class JobPostActivity extends AppCompatActivity {
     private firebaseHelper firebase_helper;
     private DatabaseReference jobsdbRef;
 
+    private Button backToDashboard;
+
 
 
 
@@ -56,10 +58,18 @@ public class JobPostActivity extends AppCompatActivity {
         locationEditText = findViewById(R.id.locationEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
         submitJobButton = findViewById(R.id.submitJobButton);
+        backToDashboard = findViewById(R.id.backButton);
 
         firebase_helper = new firebaseHelper();
 
         categorySpinner();
+
+        backToDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(JobPostActivity.this, DashboardActivity.class);
+            String email = getIntent().getStringExtra("userEmail");
+            intent.putExtra("userEmail", email);
+            startActivity(intent);
+        });
 
         submitJobButton.setOnClickListener(new View.OnClickListener() {
             @Override
