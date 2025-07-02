@@ -16,9 +16,6 @@
       <SelectionState runConfigName="JobPostActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="postJobButton_opensJobPostForm()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="jobPostFormFields_areDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
