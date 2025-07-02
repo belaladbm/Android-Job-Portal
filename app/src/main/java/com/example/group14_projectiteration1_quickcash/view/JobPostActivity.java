@@ -17,6 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.group14_projectiteration1_quickcash.R;
+import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
+import com.example.group14_projectiteration1_quickcash.model.Job;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +33,11 @@ public class JobPostActivity extends AppCompatActivity {
     private EditText locationEditText;
     private Spinner categorySpinner;
     private Button submitJobButton;
+
+    private firebaseHelper firebase_helper;
+    private DatabaseReference jobsdbRef;
+
+
 
 
     @Override
@@ -49,12 +57,15 @@ public class JobPostActivity extends AppCompatActivity {
         categorySpinner = findViewById(R.id.categorySpinner);
         submitJobButton = findViewById(R.id.submitJobButton);
 
+        firebase_helper = new firebaseHelper();
 
         categorySpinner();
 
         submitJobButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                firebase_helper.connectFirebase();
+                jobsdbRef = firebase_helper.dbref.child("Jobs:");
                 submitJob();
             }
         });
@@ -65,6 +76,8 @@ public class JobPostActivity extends AppCompatActivity {
 
     private void submitJob(){
 
+        // Validation for job posting fields.
+        /* 1. Job title */
         if (TextUtils.isEmpty(jobNameEditText.getText().toString().trim())) {
             jobNameEditText.setError("Job title is required");
             Toast.makeText(this, "Job Posting Failed!, Please enter a job title", Toast.LENGTH_SHORT).show();
@@ -92,8 +105,24 @@ public class JobPostActivity extends AppCompatActivity {
             return;
         }
 
-        Toast.makeText(this, "Job Posted Successfully", Toast.LENGTH_SHORT).show();
-        redirectingToDashboard();
+        //Creating a job object with the input data
+        Job job = new Job(
+                jobNameEditText.getText().toString(),
+                jobDescriptionEditText.getText().toString(),
+                categorySpinner.getSelectedItem().toString(),
+                locationEditText.getText().toString(),
+                getIntent().getStringExtra("userEmail")
+        );
+
+        // Saving the job to database.
+        jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Toast.makeText(this, "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
+                redirectingToDashboard();
+            }else {
+                Toast.makeText(this, "Job Posting Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

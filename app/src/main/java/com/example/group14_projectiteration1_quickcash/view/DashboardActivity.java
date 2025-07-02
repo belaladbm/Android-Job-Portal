@@ -119,7 +119,7 @@ public class DashboardActivity extends AppCompatActivity {
                             nearbyJobsText.setVisibility(View.GONE);
                             jobsDisplay.setVisibility(View.GONE);
                             postJobButton.setVisibility(View.VISIBLE);
-                            moveToPostJobPage(postJobButton);
+                            moveToPostJobPage(postJobButton, email);
                         }
                     }
                 }
@@ -185,10 +185,12 @@ public class DashboardActivity extends AppCompatActivity {
     /**
      * Moves the user to post job page
      * @param postJobButton Button to take user to settings page
+     * @param email Employer's email.
      * */
-    public void moveToPostJobPage(Button postJobButton) {
+    public void moveToPostJobPage(Button postJobButton, String email) {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
+            intent.putExtra("userEmail", email);
             startActivity(intent);
         });
     }
