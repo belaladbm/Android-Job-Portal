@@ -5,17 +5,20 @@ import static org.junit.Assert.assertEquals;
 import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.group14_projectiteration1_quickcash.adapter.JobAdapter;
 import com.example.group14_projectiteration1_quickcash.model.Job;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobAdapterJunitTest {
+@RunWith(AndroidJUnit4.class)
+public class JobAdapterTest {
     private JobAdapter jobAdapter;
     private List<Job> testJobList;
     private Context context;
@@ -35,6 +38,6 @@ public class JobAdapterJunitTest {
 
     @Test
     public void testGetJobCount(){
-        assertEquals(3, jobAdapter.getJobCount());
+        assertEquals(3, jobAdapter.getItemCount());
     }
 }
