@@ -161,6 +161,8 @@ public class JobPostActivity extends AppCompatActivity {
 
     private void redirectingToDashboard() {
         Intent intent = new Intent(JobPostActivity.this, DashboardActivity.class);
+        String email = getIntent().getStringExtra("userEmail");
+        intent.putExtra("userEmail", email);
         startActivity(intent);
     }
 }

@@ -202,7 +202,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToPostJobPage(Button postJobButton, String email) {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
-            intent.putExtra("userEmail", email);
+            intent.putExtra("userEmail", email);    //Send user email to Job post form.
             startActivity(intent);
         });
     }
