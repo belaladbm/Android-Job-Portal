@@ -35,7 +35,6 @@ public class JobPostActivity extends AppCompatActivity {
     private Button submitJobButton;
 
     private firebaseHelper firebase_helper;
-    private DatabaseReference jobsdbRef;
 
     private Button backToDashboard;
 
@@ -75,7 +74,6 @@ public class JobPostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 firebase_helper.connectFirebase();
-                jobsdbRef = firebase_helper.dbref.child("Jobs:");
                 submitJob();
             }
         });
@@ -125,7 +123,7 @@ public class JobPostActivity extends AppCompatActivity {
         );
 
         // Saving the job to database.
-        jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
+        firebase_helper.jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 Toast.makeText(this, "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
                 redirectingToDashboard();
