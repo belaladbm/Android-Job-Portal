@@ -304,7 +304,7 @@ public class DashboardActivity extends AppCompatActivity {
             return;
         }
 
-        DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("User details/Jobs:");
+        DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
         jobsRef.addValueEventListener(new ValueEventListener() {
             @Override
