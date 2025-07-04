@@ -19,7 +19,18 @@ import java.util.List;
  */
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
+    public interface OnJobClickListener {
+        void onJobClick(Job job);
+    }
+
     private List<Job> jobList;
+    private OnJobClickListener listener;
+
+    // Updated constructor
+    public JobAdapter(List<Job> jobList, OnJobClickListener listener) {
+        this.jobList = jobList;
+        this.listener = listener;
+    }
 
     // Constructor
     public JobAdapter(List<Job> jobList) {
@@ -37,10 +48,16 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobList.get(position);
 
-        // Setting the job details using public fields
         holder.jobTitle.setText(job.title);
         holder.jobLocation.setText("Location: " + job.location);
         holder.jobCategory.setText("Category: " + job.category);
+
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onJobClick(job);
+            }
+        });
     }
 
     @Override

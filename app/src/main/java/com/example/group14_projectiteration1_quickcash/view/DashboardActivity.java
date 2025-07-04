@@ -56,6 +56,8 @@ public class DashboardActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     private Button postJobButton;
+
+    private Button search;
     private JobAdapter jobAdapter;
     private List<Job> jobList;
 
@@ -73,6 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
         jobsDisplay = findViewById(R.id.jobsDisplayView);
         postJobButton = findViewById(R.id.postJobButton);
+        search = findViewById(R.id.search);
 
         // Initializing RecyclerView for jobs
         jobList = new ArrayList<>();
@@ -125,12 +128,15 @@ public class DashboardActivity extends AppCompatActivity {
                             nearbyJobsText.setVisibility(View.VISIBLE);
                             jobsDisplay.setVisibility(View.VISIBLE);
                             postJobButton.setVisibility(View.GONE);
+                            search.setVisibility(View.VISIBLE);
+                            moveToSearchPage(search, email);
                         }
                         else if("Employer".equals(role)){
                             locationText.setVisibility(View.GONE);
                             nearbyJobsText.setVisibility(View.GONE);
                             jobsDisplay.setVisibility(View.GONE);
                             postJobButton.setVisibility(View.VISIBLE);
+                            search.setVisibility(View.GONE);
                             moveToPostJobPage(postJobButton, email);
                         }
                     }
@@ -203,6 +209,14 @@ public class DashboardActivity extends AppCompatActivity {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
             intent.putExtra("userEmail", email);    //Send user email to Job post form.
+            startActivity(intent);
+        });
+    }
+
+    public void moveToSearchPage(Button search, String email){
+        search.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
+            intent.putExtra("userEmail", email);    //Send user email to search page.
             startActivity(intent);
         });
     }
