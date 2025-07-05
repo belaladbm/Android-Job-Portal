@@ -88,9 +88,11 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
     }
 
     private void searchJobs() {
-        String category = spinnerCategory.getSelectedItem().toString().trim().toLowerCase();
-        String location = editLocation.getText().toString().trim().toLowerCase();
-        String keyword = editKeyword.getText().toString().trim().toLowerCase();
+        String category = spinnerCategory.getSelectedItem().toString().trim();
+        String location = editLocation.getText().toString().trim();
+        String keyword = editKeyword.getText().toString().trim();
+        // Handle "Select job category" option
+        boolean ignoreCategory = category.equals("Select job category");
 
         jobsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -100,17 +102,26 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                     Job job = jobSnap.getValue(Job.class);
                     if (job == null) continue;
 
-                    boolean match = (category.equals("select job category") || job.category.toLowerCase().contains(category)) &&
-                            (location.isEmpty() || job.location.toLowerCase().contains(location)) &&
-                            (keyword.isEmpty() || job.title.toLowerCase().contains(keyword) || job.description.toLowerCase().contains(keyword));
+                    // Case-insensitive matching
+                    boolean categoryMatch = ignoreCategory ||
+                            (job.category != null && job.category.equalsIgnoreCase(category));
+                    boolean locationMatch = location.isEmpty() ||
+                            (job.location != null && job.location.toLowerCase().contains(location.toLowerCase()));
+                    boolean keywordMatch = keyword.isEmpty() ||
+                            (job.title != null && job.title.toLowerCase().contains(keyword.toLowerCase())) ||
+                            (job.description != null && job.description.toLowerCase().contains(keyword.toLowerCase()));
 
-                    if (match) {
+                    if (categoryMatch && locationMatch && keywordMatch) {
                         jobList.add(job);
                     }
                 }
 
                 if (jobList.isEmpty()) {
                     Toast.makeText(SearchActivity.this, "No jobs found.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SearchActivity.this,
+                            "Found " + jobList.size() + " jobs",
+                            Toast.LENGTH_SHORT).show();
                 }
 
                 jobAdapter.updateJobs(jobList);
@@ -118,17 +129,20 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(SearchActivity.this, "Something went wrong. Please try again later.", Toast.LENGTH_LONG).show();
+                Toast.makeText(SearchActivity.this,
+                        "Something went wrong. Please try again later.",
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
 
+
     @Override
     public void onJobClick(Job job) {
         if (job.latitude != null && job.longitude != null) {
-            String uri = "http://maps.google.com/maps?q=loc:" + job.latitude + "," + job.longitude;
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            intent.setPackage("com.google.android.apps.maps");
+            Intent intent = new Intent(SearchActivity.this, GoogleMapActivity.class);
+            intent.putExtra("latitude", Double.parseDouble(job.latitude));
+            intent.putExtra("longitude", Double.parseDouble(job.longitude));
             startActivity(intent);
         }
     }

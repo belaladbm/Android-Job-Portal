@@ -39,13 +39,12 @@
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray" />
 
-        <!-- View on Map Button -->
         <Button
             android:id="@+id/btnViewOnMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="View on Map" />
+            android:text="View on Map"
+            android:layout_marginTop="8dp"/>
 
     </LinearLayout>
 

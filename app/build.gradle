@@ -38,6 +38,9 @@ dependencies {
     implementation libs.firebase.database
     implementation libs.firebase.ai
     implementation libs.recyclerview
+    implementation libs.play.services.maps
+    implementation libs.espresso.intents
+    implementation libs.espresso.contrib
     testImplementation libs.junit
     testImplementation libs.core
     androidTestImplementation libs.ext.junit

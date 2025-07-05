@@ -25,6 +25,10 @@
         <activity
             android:name=".view.JobPostActivity"
             android:exported="false" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB8QToIrkOsNRBXnDAj39TBp5iOT9Lao4w" />
+        <activity android:name=".view.GoogleMapActivity" />
         <activity android:name=".view.SettingsActivity" />
         <activity android:name=".view.ResetPasswordAndSwitchRoleActivity" />
         <activity android:name=".view.NewPasswordActivity" />
@@ -44,5 +48,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
