@@ -79,7 +79,32 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Initializing RecyclerView for jobs
         jobList = new ArrayList<>();
-        jobAdapter = new JobAdapter(jobList);
+
+        jobAdapter = new JobAdapter(jobList, new JobAdapter.OnJobClickListener() {
+            @Override
+            public void onJobClick(Job job) {
+                if (job.location != null && !job.location.isEmpty()) {
+
+                    Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                        if (!addresses.isEmpty()) {
+                            Address address = addresses.get(0);
+                            Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
+                            intent.putExtra("latitude", address.getLatitude());
+                            intent.putExtra("longitude", address.getLongitude());
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(DashboardActivity.this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        Toast.makeText(DashboardActivity.this, "Error finding location", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(DashboardActivity.this, "Location not available for this job", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
         jobsDisplay.setAdapter(jobAdapter);
 
