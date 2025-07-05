@@ -1,6 +1,8 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -24,9 +26,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJobClickListener {
 
@@ -139,11 +143,26 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
     @Override
     public void onJobClick(Job job) {
-        if (job.latitude != null && job.longitude != null) {
-            Intent intent = new Intent(SearchActivity.this, GoogleMapActivity.class);
-            intent.putExtra("latitude", Double.parseDouble(job.latitude));
-            intent.putExtra("longitude", Double.parseDouble(job.longitude));
-            startActivity(intent);
+        if (job.location != null && !job.location.isEmpty()) {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                if (!addresses.isEmpty()) {
+                    Address address = addresses.get(0);
+                    Intent intent = new Intent(SearchActivity.this, GoogleMapActivity.class);
+                    intent.putExtra("latitude", address.getLatitude());
+                    intent.putExtra("longitude", address.getLongitude());
+                    intent.putExtra("jobTitle", job.title);
+                    intent.putExtra("location", job.location);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
         }
     }
 }
