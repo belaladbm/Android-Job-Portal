@@ -3,6 +3,7 @@ package com.example.group14_projectiteration1_quickcash.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +33,12 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         this.listener = listener;
     }
 
-    // Constructor
     public JobAdapter(List<Job> jobList) {
         this.jobList = jobList;
+        this.listener = null;
     }
+    // Constructor
+
 
     @NonNull
     @Override
@@ -47,7 +50,11 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobList.get(position);
-
+        holder.btnViewOnMap.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onJobClick(job);
+            }
+        });
         holder.jobTitle.setText(job.title);
         holder.jobLocation.setText("Location: " + job.location);
         holder.jobCategory.setText("Category: " + job.category);
@@ -75,12 +82,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
     // ViewHolder class
     public static class JobViewHolder extends RecyclerView.ViewHolder {
+        Button btnViewOnMap;
         TextView jobTitle;
         TextView jobLocation;
         TextView jobCategory;
 
         public JobViewHolder(@NonNull View itemView) {
             super(itemView);
+            btnViewOnMap = itemView.findViewById(R.id.btnViewOnMap);
             jobTitle = itemView.findViewById(R.id.jobTitleTextView);
             jobLocation = itemView.findViewById(R.id.jobLocationTextView);
             jobCategory = itemView.findViewById(R.id.jobCategoryTextView);
