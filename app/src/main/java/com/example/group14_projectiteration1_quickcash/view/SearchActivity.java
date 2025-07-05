@@ -37,7 +37,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
     private JobAdapter jobAdapter;
     private List<Job> jobList = new ArrayList<>();
 
-    DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs");
+    DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
