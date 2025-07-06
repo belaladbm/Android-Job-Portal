@@ -90,7 +90,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                 "Moving & Packing",
                 "Pet Care",
                 "Landscaping & Gardening",
-                 "Tutoring & Teaching"
+                "Tutoring & Teaching"
         );
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
