@@ -93,6 +93,8 @@ public class DashboardActivity extends AppCompatActivity {
                             Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
                             intent.putExtra("latitude", address.getLatitude());
                             intent.putExtra("longitude", address.getLongitude());
+                            String email = getIntent().getStringExtra("userEmail");
+                            intent.putExtra("userEmail", email);
                             startActivity(intent);
                         } else {
                             Toast.makeText(DashboardActivity.this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();

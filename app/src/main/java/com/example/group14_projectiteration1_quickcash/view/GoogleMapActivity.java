@@ -1,6 +1,9 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.group14_projectiteration1_quickcash.R;
@@ -15,6 +18,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private double latitude;
     private double longitude;
+    private Button backToDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,14 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
         latitude = getIntent().getDoubleExtra("latitude", 0);
         longitude = getIntent().getDoubleExtra("longitude", 0);
+        backToDashboard = findViewById(R.id.backButton);
+
+        backToDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(GoogleMapActivity.this, DashboardActivity.class);
+            String email = getIntent().getStringExtra("userEmail");
+            intent.putExtra("userEmail", email);
+            startActivity(intent);
+        });
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_fragment);
