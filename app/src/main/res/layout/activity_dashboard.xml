@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.DashboardActivity">
+
     <Button
         android:id="@+id/settingsButton"
         android:layout_width="wrap_content"
@@ -17,16 +18,13 @@
         android:layout_marginEnd="16dp" />
 
     <TextView
-
         android:id="@+id/dashboardText"
         android:layout_width="287dp"
         android:layout_height="70dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="75dp"
-        android:layout_marginBottom="585dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,39 +36,45 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="543dp"
         android:text="Your Location : Searching..."
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dashboardText" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/jobsDisplayView"
-        android:layout_width="394dp"
-        android:layout_height="453dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <Button
+        android:id="@+id/search"
+        android:layout_width="165dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="10dp"
+        android:text="Search Jobs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nearbyJobsTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
     <TextView
         android:id="@+id/nearbyJobsTextView"
         android:layout_width="257dp"
         android:layout_height="43dp"
         android:layout_marginStart="77dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="77dp"
-        android:layout_marginBottom="27dp"
         android:text="Nearby Jobs"
-        app:layout_constraintBottom_toTopOf="@+id/jobsDisplayView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/search" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/jobsDisplayView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nearbyJobsTextView" />
 
     <Button
         android:id="@+id/postJobButton"
@@ -81,4 +85,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

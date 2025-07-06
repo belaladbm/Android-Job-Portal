@@ -56,6 +56,8 @@ public class DashboardActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     private Button postJobButton;
+
+    private Button search;
     private JobAdapter jobAdapter;
     private List<Job> jobList;
 
@@ -73,10 +75,38 @@ public class DashboardActivity extends AppCompatActivity {
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
         jobsDisplay = findViewById(R.id.jobsDisplayView);
         postJobButton = findViewById(R.id.postJobButton);
+        search = findViewById(R.id.search);
 
         // Initializing RecyclerView for jobs
         jobList = new ArrayList<>();
-        jobAdapter = new JobAdapter(jobList);
+
+        jobAdapter = new JobAdapter(jobList, new JobAdapter.OnJobClickListener() {
+            @Override
+            public void onJobClick(Job job) {
+                if (job.location != null && !job.location.isEmpty()) {
+
+                    Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                        if (!addresses.isEmpty()) {
+                            Address address = addresses.get(0);
+                            Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
+                            intent.putExtra("latitude", address.getLatitude());
+                            intent.putExtra("longitude", address.getLongitude());
+                            String email = getIntent().getStringExtra("userEmail");
+                            intent.putExtra("userEmail", email);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(DashboardActivity.this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        Toast.makeText(DashboardActivity.this, "Error finding location", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(DashboardActivity.this, "Location not available for this job", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
         jobsDisplay.setAdapter(jobAdapter);
 
@@ -125,12 +155,15 @@ public class DashboardActivity extends AppCompatActivity {
                             nearbyJobsText.setVisibility(View.VISIBLE);
                             jobsDisplay.setVisibility(View.VISIBLE);
                             postJobButton.setVisibility(View.GONE);
+                            search.setVisibility(View.VISIBLE);
+                            moveToSearchPage(search, email);
                         }
                         else if("Employer".equals(role)){
                             locationText.setVisibility(View.GONE);
                             nearbyJobsText.setVisibility(View.GONE);
                             jobsDisplay.setVisibility(View.GONE);
                             postJobButton.setVisibility(View.VISIBLE);
+                            search.setVisibility(View.GONE);
                             moveToPostJobPage(postJobButton, email);
                         }
                     }
@@ -203,6 +236,14 @@ public class DashboardActivity extends AppCompatActivity {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
             intent.putExtra("userEmail", email);    //Send user email to Job post form.
+            startActivity(intent);
+        });
+    }
+
+    public void moveToSearchPage(Button search, String email){
+        search.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
+            intent.putExtra("userEmail", email);    //Send user email to search page.
             startActivity(intent);
         });
     }

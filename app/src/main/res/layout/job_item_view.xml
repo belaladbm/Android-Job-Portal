@@ -39,6 +39,13 @@
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray" />
 
+        <Button
+            android:id="@+id/btnViewOnMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View on Map"
+            android:layout_marginTop="8dp"/>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
