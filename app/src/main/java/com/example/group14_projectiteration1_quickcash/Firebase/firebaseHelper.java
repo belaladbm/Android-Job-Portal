@@ -16,6 +16,8 @@ public class firebaseHelper {
 
     public DatabaseReference dbref;
 
+    public DatabaseReference jobsdbRef;
+
     // Firebase URL
     private static final String FIREBASE_URL = "https://group-14-project-quickca-c43bd-default-rtdb.firebaseio.com";
 
@@ -25,5 +27,6 @@ public class firebaseHelper {
     public void connectFirebase(){
         firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
         dbref = firebaseDatabase.getReference("User details");
+        jobsdbRef = firebaseDatabase.getReference("Jobs:");
     }
 }

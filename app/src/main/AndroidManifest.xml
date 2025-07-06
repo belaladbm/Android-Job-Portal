@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    permissions
+    Referred from Tutorial 6 - GoogleMaps
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,11 +20,18 @@
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
         <activity
-            android:name=".view.SettingsActivity" />
+            android:name=".view.SearchActivity"
+            android:exported="false" />
         <activity
-            android:name=".view.ResetPasswordAndSwitchRoleActivity" />
-        <activity
-            android:name=".view.NewPasswordActivity" />
+            android:name=".view.JobPostActivity"
+            android:exported="false" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB8QToIrkOsNRBXnDAj39TBp5iOT9Lao4w" />
+        <activity android:name=".view.GoogleMapActivity" />
+        <activity android:name=".view.SettingsActivity" />
+        <activity android:name=".view.ResetPasswordAndSwitchRoleActivity" />
+        <activity android:name=".view.NewPasswordActivity" />
         <activity
             android:name=".view.DashboardActivity"
             android:exported="true" />
@@ -35,5 +48,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
