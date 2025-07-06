@@ -41,6 +41,8 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
     private JobAdapter jobAdapter;
     private List<Job> jobList = new ArrayList<>();
 
+    private Button backToDashboard;
+
     DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
     @Override
@@ -53,6 +55,14 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
         editKeyword = findViewById(R.id.editKeyword);
         btnSearch = findViewById(R.id.btnSearch);
         recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
+        backToDashboard = findViewById(R.id.backButton);
+
+        backToDashboard.setOnClickListener(v -> {
+            Intent intent = new Intent(SearchActivity.this, DashboardActivity.class);
+            String email = getIntent().getStringExtra("userEmail");
+            intent.putExtra("userEmail", email);
+            startActivity(intent);
+        });
 
         setupCategorySpinner();
         recyclerViewJobs.setLayoutManager(new LinearLayoutManager(this));

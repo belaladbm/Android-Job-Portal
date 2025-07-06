@@ -5,33 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Category selector -->
     <Spinner
         android:id="@+id/spinnerCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- Location field -->
     <EditText
         android:id="@+id/editLocation"
         android:hint="Location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- Keyword field -->
     <EditText
         android:id="@+id/editKeyword"
         android:hint="Keyword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- Search button -->
     <Button
         android:id="@+id/btnSearch"
         android:text="Search Jobs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!-- Replace ListView with RecyclerView -->
+    <!-- Results list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewJobs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back to Dashboard" />
 </LinearLayout>
