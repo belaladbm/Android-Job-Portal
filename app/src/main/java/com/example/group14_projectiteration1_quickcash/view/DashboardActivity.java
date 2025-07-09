@@ -56,10 +56,11 @@ public class DashboardActivity extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
     private Button postJobButton;
-
     private Button search;
     private JobAdapter jobAdapter;
     private List<Job> jobList;
+    private String email;
+    private Button buttonViewJobs;
 
 
     @Override
@@ -75,43 +76,50 @@ public class DashboardActivity extends AppCompatActivity {
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
         jobsDisplay = findViewById(R.id.jobsDisplayView);
         postJobButton = findViewById(R.id.postJobButton);
+        buttonViewJobs = findViewById(R.id.buttonViewJobs);
         search = findViewById(R.id.search);
 
+        // Get the email from intent
+        email = getIntent().getStringExtra("userEmail");
         // Initializing RecyclerView for jobs
         jobList = new ArrayList<>();
-
+        // In your DashboardActivity's onCreate method, update the JobAdapter initialization:
         jobAdapter = new JobAdapter(jobList, new JobAdapter.OnJobClickListener() {
             @Override
             public void onJobClick(Job job) {
                 if (job.location != null && !job.location.isEmpty()) {
-
                     Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
                     try {
                         List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
                         if (!addresses.isEmpty()) {
                             Address address = addresses.get(0);
+
                             Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
                             intent.putExtra("latitude", address.getLatitude());
                             intent.putExtra("longitude", address.getLongitude());
-                            String email = getIntent().getStringExtra("userEmail");
+                            intent.putExtra("jobTitle", job.title);
+                            intent.putExtra("location", job.location);
                             intent.putExtra("userEmail", email);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(DashboardActivity.this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DashboardActivity.this,
+                                    "Could not find location: " + job.location,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     } catch (IOException e) {
-                        Toast.makeText(DashboardActivity.this, "Error finding location", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DashboardActivity.this,
+                                "Error finding location",
+                                Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(DashboardActivity.this, "Location not available for this job", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DashboardActivity.this,
+                            "Location not available for this job",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        }, email);
         jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
         jobsDisplay.setAdapter(jobAdapter);
-
-        //extracting email passed through intent
-        String email = getIntent().getStringExtra("userEmail");
 
         // Initialize location manager
         //Referred from Tutorial 6 - GoogleMaps
@@ -125,6 +133,13 @@ public class DashboardActivity extends AppCompatActivity {
         if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
+
+        //view posted jobs when logged in as an employer
+        buttonViewJobs.setOnClickListener(v->{
+            Intent intent = new Intent(DashboardActivity.this, EmployerJobsActivity.class);
+            intent.putExtra("userEmail", email);
+            startActivity(intent);
+        });
 
         //getting database reference
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
@@ -156,6 +171,7 @@ public class DashboardActivity extends AppCompatActivity {
                             jobsDisplay.setVisibility(View.VISIBLE);
                             postJobButton.setVisibility(View.GONE);
                             search.setVisibility(View.VISIBLE);
+                            buttonViewJobs.setVisibility(View.GONE);
                             moveToSearchPage(search, email);
                         }
                         else if("Employer".equals(role)){
@@ -164,6 +180,7 @@ public class DashboardActivity extends AppCompatActivity {
                             jobsDisplay.setVisibility(View.GONE);
                             postJobButton.setVisibility(View.VISIBLE);
                             search.setVisibility(View.GONE);
+                            buttonViewJobs.setVisibility(View.VISIBLE);
                             moveToPostJobPage(postJobButton, email);
                         }
                     }
@@ -204,6 +221,9 @@ public class DashboardActivity extends AppCompatActivity {
      * @return Customized welcome message String.
      * */
     public static String getMessage(String firstName, String role) {
+        if(firstName == null || role == null){
+            return "Welcome to QuickCash :)";
+        }
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 
@@ -222,7 +242,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToSettingsPage(Button settingsPageButton, String email) {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
-            intent.putExtra("userEmail", email); //  Send user email to settings
+            intent.putExtra("userEmail", email);
             startActivity(intent);
         });
     }
@@ -235,7 +255,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToPostJobPage(Button postJobButton, String email) {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
-            intent.putExtra("userEmail", email);    //Send user email to Job post form.
+            intent.putExtra("userEmail", email);
             startActivity(intent);
         });
     }
@@ -243,7 +263,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToSearchPage(Button search, String email){
         search.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
-            intent.putExtra("userEmail", email);    //Send user email to search page.
+            intent.putExtra("userEmail", email);
             startActivity(intent);
         });
     }

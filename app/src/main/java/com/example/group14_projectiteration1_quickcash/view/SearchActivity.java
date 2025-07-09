@@ -40,7 +40,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
     private RecyclerView recyclerViewJobs;
     private JobAdapter jobAdapter;
     private List<Job> jobList = new ArrayList<>();
-
+    private String email;
     private Button backToDashboard;
 
     DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
@@ -56,17 +56,16 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
         btnSearch = findViewById(R.id.btnSearch);
         recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
         backToDashboard = findViewById(R.id.backButton);
-
+        email = getIntent().getStringExtra("userEmail");
         backToDashboard.setOnClickListener(v -> {
             Intent intent = new Intent(SearchActivity.this, DashboardActivity.class);
-            String email = getIntent().getStringExtra("userEmail");
             intent.putExtra("userEmail", email);
             startActivity(intent);
         });
 
         setupCategorySpinner();
         recyclerViewJobs.setLayoutManager(new LinearLayoutManager(this));
-        jobAdapter = new JobAdapter(jobList, this);
+        jobAdapter = new JobAdapter(jobList, this, email);
         recyclerViewJobs.setAdapter(jobAdapter);
 
         btnSearch.setOnClickListener(v -> searchJobs());
@@ -164,6 +163,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                     intent.putExtra("longitude", address.getLongitude());
                     intent.putExtra("jobTitle", job.title);
                     intent.putExtra("location", job.location);
+                    intent.putExtra("userEmail", email);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
