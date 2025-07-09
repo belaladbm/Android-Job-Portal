@@ -1,6 +1,7 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,8 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     private firebaseHelper firebase_helper;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,10 +39,13 @@ public class JobDetailsActivity extends AppCompatActivity {
         TextView categoryText = findViewById(R.id.detailCategoryTextView);
         TextView locationText = findViewById(R.id.detailLocationTextView);
         Button applyNowButton = findViewById(R.id.applyNowButton);
+        backButton = findViewById(R.id.backButton);
 
         selectedJob = (Job) getIntent().getSerializableExtra("job");
         employeeEmail = getIntent().getStringExtra("userEmail");
         firebase_helper = new firebaseHelper();
+
+        moveToDashboard(backButton, employeeEmail);
 
         if (selectedJob != null) {
             if (selectedJob.jobId == null || selectedJob.jobId.isEmpty()) {
@@ -56,6 +62,14 @@ public class JobDetailsActivity extends AppCompatActivity {
         }
         applyNowButton.setOnClickListener(v -> {
             showApplicationDialog(employeeEmail);
+        });
+    }
+
+    public void moveToDashboard(Button settingsPageButton, String email) {
+        settingsPageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(JobDetailsActivity.this, DashboardActivity.class);
+            intent.putExtra("userEmail", email);
+            startActivity(intent);
         });
     }
 
