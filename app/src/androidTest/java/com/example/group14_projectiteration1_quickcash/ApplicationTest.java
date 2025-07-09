@@ -1,0 +1,32 @@
+package com.example.group14_projectiteration1_quickcash;
+
+import static org.junit.Assert.*;
+
+import com.example.group14_projectiteration1_quickcash.model.Application;
+import com.example.group14_projectiteration1_quickcash.model.Job;
+
+import org.junit.Test;
+
+public class ApplicationTest {
+    @Test
+    public void testApplicationCreation() {
+        Application app = new Application("job123", "user@test.com", "I'm interested");
+        assertEquals("job123", app.jobId);
+        assertEquals("user@test.com", app.employeeEmail);
+        assertEquals("I'm interested", app.coverLetter);
+        assertEquals("pending", app.status);
+    }
+
+    @Test
+    public void testJobWithApplications() {
+        Job job = new Job();
+        job.generateId();
+        assertNotNull(job.jobId);
+
+        Application app = new Application(job.jobId, "user@test.com", "Cover letter");
+        job.applications.put("user@test.com", app);
+
+        assertEquals(1, job.applications.size());
+        assertTrue(job.applications.containsKey("user@test.com"));
+    }
+}
