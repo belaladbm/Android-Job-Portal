@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
+import com.example.group14_projectiteration1_quickcash.view.GoogleMapActivity;
 import com.example.group14_projectiteration1_quickcash.view.JobDetailsActivity;
 
 import java.util.List;
@@ -23,20 +24,20 @@ import java.util.List;
  */
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
 
-
-
     public interface OnJobClickListener {
         void onJobClick(Job job);
     }
 
     private List<Job> jobList;
     private OnJobClickListener listener;
+    private String userEmail;
 
 
     // Updated constructor
-    public JobAdapter(List<Job> jobList, OnJobClickListener listener) {
+    public JobAdapter(List<Job> jobList, OnJobClickListener listener, String userEmail) {
         this.jobList = jobList;
         this.listener = listener;
+        this.userEmail = userEmail;
     }
 
     public JobAdapter(List<Job> jobList) {
@@ -67,19 +68,10 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             }
         });
 
-        // Apply Now button
         holder.applyNowButton.setOnClickListener(v -> {
-            // Open JobDetailsActivity
             Intent intent = new Intent(holder.itemView.getContext(), JobDetailsActivity.class);
             intent.putExtra("job", job);
-
-            // Assuming the email is passed to the adapter or activity (you'll need to handle this properly)
-            if (holder.itemView.getContext() instanceof DashboardActivity) {
-                DashboardActivity activity = (DashboardActivity) holder.itemView.getContext();
-                String userEmail = activity.getIntent().getStringExtra("userEmail");
-                intent.putExtra("userEmail", userEmail);
-            }
-
+            intent.putExtra("userEmail", userEmail);
             holder.itemView.getContext().startActivity(intent);
         });
     }

@@ -40,6 +40,15 @@
             android:name=".view.NewPasswordActivity"
             android:exported="false" />
         <activity
+            android:name=".view.EmployerJobsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.JobApplicationsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".view.ApplicationDetailsActivity"
+            android:exported="true" />
+        <activity
             android:name=".view.DashboardActivity"
             android:exported="true" />
         <activity
