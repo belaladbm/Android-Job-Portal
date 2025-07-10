@@ -117,12 +117,12 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
                     // Case-insensitive matching
                     boolean categoryMatch = ignoreCategory ||
-                            (job.category != null && job.category.equalsIgnoreCase(category));
+                            (job.getCategory() != null && job.getCategory().equalsIgnoreCase(category));
                     boolean locationMatch = location.isEmpty() ||
-                            (job.location != null && job.location.toLowerCase().contains(location.toLowerCase()));
+                            (job.getLocation() != null && job.getLocation().toLowerCase().contains(location.toLowerCase()));
                     boolean keywordMatch = keyword.isEmpty() ||
-                            (job.title != null && job.title.toLowerCase().contains(keyword.toLowerCase())) ||
-                            (job.description != null && job.description.toLowerCase().contains(keyword.toLowerCase()));
+                            (job.getTitle() != null && job.getTitle().toLowerCase().contains(keyword.toLowerCase())) ||
+                            (job.getDescription() != null && job.getDescription().toLowerCase().contains(keyword.toLowerCase()));
 
                     if (categoryMatch && locationMatch && keywordMatch) {
                         jobList.add(job);
@@ -152,21 +152,21 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
     @Override
     public void onJobClick(Job job) {
-        if (job.location != null && !job.location.isEmpty()) {
+        if (job.getLocation() != null && !job.getLocation().isEmpty()) {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             try {
-                List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
                 if (!addresses.isEmpty()) {
                     Address address = addresses.get(0);
                     Intent intent = new Intent(SearchActivity.this, GoogleMapActivity.class);
                     intent.putExtra("latitude", address.getLatitude());
                     intent.putExtra("longitude", address.getLongitude());
-                    intent.putExtra("jobTitle", job.title);
-                    intent.putExtra("location", job.location);
+                    intent.putExtra("jobTitle", job.getTitle());
+                    intent.putExtra("location", job.getLocation());
                     intent.putExtra("userEmail", email);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();

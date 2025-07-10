@@ -5,16 +5,17 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Job implements Serializable {
-    public String jobId;
-    public String title;
-    public String description;
-    public String category;
-    public String location;
-    public String employerEmail;
-    public HashMap<String, Application> applications;
 
+    private String jobId;
+    private String title;
+    private String description;
+    private String category;
+    private String location;
+    private String employerEmail;
+    private HashMap<String, Application> applications;
+
+    // Required empty constructor for Firebase
     public Job() {
-        // Required empty constructor for Firebase
     }
 
     public Job(String title, String description, String category,
@@ -30,5 +31,63 @@ public class Job implements Serializable {
 
     public void generateId() {
         this.jobId = UUID.randomUUID().toString();
+    }
+
+    // Getters
+    public String getJobId() {
+        return jobId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getEmployerEmail() {
+        return employerEmail;
+    }
+
+    public HashMap<String, Application> getApplications() {
+        return applications;
+    }
+
+    // Setters
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setEmployerEmail(String employerEmail) {
+        this.employerEmail = employerEmail;
+    }
+
+    public void setApplications(HashMap<String, Application> applications) {
+        this.applications = applications;
     }
 }

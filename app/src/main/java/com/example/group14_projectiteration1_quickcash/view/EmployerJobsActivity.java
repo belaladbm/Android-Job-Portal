@@ -95,14 +95,14 @@ public class EmployerJobsActivity extends AppCompatActivity implements EmployerJ
      */
     @Override
     public void onJobClick(Job job) {
-        if (job.jobId == null || job.jobId.isEmpty()) {
+        if (job.getJobId() == null || job.getJobId().isEmpty()) {
             Toast.makeText(this, "Error: Job ID not found", Toast.LENGTH_SHORT).show();
             return;
         }
         // Start JobApplicationsActivity for the selected job
         Intent intent = new Intent(this, JobApplicationsActivity.class);
-        intent.putExtra("jobId", job.jobId);
-        intent.putExtra("jobTitle", job.title);
+        intent.putExtra("jobId", job.getJobId());
+        intent.putExtra("jobTitle", job.getTitle());
         startActivity(intent);
     }
 
@@ -120,7 +120,7 @@ public class EmployerJobsActivity extends AppCompatActivity implements EmployerJ
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Job job = snapshot.getValue(Job.class);
                             if (job != null) {
-                                Log.d(TAG, "Job: " + job.title + " | jobId: " + job.jobId);
+                                Log.d(TAG, "Job: " + job.getTitle() + " | jobId: " + job.getJobId());
                             }
                         }
                     }

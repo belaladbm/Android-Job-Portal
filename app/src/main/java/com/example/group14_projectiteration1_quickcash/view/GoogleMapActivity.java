@@ -18,7 +18,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private double latitude;
     private double longitude;
-    private Button backToDashboard;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class GoogleMapActivity extends FragmentActivity implements OnMapReadyCal
 
         latitude = getIntent().getDoubleExtra("latitude", 0);
         longitude = getIntent().getDoubleExtra("longitude", 0);
-        backToDashboard = findViewById(R.id.backButton);
+        Button backToDashboard = findViewById(R.id.backButton);
 
         backToDashboard.setOnClickListener(v -> {
             Intent intent = new Intent(GoogleMapActivity.this, DashboardActivity.class);

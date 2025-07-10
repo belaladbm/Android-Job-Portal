@@ -48,13 +48,13 @@ public class JobDetailsActivity extends AppCompatActivity {
         moveToDashboard(backButton, employeeEmail);
 
         if (selectedJob != null) {
-            if (selectedJob.jobId == null || selectedJob.jobId.isEmpty()) {
+            if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty()) {
                 selectedJob.generateId();
             }
-            titleText.setText(selectedJob.title);
-            descriptionText.setText(selectedJob.description);
-            categoryText.setText("Category: " + selectedJob.category);
-            locationText.setText("Location: " + selectedJob.location);
+            titleText.setText(selectedJob.getTitle());
+            descriptionText.setText(selectedJob.getDescription());
+            categoryText.setText("Category: " + selectedJob.getCategory());
+            locationText.setText("Location: " + selectedJob.getLocation());
         }
         if (employeeEmail == null || employeeEmail.isEmpty()) {
             Toast.makeText(this, "User not identified", Toast.LENGTH_SHORT).show();
@@ -102,22 +102,22 @@ public class JobDetailsActivity extends AppCompatActivity {
     }
 
     private void submitApplication(String employeeEmail, String coverLetter) {
-        if (selectedJob == null || selectedJob.jobId == null) {
+        if (selectedJob == null || selectedJob.getJobId() == null) {
             Toast.makeText(this, "Application failed. Please try again later.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (selectedJob.applications == null) {
-            selectedJob.applications = new HashMap<>();
+        if (selectedJob.getApplications() == null) {
+            selectedJob.setApplications(new HashMap<>());
         }
 
-        if (selectedJob.applications.containsKey(employeeEmail)) {
+        if (selectedJob.getApplications().containsKey(employeeEmail)) {
             Toast.makeText(this, "You have already applied for this job.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Application application = new Application(selectedJob.jobId, employeeEmail, coverLetter);
-        selectedJob.applications.put(employeeEmail, application);
+        Application application = new Application(selectedJob.getJobId(), employeeEmail, coverLetter);
+        selectedJob.getApplications().put(employeeEmail, application);
 
         firebase_helper.applydbref.push().setValue(application)
                 .addOnCompleteListener(task -> {

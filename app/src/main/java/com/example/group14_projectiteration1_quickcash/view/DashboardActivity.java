@@ -77,23 +77,23 @@ public class DashboardActivity extends AppCompatActivity {
         jobList = new ArrayList<>();
         // In your DashboardActivity's onCreate method, update the JobAdapter initialization:
         jobAdapter = new JobAdapter(jobList, job -> {
-            if (job.location != null && !job.location.isEmpty()) {
+            if (job.getLocation() != null && !job.getLocation().isEmpty()) {
                 Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
                 try {
-                    List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                    List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
                     if (!addresses.isEmpty()) {
                         Address address = addresses.get(0);
 
                         Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
                         intent.putExtra("latitude", address.getLatitude());
                         intent.putExtra("longitude", address.getLongitude());
-                        intent.putExtra("jobTitle", job.title);
-                        intent.putExtra("location", job.location);
+                        intent.putExtra("jobTitle", job.getTitle());
+                        intent.putExtra("location", job.getLocation());
                         intent.putExtra(USER_EMAIL_KEY, email);
                         startActivity(intent);
                     } else {
                         Toast.makeText(DashboardActivity.this,
-                                "Could not find location: " + job.location,
+                                "Could not find location: " + job.getLocation(),
                                 Toast.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
@@ -290,8 +290,8 @@ public class DashboardActivity extends AppCompatActivity {
                 for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
                     Job job = jobSnapshot.getValue(Job.class);
 
-                    if (job != null && job.location != null &&
-                            job.location.toLowerCase().contains(userCity.toLowerCase())) {
+                    if (job != null && job.getLocation() != null &&
+                            job.getLocation().toLowerCase().contains(userCity.toLowerCase())) {
                         jobList.add(job);
                         jobsFound = true;
                     }

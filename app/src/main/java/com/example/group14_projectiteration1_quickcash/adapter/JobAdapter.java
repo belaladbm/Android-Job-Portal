@@ -58,9 +58,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobList.get(position);
 
-        holder.jobTitle.setText(job.title);
-        holder.jobLocation.setText("Location: " + job.location);
-        holder.jobCategory.setText("Category: " + job.category);
+        holder.jobTitle.setText(job.getTitle());
+        holder.jobLocation.setText("Location: " + job.getLocation());
+        holder.jobCategory.setText("Category: " + job.getCategory());
 
         holder.btnViewOnMap.setOnClickListener(v -> {
             if (listener != null) {

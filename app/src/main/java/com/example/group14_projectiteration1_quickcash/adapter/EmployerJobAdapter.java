@@ -36,9 +36,9 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
     public void onBindViewHolder(@NonNull EmployerJobViewHolder holder, int position) {
         Job job = jobList.get(position);
 
-        holder.jobTitle.setText(job.title != null ? job.title : "No Title");
-        holder.jobLocation.setText(job.location != null ? "Location: " + job.location : "");
-        holder.jobCategory.setText(job.category != null ? "Category: " + job.category : "");
+        holder.jobTitle.setText(job.getTitle() != null ? job.getTitle() : "No Title");
+        holder.jobLocation.setText(job.getLocation() != null ? "Location: " + job.getLocation() : "");
+        holder.jobCategory.setText(job.getCategory() != null ? "Category: " + job.getCategory() : "");
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
