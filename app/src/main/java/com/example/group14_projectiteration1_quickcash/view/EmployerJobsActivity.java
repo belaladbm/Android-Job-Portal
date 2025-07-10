@@ -25,7 +25,6 @@ import java.util.List;
 public class EmployerJobsActivity extends AppCompatActivity implements EmployerJobAdapter.OnJobClickListener {
 
     private static final String TAG = "EmployerJobsActivity";
-    private RecyclerView recyclerView;
     private EmployerJobAdapter adapter;
     private List<Job> jobList;
     private firebaseHelper fbHelper;
@@ -41,7 +40,7 @@ public class EmployerJobsActivity extends AppCompatActivity implements EmployerJ
 
         employerEmail = getIntent().getStringExtra("userEmail");
 
-        recyclerView = findViewById(R.id.recyclerViewJobs);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewJobs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         jobList = new ArrayList<>();
