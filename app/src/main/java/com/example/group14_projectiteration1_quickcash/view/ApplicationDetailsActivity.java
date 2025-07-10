@@ -20,11 +20,8 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
     private TextView applicantEmail;
     private TextView coverLetter;
     private TextView status;
-    private Button acceptBTN;
-    private Button declineBTN;
     private firebaseHelper fbHelper;
     private String applicationId;
-    private String jobId;
     private String email;
 
     @Override
@@ -32,15 +29,17 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_application_details);
 
-        jobId = getIntent().getStringExtra("jobId");
+        // Extract passed intent extras
+        String jobId = getIntent().getStringExtra("jobId");
         applicationId = getIntent().getStringExtra("applicationId");
 
+        // Initialize UI components
         applicantName = findViewById(R.id.applicantName);
         applicantEmail = findViewById(R.id.applicantEmail);
         coverLetter = findViewById(R.id.coverLetter);
         status = findViewById(R.id.status);
-        acceptBTN = findViewById(R.id.acceptBTN);
-        declineBTN = findViewById(R.id.declineBTN);
+        Button acceptBTN = findViewById(R.id.acceptBTN);
+        Button declineBTN = findViewById(R.id.declineBTN);
 
         fbHelper = new firebaseHelper();
         fbHelper.connectFirebase();
@@ -54,6 +53,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
 
         loadApplicationDetails();
 
+        // Set click listeners for Accept and Decline buttons
         acceptBTN.setOnClickListener(v -> updateApplicationStatus("Accepted"));
         declineBTN.setOnClickListener(v -> updateApplicationStatus("Rejected"));
     }
@@ -74,7 +74,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                             status.setText(application.getStatus() != null ? application.getStatus() : "Pending");
                             loadApplicantProfile(email);
                         } else {
-                            // Application not found in databas
+                            // Application not found in database
                             Toast.makeText(ApplicationDetailsActivity.this, "Application not found", Toast.LENGTH_SHORT).show();
                             finish();
                         }
