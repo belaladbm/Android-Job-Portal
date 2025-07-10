@@ -14,6 +14,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Show an employee's application.
+ * Allows an employer to view the cover letter, applicant's name/email, and accept or decline the application.
+ */
 public class ApplicationDetailsActivity extends AppCompatActivity {
 
     private TextView applicantName;
@@ -24,12 +28,16 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
     private String applicationId;
     private String email;
 
+    /**
+     * Initializes UI components, extracts intent extras, and loads application details.
+     * @param savedInstanceState The saved state of the activity (if any).
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_application_details);
 
-        // Extract passed intent extras
+        // Extract intent extras
         String jobId = getIntent().getStringExtra("jobId");
         applicationId = getIntent().getStringExtra("applicationId");
 
@@ -44,13 +52,14 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
         fbHelper = new firebaseHelper();
         fbHelper.connectFirebase();
 
-        // Validate that we have both required IDs
+        // Close the app if we don't have the IDs
         if (applicationId == null || applicationId.isEmpty() || jobId == null || jobId.isEmpty()) {
             Toast.makeText(this, "Application or Job not found", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
+        // Load application details from Firebase
         loadApplicationDetails();
 
         // Set click listeners for Accept and Decline buttons
@@ -59,8 +68,7 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads the application details from Firebase database
-     * Once loaded it also triggers loading of the applicant's profile
+     * Loads the application details from Firebase using the application ID.
      */
     private void loadApplicationDetails() {
         fbHelper.applydbref.child(applicationId)
@@ -74,7 +82,6 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                             status.setText(application.getStatus() != null ? application.getStatus() : "Pending");
                             loadApplicantProfile(email);
                         } else {
-                            // Application not found in database
                             Toast.makeText(ApplicationDetailsActivity.this, "Application not found", Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -88,10 +95,11 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Loads the applicant's profile information from firebase
+     * Loads the applicant's profile from the Firebase database based on the provided email.
+     * Displays the applicant's details.
+     * @param email The email address of the applicant.
      */
     private void loadApplicantProfile(String email) {
-        // Query users by email to find the applicant's profile
         fbHelper.dbref.orderByChild("email").equalTo(email)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -116,7 +124,8 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates the status of the application in firebase
+     * Updates the application status in Firebase to the specified value ("Accepted" or "Rejected").
+     * @param newStatus The new status to be set
      */
     private void updateApplicationStatus(String newStatus) {
         fbHelper.applydbref.child(applicationId).child("status").setValue(newStatus)
