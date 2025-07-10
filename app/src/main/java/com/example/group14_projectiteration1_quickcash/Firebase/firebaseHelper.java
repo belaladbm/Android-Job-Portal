@@ -12,8 +12,6 @@ public class firebaseHelper {
     public firebaseHelper(){}
 
     // Firebase database instance and reference
-    private FirebaseDatabase firebaseDatabase;
-
     public DatabaseReference dbref;
 
     public DatabaseReference jobsdbRef;
@@ -27,7 +25,7 @@ public class firebaseHelper {
      * Connects to Firebase Database and initializes the database reference.
      */
     public void connectFirebase(){
-        firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL);
         dbref = firebaseDatabase.getReference("User details");
         jobsdbRef = firebaseDatabase.getReference("Jobs:");
         applydbref = firebaseDatabase.getReference("Applications:");
