@@ -22,6 +22,7 @@ public class Job implements Serializable {
      * Empty constructor required for Firebase deserialization.
      */
     public Job() {
+        this.applications = new HashMap<>();
     }
 
     /**
@@ -101,14 +102,6 @@ public class Job implements Serializable {
         return employerEmail;
     }
 
-    /**
-     * Gets the map of applications submitted to this job.
-     * @return Map of applications (email → Application)
-     */
-    public HashMap<String, Application> getApplications() {
-        return applications;
-    }
-
     //Setters
 
     /**
@@ -165,5 +158,16 @@ public class Job implements Serializable {
      */
     public void setApplications(HashMap<String, Application> applications) {
         this.applications = applications;
+    }
+
+    /**
+     * Gets the map of applications submitted to this job.
+     * @return Map of applications (email → Application)
+     */
+    public HashMap<String, Application> getApplications() {
+        if (applications == null) {
+            applications = new HashMap<>();
+        }
+        return applications;
     }
 }
