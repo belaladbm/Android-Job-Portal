@@ -15,44 +15,44 @@ public class EmployerJobsJUnitTest {
 
     @Test
     public void testJobModel() {
-        assertEquals("Pilot", job.title);
-        assertEquals("Pilot airplanes", job.description);
-        assertEquals("Aviation", job.category);
-        assertEquals("Halifax", job.location);
-        assertEquals("employer@email.com", job.employerEmail);
-        assertNotNull(job.jobId);
+        assertEquals("Pilot", job.getTitle());
+        assertEquals("Pilot airplanes", job.getDescription());
+        assertEquals("Aviation", job.getCategory());
+        assertEquals("Halifax", job.getLocation());
+        assertEquals("employer@email.com", job.getEmployerEmail());
+        assertNotNull(job.getJobId());
     }
 
     @Test
     public void testJobIdGeneration() {
         Job emptyJob = new Job();
-        assertNull(emptyJob.jobId);
+        assertNull(emptyJob.getJobId());
         emptyJob.generateId();
-        assertNotNull(emptyJob.jobId);
-        assertFalse(emptyJob.jobId.isEmpty());
+        assertNotNull(emptyJob.getJobId());
+        assertFalse(emptyJob.getJobId().isEmpty());
     }
 
     @Test
     public void testJobLocationNotEmpty() {
-        assertNotNull(job.location);
-        assertFalse(job.location.trim().isEmpty());
+        assertNotNull(job.getLocation());
+        assertFalse(job.getLocation().trim().isEmpty());
     }
 
     @Test
     public void testEmptyCategoryAllowed() {
-        job.category = "";
-        assertEquals("", job.category);
+        job.setCategory("");
+        assertEquals("", job.getCategory());
     }
 
     @Test
     public void testNullTitle() {
-        job.title = null;
-        assertNull(job.title);
+        job.setTitle(null);
+        assertNull(job.getTitle());
     }
 
     @Test
     public void testEmailIdentifier() {
-        String key = job.employerEmail;
+        String key = job.getEmployerEmail();
         assertEquals("employer@email.com", key);
     }
 }
