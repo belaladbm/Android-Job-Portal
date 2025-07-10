@@ -14,32 +14,32 @@ public class ApplicationDetailsJUnitTest {
     @Before
     public void setup() {
         application = new Application("id111", "employee@email.com", "test");
-        application.status = "pending";
+        application.setStatus("pending");
     }
 
     @Test
     public void testApplicationModelFields() {
-        assertEquals("id111", application.jobId);
-        assertEquals("employee@email.com", application.employeeEmail);
-        assertEquals("test", application.coverLetter);
-        assertEquals("pending", application.status);
+        assertEquals("id111", application.getJobId());
+        assertEquals("employee@email.com", application.getEmployeeEmail());
+        assertEquals("test", application.getCoverLetter());
+        assertEquals("pending", application.getStatus());
     }
 
     @Test
     public void testStatusUpdateLogic() {
-        application.status = "accepted";
-        assertEquals("accepted", application.status);
+        application.setStatus("accepted");
+        assertEquals("accepted", application.getStatus());
     }
 
     @Test
     public void testNullCoverLetter() {
-        application.coverLetter = null;
-        assertNull(application.coverLetter);
+        application.setCoverLetter(null);
+        assertNull(application.getCoverLetter());
     }
 
     @Test
     public void testEmptyCoverLetter() {
-        application.coverLetter = "";
-        assertTrue(application.coverLetter.isEmpty());
+        application.setCoverLetter("");
+        assertTrue(application.getCoverLetter().isEmpty());
     }
 }
