@@ -21,10 +21,10 @@ public class RegistrationJunitTest {
                 "Employee"
         );
 
-        assertEquals("Abeed", user.firstName);
-        assertEquals("Mulla", user.lastName);
-        assertEquals("abeed.mulla@dal.ca", user.email);
-        assertEquals("Employee", user.role);
+        assertEquals("Abeed", user.getFirstName());
+        assertEquals("Mulla", user.getLastName());
+        assertEquals("abeed.mulla@dal.ca", user.getEmail());
+        assertEquals("Employee", user.getRole());
     }
 
     /**
