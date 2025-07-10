@@ -11,10 +11,10 @@ public class ApplicationTest {
     @Test
     public void testApplicationCreation() {
         Application app = new Application("job123", "user@test.com", "I'm interested");
-        assertEquals("job123", app.jobId);
-        assertEquals("user@test.com", app.employeeEmail);
-        assertEquals("I'm interested", app.coverLetter);
-        assertEquals("pending", app.status);
+        assertEquals("job123", app.getJobId());
+        assertEquals("user@test.com", app.getEmployeeEmail());
+        assertEquals("I'm interested", app.getCoverLetter());
+        assertEquals("pending", app.getStatus());
     }
 
     @Test

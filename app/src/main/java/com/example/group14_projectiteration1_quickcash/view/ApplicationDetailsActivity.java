@@ -69,9 +69,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot snapshot) {
                         Application application = snapshot.getValue(Application.class);
                         if (application != null) {
-                            email = application.employeeEmail;
-                            coverLetter.setText(application.coverLetter != null ? application.coverLetter : "N/A");
-                            status.setText(application.status != null ? application.status : "Pending");
+                            email = application.getEmployeeEmail();
+                            coverLetter.setText(application.getCoverLetter() != null ? application.getCoverLetter() : "N/A");
+                            status.setText(application.getStatus() != null ? application.getStatus() : "Pending");
                             loadApplicantProfile(email);
                         } else {
                             // Application not found in databas

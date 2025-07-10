@@ -43,15 +43,15 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ApplicationViewHolder holder, int position) {
         Application application = applicationList.get(position);
-        holder.applicantEmail.setText(application.employeeEmail);
-        holder.status.setText("Status: " + application.status);
+        holder.applicantEmail.setText(application.getEmployeeEmail());
+        holder.status.setText("Status: " + application.getStatus());
 
         holder.itemView.setOnClickListener(v -> listener.onApplicationClick(application));
         holder.acceptButton.setOnClickListener(v -> listener.onAccept(application));
         holder.declineButton.setOnClickListener(v -> listener.onDecline(application));
 
 
-        if (!application.status.equalsIgnoreCase("pending")) {
+        if (!application.getStatus().equalsIgnoreCase("pending")) {
             holder.acceptButton.setEnabled(false);
             holder.declineButton.setEnabled(false);
         } else {

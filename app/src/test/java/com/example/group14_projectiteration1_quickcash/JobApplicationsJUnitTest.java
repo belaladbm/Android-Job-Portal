@@ -12,44 +12,44 @@ public class JobApplicationsJUnitTest {
     @Before
     public void setup() {
         application = new Application("id111", "employee@email.com", "cover letter template");
-        application.status = "pending";
+        application.setStatus("pending");
     }
 
     @Test
     public void testApplicationInitialization() {
-        assertEquals("id111", application.jobId);
-        assertEquals("employee@email.com", application.employeeEmail);
-        assertEquals("cover letter template", application.coverLetter);
-        assertEquals("pending", application.status);
+        assertEquals("id111", application.getJobId());
+        assertEquals("employee@email.com", application.getEmployeeEmail());
+        assertEquals("cover letter template", application.getCoverLetter());
+        assertEquals("pending", application.getStatus());
     }
 
     @Test
     public void testUpdateToAcceptedStatus() {
-        application.status = "accepted";
-        assertEquals("accepted", application.status);
+        application.setStatus("accepted");
+        assertEquals("accepted", application.getStatus());
     }
 
     @Test
     public void testUpdateToRejectedStatus() {
-        application.status = "rejected";
-        assertEquals("rejected", application.status);
+        application.setStatus("rejected");
+        assertEquals("rejected", application.getStatus());
     }
 
     @Test
     public void testEmailIsUsedAsApplicationId() {
-        String key = application.employeeEmail;
+        String key = application.getEmployeeEmail();
         assertEquals("employee@email.com", key);
     }
 
     @Test
     public void testNullJobId() {
-        application.jobId = null;
-        assertNull(application.jobId);
+        application.setJobId(null);
+        assertNull(application.getJobId());
     }
 
     @Test
     public void testEmptyEmployeeEmail() {
-        application.employeeEmail = "";
-        assertTrue(application.employeeEmail.isEmpty());
+        application.setEmployeeEmail("");
+        assertTrue(application.getEmployeeEmail().isEmpty());
     }
 }

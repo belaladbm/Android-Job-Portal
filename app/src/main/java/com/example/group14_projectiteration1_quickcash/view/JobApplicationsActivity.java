@@ -73,7 +73,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 Application application = snapshot.getValue(Application.class);
                                 if (application != null) {
-                                    application.id = snapshot.getKey();
+                                    application.setId(snapshot.getKey());
                                     applicationsList.add(application);
                                 }
                             }
@@ -103,7 +103,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
         // Start ApplicationDetailsActivity for the selected application
         Intent intent = new Intent(this, ApplicationDetailsActivity.class);
         intent.putExtra("jobId", jobId);
-        intent.putExtra("applicationId", application.id);
+        intent.putExtra("applicationId", application.getId());
         startActivity(intent);
     }
 
@@ -131,7 +131,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
      * @param status The new status
      */
     private void updateApplicationStatus(Application application, String status) {
-        fbHelper.applydbref.child(application.id)
+        fbHelper.applydbref.child(application.getId())
                 .child("status")
                 .setValue(status)
                 .addOnCompleteListener(task -> {
