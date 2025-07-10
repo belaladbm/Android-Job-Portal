@@ -32,12 +32,7 @@ public class JobPostActivity extends AppCompatActivity {
 
     private EditText locationEditText;
     private Spinner categorySpinner;
-    private Button submitJobButton;
-    private String email;
-
     private firebaseHelper firebase_helper;
-
-    private Button backToDashboard;
 
 
     @Override
@@ -55,10 +50,10 @@ public class JobPostActivity extends AppCompatActivity {
         jobDescriptionEditText = findViewById(R.id.jobDescriptionEditText);
         locationEditText = findViewById(R.id.locationEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
-        submitJobButton = findViewById(R.id.submitJobButton);
-        backToDashboard = findViewById(R.id.backButton);
+        Button submitJobButton = findViewById(R.id.submitJobButton);
+        Button backToDashboard = findViewById(R.id.backButton);
 
-        email = getIntent().getStringExtra("userEmail");
+        String email = getIntent().getStringExtra("userEmail");
         firebase_helper = new firebaseHelper();
 
         categorySpinner();

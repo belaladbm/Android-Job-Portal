@@ -23,11 +23,8 @@ import java.util.HashMap;
 public class JobDetailsActivity extends AppCompatActivity {
 
     private Job selectedJob;
-    private String employeeEmail;
-
     private firebaseHelper firebase_helper;
 
-    private Button backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +36,10 @@ public class JobDetailsActivity extends AppCompatActivity {
         TextView categoryText = findViewById(R.id.detailCategoryTextView);
         TextView locationText = findViewById(R.id.detailLocationTextView);
         Button applyNowButton = findViewById(R.id.applyNowButton);
-        backButton = findViewById(R.id.backButton);
+        Button backButton = findViewById(R.id.backButton);
 
         selectedJob = (Job) getIntent().getSerializableExtra("job");
-        employeeEmail = getIntent().getStringExtra("userEmail");
+        String employeeEmail = getIntent().getStringExtra("userEmail");
         firebase_helper = new firebaseHelper();
 
         moveToDashboard(backButton, employeeEmail);

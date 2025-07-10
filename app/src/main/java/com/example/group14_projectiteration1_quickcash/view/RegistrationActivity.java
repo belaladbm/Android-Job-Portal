@@ -45,7 +45,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private EditText confirmPassword;
 
-    private TextView loginPageLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class RegistrationActivity extends AppCompatActivity {
         // Initializing the spinner for role selection.
         roleSpinner = findViewById(R.id.spinner);
 
-        loginPageLink = findViewById(R.id.loginPageLink);
+        TextView loginPageLink = findViewById(R.id.loginPageLink);
 
         //making new object of firebaseHelper class
         firebase_helper = new firebaseHelper();
