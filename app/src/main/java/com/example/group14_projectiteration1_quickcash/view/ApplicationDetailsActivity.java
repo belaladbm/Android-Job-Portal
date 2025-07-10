@@ -99,9 +99,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                         for (DataSnapshot userSnap : snapshot.getChildren()) {
                             User user = userSnap.getValue(User.class);
                             if (user != null) {
-                                String fullName = user.firstName + " " + user.lastName;
+                                String fullName = user.getFirstName() + " " + user.getLastName();
                                 applicantName.setText(fullName);
-                                applicantEmail.setText(user.email);
+                                applicantEmail.setText(user.getEmail());
                                 return;
                             }
                         }
