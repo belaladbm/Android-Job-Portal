@@ -26,11 +26,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     Button logoutButton;
     Button resetPasswordButton;
-
-    private Button switchRoleButton;
     private DatabaseReference dbRef;
     private String currentUserEmail;
-    private Button backToDashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         logoutButton = findViewById(R.id.logoutButton);
-        switchRoleButton = findViewById(R.id.switchRoleButton);
-        backToDashboard = findViewById(R.id.backButton);
+        Button switchRoleButton = findViewById(R.id.switchRoleButton);
+        Button backToDashboard = findViewById(R.id.backButton);
         resetPasswordButton = findViewById(R.id.resetButton);
 
         // Get email passed from Dashboard

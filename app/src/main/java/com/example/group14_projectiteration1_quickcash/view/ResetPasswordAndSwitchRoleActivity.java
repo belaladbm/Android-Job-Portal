@@ -21,14 +21,9 @@ import com.google.firebase.database.DatabaseError;
 
 public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
     private EditText yourEmail;
-    private Button resetButton;
     private firebaseHelper firebaseHelper;
-
-    private TextView promptToUser;
     private String objective;
     private String userEmail;
-    private String userName;
-    private String currRole;
     private String roleToSwitch;
 
     @Override
@@ -37,15 +32,15 @@ public class ResetPasswordAndSwitchRoleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         yourEmail = findViewById(R.id.your_email);
-        resetButton = findViewById(R.id.resetButton);
-        promptToUser = findViewById(R.id.textView);
+        Button resetButton = findViewById(R.id.resetButton);
+        TextView promptToUser = findViewById(R.id.textView);
 
         objective = getIntent().getStringExtra("objective");
         userEmail = getIntent().getStringExtra("userEmail");
 
         if ("roleSwitch".equals(objective)) {
-            userName = getIntent().getStringExtra("userName");
-            currRole = getIntent().getStringExtra("currUserRole");
+            String userName = getIntent().getStringExtra("userName");
+            String currRole = getIntent().getStringExtra("currUserRole");
             roleToSwitch = getIntent().getStringExtra("switchToRole");
 
             // Update UI for role switching

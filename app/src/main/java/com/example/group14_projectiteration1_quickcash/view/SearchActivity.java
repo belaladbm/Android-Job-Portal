@@ -36,12 +36,9 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
     private Spinner spinnerCategory;
     private EditText editLocation, editKeyword;
-    private Button btnSearch;
-    private RecyclerView recyclerViewJobs;
     private JobAdapter jobAdapter;
     private List<Job> jobList = new ArrayList<>();
-
-    private Button backToDashboard;
+    private String email;
 
     DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
@@ -53,20 +50,19 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
         spinnerCategory = findViewById(R.id.spinnerCategory);
         editLocation = findViewById(R.id.editLocation);
         editKeyword = findViewById(R.id.editKeyword);
-        btnSearch = findViewById(R.id.btnSearch);
-        recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
-        backToDashboard = findViewById(R.id.backButton);
-
+        Button btnSearch = findViewById(R.id.btnSearch);
+        RecyclerView recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
+        Button backToDashboard = findViewById(R.id.backButton);
+        email = getIntent().getStringExtra("userEmail");
         backToDashboard.setOnClickListener(v -> {
             Intent intent = new Intent(SearchActivity.this, DashboardActivity.class);
-            String email = getIntent().getStringExtra("userEmail");
             intent.putExtra("userEmail", email);
             startActivity(intent);
         });
 
         setupCategorySpinner();
         recyclerViewJobs.setLayoutManager(new LinearLayoutManager(this));
-        jobAdapter = new JobAdapter(jobList, this);
+        jobAdapter = new JobAdapter(jobList, this, email);
         recyclerViewJobs.setAdapter(jobAdapter);
 
         btnSearch.setOnClickListener(v -> searchJobs());
@@ -90,7 +86,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                 "Moving & Packing",
                 "Pet Care",
                 "Landscaping & Gardening",
-                 "Tutoring & Teaching"
+                "Tutoring & Teaching"
         );
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
@@ -118,12 +114,12 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
                     // Case-insensitive matching
                     boolean categoryMatch = ignoreCategory ||
-                            (job.category != null && job.category.equalsIgnoreCase(category));
+                            (job.getCategory() != null && job.getCategory().equalsIgnoreCase(category));
                     boolean locationMatch = location.isEmpty() ||
-                            (job.location != null && job.location.toLowerCase().contains(location.toLowerCase()));
+                            (job.getLocation() != null && job.getLocation().toLowerCase().contains(location.toLowerCase()));
                     boolean keywordMatch = keyword.isEmpty() ||
-                            (job.title != null && job.title.toLowerCase().contains(keyword.toLowerCase())) ||
-                            (job.description != null && job.description.toLowerCase().contains(keyword.toLowerCase()));
+                            (job.getTitle() != null && job.getTitle().toLowerCase().contains(keyword.toLowerCase())) ||
+                            (job.getDescription() != null && job.getDescription().toLowerCase().contains(keyword.toLowerCase()));
 
                     if (categoryMatch && locationMatch && keywordMatch) {
                         jobList.add(job);
@@ -153,20 +149,21 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
     @Override
     public void onJobClick(Job job) {
-        if (job.location != null && !job.location.isEmpty()) {
+        if (job.getLocation() != null && !job.getLocation().isEmpty()) {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             try {
-                List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
+                List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
                 if (!addresses.isEmpty()) {
                     Address address = addresses.get(0);
                     Intent intent = new Intent(SearchActivity.this, GoogleMapActivity.class);
                     intent.putExtra("latitude", address.getLatitude());
                     intent.putExtra("longitude", address.getLongitude());
-                    intent.putExtra("jobTitle", job.title);
-                    intent.putExtra("location", job.location);
+                    intent.putExtra("jobTitle", job.getTitle());
+                    intent.putExtra("location", job.getLocation());
+                    intent.putExtra("userEmail", email);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException e) {
                 Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();

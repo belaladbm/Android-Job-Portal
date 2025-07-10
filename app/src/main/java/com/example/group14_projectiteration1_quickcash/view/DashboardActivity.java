@@ -9,7 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,286 +37,160 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * After successfully login user gets redirected to dashboard.
- * */
-
+ * DashboardActivity is the home screen after login.
+ * It shows nearby jobs to employees or post/view buttons for employers.
+ */
 public class DashboardActivity extends AppCompatActivity {
 
-    private TextView welcomeText;
-    private Button settingsButton;
-    private TextView locationText;
-
-    private TextView nearbyJobsText;
-
-    private RecyclerView jobsDisplay;
-
-    private String userLocationCity;
-
     private static final int REQUEST_LOCATION_PERMISSION = 1;
-    LocationManager locationManager;
-    LocationListener locationListener;
-    private Button postJobButton;
+    private static final String USER_EMAIL_KEY = "userEmail";
+    private static final String LOCATION_LABEL = "Your Location : ";
 
-    private Button search;
+    private TextView welcomeText;
+    private TextView nearbyJobsText;
+    private RecyclerView jobsDisplay;
     private JobAdapter jobAdapter;
     private List<Job> jobList;
-
+    private String email;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //initializing dashboard page UI elements
+        // Setup UI elements
         welcomeText = findViewById(R.id.dashboardText);
-        settingsButton = findViewById(R.id.settingsButton);
-        locationText = findViewById(R.id.locationTextView);
+        TextView locationText = findViewById(R.id.locationTextView);
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
         jobsDisplay = findViewById(R.id.jobsDisplayView);
-        postJobButton = findViewById(R.id.postJobButton);
-        search = findViewById(R.id.search);
+        Button postJobButton = findViewById(R.id.postJobButton);
+        Button buttonViewJobs = findViewById(R.id.buttonViewJobs);
+        Button search = findViewById(R.id.search);
+        Button settingsButton = findViewById(R.id.settingsButton);
 
-        // Initializing RecyclerView for jobs
-        jobList = new ArrayList<>();
-
-        jobAdapter = new JobAdapter(jobList, new JobAdapter.OnJobClickListener() {
-            @Override
-            public void onJobClick(Job job) {
-                if (job.location != null && !job.location.isEmpty()) {
-
-                    Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocationName(job.location + " Canada", 1);
-                        if (!addresses.isEmpty()) {
-                            Address address = addresses.get(0);
-                            Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
-                            intent.putExtra("latitude", address.getLatitude());
-                            intent.putExtra("longitude", address.getLongitude());
-                            String email = getIntent().getStringExtra("userEmail");
-                            intent.putExtra("userEmail", email);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(DashboardActivity.this, "Could not find location: " + job.location, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        Toast.makeText(DashboardActivity.this, "Error finding location", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(DashboardActivity.this, "Location not available for this job", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
-        jobsDisplay.setAdapter(jobAdapter);
-
-        //extracting email passed through intent
-        String email = getIntent().getStringExtra("userEmail");
-
-        // Initialize location manager
-        //Referred from Tutorial 6 - GoogleMaps
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        initializeLocationListener();
-        checkLocationPermissionAndStartUpdates();
-
-        moveToSettingsPage(settingsButton, email);
-
-        //if there is not email
+        email = getIntent().getStringExtra(USER_EMAIL_KEY);
         if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
 
-        //getting database reference
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
+        // Setup RecyclerView
+        jobList = new ArrayList<>();
+        setupJobClickListener();
+        jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
+        jobsDisplay.setAdapter(jobAdapter);
 
-        // making query
-        Query userQuery = dbRef.orderByChild("email").equalTo(email);
+        // Setup location
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        initializeLocationListener(locationText);
+        checkLocationPermissionAndStartUpdates();
 
-        //executing query
-        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //if user found
-                if (dataSnapshot.exists()) {
-                    //looping through database
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        //getting data
-                        String firstName = userSnapshot.child("firstName").getValue(String.class);
-                        String role = userSnapshot.child("role").getValue(String.class);
-
-                        //setting the welcome message
-                        welcomeText.setText(getMessage(firstName, role));
-
-                        //this would show different display for both roles
-                        //View Visible referred from android studio docs
-                        //URL: https://developer.android.com/reference/android/view/View
-                        if("Employee".equals(role)){
-                            locationText.setVisibility(View.VISIBLE);
-                            nearbyJobsText.setVisibility(View.VISIBLE);
-                            jobsDisplay.setVisibility(View.VISIBLE);
-                            postJobButton.setVisibility(View.GONE);
-                            search.setVisibility(View.VISIBLE);
-                            moveToSearchPage(search, email);
-                        }
-                        else if("Employer".equals(role)){
-                            locationText.setVisibility(View.GONE);
-                            nearbyJobsText.setVisibility(View.GONE);
-                            jobsDisplay.setVisibility(View.GONE);
-                            postJobButton.setVisibility(View.VISIBLE);
-                            search.setVisibility(View.GONE);
-                            moveToPostJobPage(postJobButton, email);
-                        }
-                    }
-                }
-                //if user is not found
-                else {
-                    //default welcome message
-                    welcomeText.setText(getDefaultMessage());
-                }
-            }
-
-            //if any error are there while extracting data from firebase database
-            @Override
-            public void onCancelled(DatabaseError error) {
-                welcomeText.setText(getDefaultMessage());
-                Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
-            }
+        // Navigation buttons
+        moveToSettingsPage(settingsButton);
+        buttonViewJobs.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, EmployerJobsActivity.class);
+            intent.putExtra(USER_EMAIL_KEY, email);
+            startActivity(intent);
         });
+
+        // Role-specific dashboard setup
+        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search);
     }
 
-    /**
-     * Initialize Location Listener
-     * Referred from Tutorial 6 - GoogleMaps
-     * */
-    public void initializeLocationListener(){
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                getLocation(location);
-            }
-        };
+    /** Initializes listener that runs when location changes */
+    public void initializeLocationListener(TextView locationText) {
+        locationListener = location -> getLocation(location, locationText);
     }
 
-    /**
-     * Generated customized welcome message
-     * @param firstName User's first name
-     * @param role User's current role
-     * @return Customized welcome message String.
-     * */
+    /** Builds welcome message from name and role */
     public static String getMessage(String firstName, String role) {
+        if (firstName == null || role == null) return "Welcome to QuickCash :)";
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 
-    /**
-     * @return Default Welcome message
-     * */
+    /** Default welcome message if no user info found */
     public static String getDefaultMessage() {
         return "Welcome to QuickCash :)";
     }
 
-    /**
-     * Moves the user to settings page
-     * @param settingsPageButton Button to take user to settings page
-     * @param email User's email
-     * */
-    public void moveToSettingsPage(Button settingsPageButton, String email) {
+    /** Goes to settings screen */
+    public void moveToSettingsPage(Button settingsPageButton) {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
-            intent.putExtra("userEmail", email); //  Send user email to settings
+            intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
     }
 
-    /**
-     * Moves the user to post job page
-     * @param postJobButton Button to take user to settings page
-     * @param email Employer's email.
-     * */
-    public void moveToPostJobPage(Button postJobButton, String email) {
+    /** Goes to job posting page (for employers) */
+    public void moveToPostJobPage(Button postJobButton) {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
-            intent.putExtra("userEmail", email);    //Send user email to Job post form.
+            intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
     }
 
-    public void moveToSearchPage(Button search, String email){
+    /** Goes to job search page (for employees) */
+    public void moveToSearchPage(Button search) {
         search.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
-            intent.putExtra("userEmail", email);    //Send user email to search page.
+            intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
     }
 
-
-    /**
-     * Check permissions and start location updates
-     * Referred from Tutorial 6 - GoogleMaps
-     * */
+    /** Checks location permission and starts updates if allowed */
     private void checkLocationPermissionAndStartUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
         } else {
             startLocationUpdates();
         }
     }
 
-    /**
-     * Start Receiving location updates
-     * Referred from Tutorial 6 - GoogleMaps
-     * */
+    /** Starts listening for location updates */
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
     }
 
-    /**
-     * This gets the current location of user using geocoder
-     * URL: https://developer.android.com/reference/android/location/Geocoder
-     * */
-    public void getLocation(Location loc) {
+    /** Gets user's city from GPS location and updates nearby jobs */
+    public void getLocation(Location loc, TextView locationText) {
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-
-            //getfromlocation referred from android studio docs
-            //URL: https://developer.android.com/reference/android/location/Geocoder
             List<Address> adds = geocoder.getFromLocation(loc.getLatitude(), loc.getLongitude(), 1);
 
-            if(!adds.isEmpty()){
+            if (!adds.isEmpty()) {
                 Address add = adds.get(0);
-                String userAddress = add.getAddressLine(0);
-                userLocationCity = add.getLocality();
-                locationText.setText("Your Location : " + userLocationCity);
-
-                //calling nearby jobs method after getting user's location
-                fetchNearbyJobs(userLocationCity);
+                String userCity = add.getLocality();
+                locationText.setText(LOCATION_LABEL + userCity);
+                fetchNearbyJobs(userCity);
+            } else {
+                locationText.setText(LOCATION_LABEL + loc.getLongitude() + ", " + loc.getLatitude());
             }
-            else{
-                locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
-            }
+        } catch (IOException e) {
+            locationText.setText(LOCATION_LABEL + loc.getLongitude() + ", " + loc.getLatitude());
         }
-        catch (IOException e){
-            locationText.setText("Your Location : " + loc.getLongitude() + ", "+ loc.getLatitude());
-        }
-
     }
 
-    /**
-     *  Handles the result of location permission request
-     *  Referred from Tutorial 6 - GoogleMaps
-     * */
+    /** Handles location permission result */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startLocationUpdates();
-            }
-            else{
+            } else {
                 Toast.makeText(this, "Unable to detect location. Please enable GPS to see nearby jobs.", Toast.LENGTH_LONG).show();
-                locationText.setText("GPS Permission Denied! Please enable GPS to see nearby jobs.");
                 nearbyJobsText.setText("Unable to detect location. Please enable GPS to see nearby jobs.");
                 jobList.clear();
                 jobAdapter.updateJobs(jobList);
@@ -324,9 +198,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Referred from Tutorial 6 - GoogleMaps
-     * */
+    /** Stops location updates when activity stops */
     @Override
     protected void onStop() {
         super.onStop();
@@ -335,10 +207,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Fetches jobs from Firebase based on user's location
-     * @param userCity The city where the user is located
-     */
+    /** Loads jobs that match user's city from Firebase */
     public void fetchNearbyJobs(String userCity) {
         if (userCity == null || userCity.isEmpty()) {
             nearbyJobsText.setText("Unable to determine location");
@@ -355,9 +224,8 @@ public class DashboardActivity extends AppCompatActivity {
 
                 for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
                     Job job = jobSnapshot.getValue(Job.class);
-
-                    if (job != null && job.location != null &&
-                            job.location.toLowerCase().contains(userCity.toLowerCase())) {
+                    if (job != null && job.getLocation() != null &&
+                            job.getLocation().toLowerCase().contains(userCity.toLowerCase())) {
                         jobList.add(job);
                         jobsFound = true;
                     }
@@ -379,4 +247,82 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+        if ("Employee".equals(role)) {
+            locationText.setVisibility(View.VISIBLE);
+            nearbyJobsText.setVisibility(View.VISIBLE);
+            jobsDisplay.setVisibility(View.VISIBLE);
+            postJobButton.setVisibility(View.GONE);
+            search.setVisibility(View.VISIBLE);
+            buttonViewJobs.setVisibility(View.GONE);
+            moveToSearchPage(search);
+        } else if ("Employer".equals(role)) {
+            locationText.setVisibility(View.GONE);
+            nearbyJobsText.setVisibility(View.GONE);
+            jobsDisplay.setVisibility(View.GONE);
+            postJobButton.setVisibility(View.VISIBLE);
+            search.setVisibility(View.GONE);
+            buttonViewJobs.setVisibility(View.VISIBLE);
+            moveToPostJobPage(postJobButton);
+        }
+    }
+
+    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
+        Query userQuery = dbRef.orderByChild("email").equalTo(email);
+
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String firstName = userSnapshot.child("firstName").getValue(String.class);
+                        String role = userSnapshot.child("role").getValue(String.class);
+
+                        welcomeText.setText(getMessage(firstName, role));
+                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search);
+                    }
+                } else {
+                    welcomeText.setText(getDefaultMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                welcomeText.setText(getDefaultMessage());
+                Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showJobOnMap(Job job) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                Intent intent = new Intent(this, GoogleMapActivity.class);
+                intent.putExtra("latitude", address.getLatitude());
+                intent.putExtra("longitude", address.getLongitude());
+                intent.putExtra("jobTitle", job.getTitle());
+                intent.putExtra("location", job.getLocation());
+                intent.putExtra(USER_EMAIL_KEY, email);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupJobClickListener() {
+        jobAdapter = new JobAdapter(jobList, job -> {
+            if (job.getLocation() != null && !job.getLocation().isEmpty()) {
+                showJobOnMap(job);
+            } else {
+                Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
+            }
+        }, email);
+    }
 }

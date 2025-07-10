@@ -30,7 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 public class LogInActivity extends AppCompatActivity {
 
     private Button loginButton;
-    private EditText emailInput, passwordInput;
+    private EditText emailInput;
+    private EditText passwordInput;
     private firebaseHelper firebaseHelper;
 
     private TextView signupPageLink;
