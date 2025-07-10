@@ -21,11 +21,9 @@ import java.util.List;
 public class JobAdapterTest {
     private JobAdapter jobAdapter;
     private List<Job> testJobList;
-    private Context context;
 
     @Before
     public void setUp() {
-        context = ApplicationProvider.getApplicationContext();
         testJobList = new ArrayList<>();
 
         // Add test jobs

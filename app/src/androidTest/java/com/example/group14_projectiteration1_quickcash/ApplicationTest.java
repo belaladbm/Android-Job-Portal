@@ -21,12 +21,12 @@ public class ApplicationTest {
     public void testJobWithApplications() {
         Job job = new Job();
         job.generateId();
-        assertNotNull(job.jobId);
+        assertNotNull(job.getJobId());
 
-        Application app = new Application(job.jobId, "user@test.com", "Cover letter");
-        job.applications.put("user@test.com", app);
+        Application app = new Application(job.getJobId(), "user@test.com", "Cover letter");
+        job.getApplications().put("user@test.com", app);
 
-        assertEquals(1, job.applications.size());
-        assertTrue(job.applications.containsKey("user@test.com"));
+        assertEquals(1, job.getApplications().size());
+        assertTrue(job.getApplications().containsKey("user@test.com"));
     }
 }
