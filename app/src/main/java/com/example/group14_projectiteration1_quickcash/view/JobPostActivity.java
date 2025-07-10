@@ -19,33 +19,40 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.model.Job;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * JobPostActivity allows employers to post a job by filling in the job title,
+ * description, category, and location. The job is then stored in Firebase.
+ */
 public class JobPostActivity extends AppCompatActivity {
 
     private EditText jobNameEditText;
-
     private EditText jobDescriptionEditText;
-
     private EditText locationEditText;
     private Spinner categorySpinner;
     private firebaseHelper firebase_helper;
 
-
+    /**
+     * Called when the activity is first created.
+     * Initializes UI elements and sets up event handlers.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_job_post);
+
+        // Handle layout padding for system bars (status bar, nav bar)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        // Initialize input fields
         jobNameEditText = findViewById(R.id.jobNameEditText);
         jobDescriptionEditText = findViewById(R.id.jobDescriptionEditText);
         locationEditText = findViewById(R.id.locationEditText);
@@ -56,26 +63,26 @@ public class JobPostActivity extends AppCompatActivity {
         String email = getIntent().getStringExtra("userEmail");
         firebase_helper = new firebaseHelper();
 
+        // Populate spinner with job categories
         categorySpinner();
 
+        // Navigate back to dashboard
         backToDashboard.setOnClickListener(v -> {
             Intent intent = new Intent(JobPostActivity.this, DashboardActivity.class);
             intent.putExtra("userEmail", email);
             startActivity(intent);
         });
 
-        submitJobButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebase_helper.connectFirebase();
-                submitJob();
-            }
+        // Handle submit job button click
+        submitJobButton.setOnClickListener(v -> {
+            firebase_helper.connectFirebase();
+            submitJob(); // Call method to validate and post job
         });
-
-
-
     }
 
+    /**
+     * Validates input and creates a new job entry in Firebase.
+     */
     private void submitJob(){
 
         // Validation for job posting fields.
@@ -107,29 +114,28 @@ public class JobPostActivity extends AppCompatActivity {
             return;
         }
 
-        //Creating a job object with the input data
+        // Create Job object from input
         Job job = new Job(
                 jobNameEditText.getText().toString(),
                 jobDescriptionEditText.getText().toString(),
-                categorySpinner.getSelectedItem().toString(),
+                category,
                 locationEditText.getText().toString(),
                 getIntent().getStringExtra("userEmail")
         );
 
-        // Saving the job to database.
+        // Save job in Firebase database
         firebase_helper.jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 Toast.makeText(this, "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
                 redirectingToDashboard();
-            }else {
+            } else {
                 Toast.makeText(this, "Job Posting Failed!", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     /**
-     * Populates the category spinner with categories.
+     * Fills the job category spinner with predefined values.
      */
     private void categorySpinner() {
         List<String> roles = Arrays.asList(
@@ -161,6 +167,9 @@ public class JobPostActivity extends AppCompatActivity {
         categorySpinner.setAdapter(spinnerAdapter);
     }
 
+    /**
+     * Redirects the user back to the Dashboard after a successful job post.
+     */
     private void redirectingToDashboard() {
         Intent intent = new Intent(JobPostActivity.this, DashboardActivity.class);
         String email = getIntent().getStringExtra("userEmail");

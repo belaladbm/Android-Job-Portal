@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * After successfully login user gets redirected to dashboard.
- * */
-
+ * DashboardActivity is the home screen after login.
+ * It shows nearby jobs to employees or post/view buttons for employers.
+ */
 public class DashboardActivity extends AppCompatActivity {
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
@@ -57,11 +57,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //initializing dashboard page UI elements
+        // Initialize UI elements
         welcomeText = findViewById(R.id.dashboardText);
         TextView locationText = findViewById(R.id.locationTextView);
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
@@ -71,19 +70,19 @@ public class DashboardActivity extends AppCompatActivity {
         Button search = findViewById(R.id.search);
         Button settingsButton = findViewById(R.id.settingsButton);
 
-        // Get the email from intent
+        // Get email from intent
         email = getIntent().getStringExtra(USER_EMAIL_KEY);
-        // Initializing RecyclerView for jobs
+
+        // Setup RecyclerView with adapter
         jobList = new ArrayList<>();
-        // In your DashboardActivity's onCreate method, update the JobAdapter initialization:
         jobAdapter = new JobAdapter(jobList, job -> {
+            // When user clicks a job, open map activity with job location
             if (job.getLocation() != null && !job.getLocation().isEmpty()) {
                 Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
                 try {
                     List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
                     if (!addresses.isEmpty()) {
                         Address address = addresses.get(0);
-
                         Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
                         intent.putExtra("latitude", address.getLatitude());
                         intent.putExtra("longitude", address.getLongitude());
@@ -92,51 +91,43 @@ public class DashboardActivity extends AppCompatActivity {
                         intent.putExtra(USER_EMAIL_KEY, email);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(DashboardActivity.this,
-                                "Could not find location: " + job.getLocation(),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
-                    Toast.makeText(DashboardActivity.this,
-                            "Error finding location",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(DashboardActivity.this,
-                        "Location not available for this job",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
             }
         }, email);
+
         jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
         jobsDisplay.setAdapter(jobAdapter);
 
-        // Initialize location manager
-        //Referred from Tutorial 6 - GoogleMaps
+        // Setup location manager and permissions
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         initializeLocationListener(locationText);
         checkLocationPermissionAndStartUpdates();
 
+        // Open settings screen
         moveToSettingsPage(settingsButton);
 
-        //if there is not email
+        // If email missing, show default welcome
         if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
 
-        //view posted jobs when logged in as an employer
+        // Open posted jobs (for employer)
         buttonViewJobs.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, EmployerJobsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
 
-        //getting database reference
+        // Fetch user role and name to customize dashboard
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
-
-        // making query
         Query userQuery = dbRef.orderByChild("email").equalTo(email);
 
-        //executing query
         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,6 +138,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                         welcomeText.setText(getMessage(firstName, role));
 
+                        // UI based on role
                         if ("Employee".equals(role)) {
                             locationText.setVisibility(View.VISIBLE);
                             nearbyJobsText.setVisibility(View.VISIBLE);
@@ -178,21 +170,23 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    /** Initializes listener that runs when location changes */
     public void initializeLocationListener(TextView locationText) {
         locationListener = location -> getLocation(location, locationText);
     }
 
+    /** Builds welcome message from name and role */
     public static String getMessage(String firstName, String role) {
-        if (firstName == null || role == null) {
-            return "Welcome to QuickCash :)";
-        }
+        if (firstName == null || role == null) return "Welcome to QuickCash :)";
         return "Welcome, " + firstName + "! Your role is " + role + "!";
     }
 
+    /** Default welcome message if no user info found */
     public static String getDefaultMessage() {
         return "Welcome to QuickCash :)";
     }
 
+    /** Goes to settings screen */
     public void moveToSettingsPage(Button settingsPageButton) {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
@@ -201,6 +195,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    /** Goes to job posting page (for employers) */
     public void moveToPostJobPage(Button postJobButton) {
         postJobButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, JobPostActivity.class);
@@ -209,6 +204,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    /** Goes to job search page (for employees) */
     public void moveToSearchPage(Button search) {
         search.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
@@ -217,21 +213,28 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
+    /** Checks location permission and starts updates if allowed */
     private void checkLocationPermissionAndStartUpdates() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_LOCATION_PERMISSION);
         } else {
             startLocationUpdates();
         }
     }
 
+    /** Starts listening for location updates */
     private void startLocationUpdates() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
     }
 
+    /** Gets user's city from GPS location and updates nearby jobs */
     public void getLocation(Location loc, TextView locationText) {
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -250,8 +253,10 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    /** Handles location permission result */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -265,6 +270,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    /** Stops location updates when activity stops */
     @Override
     protected void onStop() {
         super.onStop();
@@ -273,6 +279,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
+    /** Loads jobs that match user's city from Firebase */
     public void fetchNearbyJobs(String userCity) {
         if (userCity == null || userCity.isEmpty()) {
             nearbyJobsText.setText("Unable to determine location");
@@ -289,7 +296,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                 for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
                     Job job = jobSnapshot.getValue(Job.class);
-
                     if (job != null && job.getLocation() != null &&
                             job.getLocation().toLowerCase().contains(userCity.toLowerCase())) {
                         jobList.add(job);

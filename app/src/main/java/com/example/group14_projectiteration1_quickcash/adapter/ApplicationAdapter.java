@@ -5,28 +5,44 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Application;
+
 import java.util.List;
 
+/**
+ * Adapter class for displaying a list of job applications in a RecyclerView.
+ * Allows employers to view application status and accept/decline applications.
+ */
 public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.ApplicationViewHolder> {
 
     private List<Application> applicationList;
     private OnApplicationClickListener listener;
 
+    /**
+     * Interface for handling application click actions.
+     */
     public interface OnApplicationClickListener {
         void onApplicationClick(Application application);
         void onAccept(Application application);
         void onDecline(Application application);
     }
 
+    /**
+     * Constructor to initialize the application list and listener.
+     */
     public ApplicationAdapter(List<Application> applicationList, OnApplicationClickListener listener) {
         this.applicationList = applicationList;
         this.listener = listener;
     }
 
+    /**
+     * Updates the application list and refreshes the RecyclerView.
+     */
     public void updateApplications(List<Application> newApplications) {
         this.applicationList = newApplications;
         notifyDataSetChanged();
@@ -43,14 +59,17 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
     @Override
     public void onBindViewHolder(@NonNull ApplicationViewHolder holder, int position) {
         Application application = applicationList.get(position);
+
+        // Set email and status
         holder.applicantEmail.setText(application.getEmployeeEmail());
         holder.status.setText("Status: " + application.getStatus());
 
+        // Handle click actions
         holder.itemView.setOnClickListener(v -> listener.onApplicationClick(application));
         holder.acceptButton.setOnClickListener(v -> listener.onAccept(application));
         holder.declineButton.setOnClickListener(v -> listener.onDecline(application));
 
-
+        // Disable buttons if already accepted/declined
         if (!application.getStatus().equalsIgnoreCase("pending")) {
             holder.acceptButton.setEnabled(false);
             holder.declineButton.setEnabled(false);
@@ -65,6 +84,9 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         return applicationList.size();
     }
 
+    /**
+     * ViewHolder for application item views.
+     */
     static class ApplicationViewHolder extends RecyclerView.ViewHolder {
         TextView applicantEmail;
         TextView status;

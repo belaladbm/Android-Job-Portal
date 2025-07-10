@@ -6,12 +6,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Job;
+
 import java.util.List;
 
+/**
+ * Adapter for displaying a list of jobs posted by the employer.
+ * Used in EmployerJobsActivity to show job title, location, and category.
+ */
 public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.EmployerJobViewHolder> {
 
+    /**
+     * Interface for handling job item clicks.
+     */
     public interface OnJobClickListener {
         void onJobClick(Job job);
     }
@@ -19,6 +28,9 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
     private List<Job> jobList;
     private OnJobClickListener listener;
 
+    /**
+     * Constructor to initialize job list and click listener.
+     */
     public EmployerJobAdapter(List<Job> jobList, OnJobClickListener listener) {
         this.jobList = jobList;
         this.listener = listener;
@@ -40,6 +52,7 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
         holder.jobLocation.setText(job.getLocation() != null ? "Location: " + job.getLocation() : "");
         holder.jobCategory.setText(job.getCategory() != null ? "Category: " + job.getCategory() : "");
 
+        // Handle item click
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onJobClick(job);
@@ -52,11 +65,17 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
         return jobList != null ? jobList.size() : 0;
     }
 
+    /**
+     * Updates the list of jobs and refreshes the RecyclerView.
+     */
     public void updateJobs(List<Job> newJobs) {
         this.jobList = newJobs;
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder for job items.
+     */
     static class EmployerJobViewHolder extends RecyclerView.ViewHolder {
         TextView jobTitle;
         TextView jobLocation;
