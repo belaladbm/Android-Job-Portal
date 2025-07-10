@@ -60,7 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // Initialize UI elements
+        // Setup UI elements
         welcomeText = findViewById(R.id.dashboardText);
         TextView locationText = findViewById(R.id.locationTextView);
         nearbyJobsText = findViewById(R.id.nearbyJobsTextView);
@@ -70,104 +70,32 @@ public class DashboardActivity extends AppCompatActivity {
         Button search = findViewById(R.id.search);
         Button settingsButton = findViewById(R.id.settingsButton);
 
-        // Get email from intent
         email = getIntent().getStringExtra(USER_EMAIL_KEY);
-
-        // Setup RecyclerView with adapter
-        jobList = new ArrayList<>();
-        jobAdapter = new JobAdapter(jobList, job -> {
-            // When user clicks a job, open map activity with job location
-            if (job.getLocation() != null && !job.getLocation().isEmpty()) {
-                Geocoder geocoder = new Geocoder(DashboardActivity.this, Locale.getDefault());
-                try {
-                    List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
-                    if (!addresses.isEmpty()) {
-                        Address address = addresses.get(0);
-                        Intent intent = new Intent(DashboardActivity.this, GoogleMapActivity.class);
-                        intent.putExtra("latitude", address.getLatitude());
-                        intent.putExtra("longitude", address.getLongitude());
-                        intent.putExtra("jobTitle", job.getTitle());
-                        intent.putExtra("location", job.getLocation());
-                        intent.putExtra(USER_EMAIL_KEY, email);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (IOException e) {
-                    Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
-            }
-        }, email);
-
-        jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
-        jobsDisplay.setAdapter(jobAdapter);
-
-        // Setup location manager and permissions
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        initializeLocationListener(locationText);
-        checkLocationPermissionAndStartUpdates();
-
-        // Open settings screen
-        moveToSettingsPage(settingsButton);
-
-        // If email missing, show default welcome
         if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
 
-        // Open posted jobs (for employer)
+        // Setup RecyclerView
+        jobList = new ArrayList<>();
+        setupJobClickListener();
+        jobsDisplay.setLayoutManager(new LinearLayoutManager(this));
+        jobsDisplay.setAdapter(jobAdapter);
+
+        // Setup location
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        initializeLocationListener(locationText);
+        checkLocationPermissionAndStartUpdates();
+
+        // Navigation buttons
+        moveToSettingsPage(settingsButton);
         buttonViewJobs.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, EmployerJobsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
 
-        // Fetch user role and name to customize dashboard
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
-        Query userQuery = dbRef.orderByChild("email").equalTo(email);
-
-        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        String firstName = userSnapshot.child("firstName").getValue(String.class);
-                        String role = userSnapshot.child("role").getValue(String.class);
-
-                        welcomeText.setText(getMessage(firstName, role));
-
-                        // UI based on role
-                        if ("Employee".equals(role)) {
-                            locationText.setVisibility(View.VISIBLE);
-                            nearbyJobsText.setVisibility(View.VISIBLE);
-                            jobsDisplay.setVisibility(View.VISIBLE);
-                            postJobButton.setVisibility(View.GONE);
-                            search.setVisibility(View.VISIBLE);
-                            buttonViewJobs.setVisibility(View.GONE);
-                            moveToSearchPage(search);
-                        } else if ("Employer".equals(role)) {
-                            locationText.setVisibility(View.GONE);
-                            nearbyJobsText.setVisibility(View.GONE);
-                            jobsDisplay.setVisibility(View.GONE);
-                            postJobButton.setVisibility(View.VISIBLE);
-                            search.setVisibility(View.GONE);
-                            buttonViewJobs.setVisibility(View.VISIBLE);
-                            moveToPostJobPage(postJobButton);
-                        }
-                    }
-                } else {
-                    welcomeText.setText(getDefaultMessage());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                welcomeText.setText(getDefaultMessage());
-                Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Role-specific dashboard setup
+        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search);
     }
 
     /** Initializes listener that runs when location changes */
@@ -317,5 +245,84 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(DashboardActivity.this, "Error fetching jobs: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+        if ("Employee".equals(role)) {
+            locationText.setVisibility(View.VISIBLE);
+            nearbyJobsText.setVisibility(View.VISIBLE);
+            jobsDisplay.setVisibility(View.VISIBLE);
+            postJobButton.setVisibility(View.GONE);
+            search.setVisibility(View.VISIBLE);
+            buttonViewJobs.setVisibility(View.GONE);
+            moveToSearchPage(search);
+        } else if ("Employer".equals(role)) {
+            locationText.setVisibility(View.GONE);
+            nearbyJobsText.setVisibility(View.GONE);
+            jobsDisplay.setVisibility(View.GONE);
+            postJobButton.setVisibility(View.VISIBLE);
+            search.setVisibility(View.GONE);
+            buttonViewJobs.setVisibility(View.VISIBLE);
+            moveToPostJobPage(postJobButton);
+        }
+    }
+
+    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
+        Query userQuery = dbRef.orderByChild("email").equalTo(email);
+
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String firstName = userSnapshot.child("firstName").getValue(String.class);
+                        String role = userSnapshot.child("role").getValue(String.class);
+
+                        welcomeText.setText(getMessage(firstName, role));
+                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search);
+                    }
+                } else {
+                    welcomeText.setText(getDefaultMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                welcomeText.setText(getDefaultMessage());
+                Toast.makeText(DashboardActivity.this, "Error while extracting data!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void showJobOnMap(Job job) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(job.getLocation() + " Canada", 1);
+            if (!addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                Intent intent = new Intent(this, GoogleMapActivity.class);
+                intent.putExtra("latitude", address.getLatitude());
+                intent.putExtra("longitude", address.getLongitude());
+                intent.putExtra("jobTitle", job.getTitle());
+                intent.putExtra("location", job.getLocation());
+                intent.putExtra(USER_EMAIL_KEY, email);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Could not find location: " + job.getLocation(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "Error finding location", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setupJobClickListener() {
+        jobAdapter = new JobAdapter(jobList, job -> {
+            if (job.getLocation() != null && !job.getLocation().isEmpty()) {
+                showJobOnMap(job);
+            } else {
+                Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
+            }
+        }, email);
     }
 }
