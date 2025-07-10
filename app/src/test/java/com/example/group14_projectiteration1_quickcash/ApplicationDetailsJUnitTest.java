@@ -1,7 +1,6 @@
 package com.example.group14_projectiteration1_quickcash;
 
 import com.example.group14_projectiteration1_quickcash.model.Application;
-import com.example.group14_projectiteration1_quickcash.view.ApplicationDetailsActivity;
 
 import org.junit.Before;
 import org.junit.Test;
