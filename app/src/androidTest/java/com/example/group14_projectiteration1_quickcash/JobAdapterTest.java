@@ -2,9 +2,6 @@ package com.example.group14_projectiteration1_quickcash;
 
 import static org.junit.Assert.assertEquals;
 
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.group14_projectiteration1_quickcash.adapter.JobAdapter;
@@ -17,16 +14,23 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Instrumented test for the JobAdapter class.
+ * Verifies that the adapter correctly reports the number of jobs.
+ */
 @RunWith(AndroidJUnit4.class)
 public class JobAdapterTest {
+
     private JobAdapter jobAdapter;
     private List<Job> testJobList;
 
+    /**
+     * Sets up the adapter with a list of 3 test jobs.
+     */
     @Before
     public void setUp() {
         testJobList = new ArrayList<>();
 
-        // Add test jobs
         testJobList.add(new Job("Job 1", "Description 1", "Category 1", "Halifax", "test1@email.com"));
         testJobList.add(new Job("Job 2", "Description 2", "Category 2", "Halifax", "test2@email.com"));
         testJobList.add(new Job("Job 3", "Description 3", "Category 3", "Halifax", "test3@email.com"));
@@ -34,8 +38,11 @@ public class JobAdapterTest {
         jobAdapter = new JobAdapter(testJobList);
     }
 
+    /**
+     * Checks that the adapter returns the correct item count.
+     */
     @Test
-    public void testGetJobCount(){
+    public void testGetJobCount() {
         assertEquals(3, jobAdapter.getItemCount());
     }
 }

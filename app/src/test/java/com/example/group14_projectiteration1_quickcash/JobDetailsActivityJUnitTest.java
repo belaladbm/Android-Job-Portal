@@ -3,10 +3,19 @@ package com.example.group14_projectiteration1_quickcash;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/**
+ * Unit test for checking when a toast should be shown in JobDetailsActivity
+ * based on whether the user email is null or empty.
+ */
 public class JobDetailsActivityJUnitTest {
 
+    /**
+     * Simulates email validation logic from JobDetailsActivity.
+     *
+     * @param email The user's email
+     * @return true if a toast should be shown (i.e., email is invalid)
+     */
     private boolean shouldShowToast(String email) {
-        // Simulates the logic in JobDetailsActivity
         return email == null || email.isEmpty();
     }
 
