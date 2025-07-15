@@ -45,9 +45,10 @@
         android:id="@+id/search"
         android:layout_width="165dp"
         android:layout_height="46dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
         android:text="Search Jobs"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.081"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
@@ -96,5 +97,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/myApplicationButton"
+        android:layout_width="165dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="4dp"
+        android:text="My Applications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/locationTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
