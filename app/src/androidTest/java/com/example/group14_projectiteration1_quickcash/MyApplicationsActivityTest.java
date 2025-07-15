@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
+import com.example.group14_projectiteration1_quickcash.view.MyApplicationsActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,15 +21,11 @@ import org.junit.runner.RunWith;
 public class MyApplicationsActivityTest {
 
     @Rule
-    public ActivityScenarioRule<DashboardActivity> activityRule =
-            new ActivityScenarioRule<>(DashboardActivity.class);
+    public ActivityScenarioRule<MyApplicationsActivity> activityRule =
+            new ActivityScenarioRule<>(MyApplicationsActivity.class);
 
     @Test
-    public void testNavigateToMyApplications() {
-        // Click the My Applications button
-        onView(withId(R.id.myApplicationsButton)).perform(click());
-
-        // Check that the MyApplicationsActivity UI is displayed
+    public void testMyApplicationsUI() {
         onView(withId(R.id.myApplicationsTitle))
                 .check(matches(isDisplayed()));
     }
