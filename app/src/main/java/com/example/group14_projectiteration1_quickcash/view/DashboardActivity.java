@@ -264,6 +264,7 @@ public class DashboardActivity extends AppCompatActivity {
             jobsDisplay.setVisibility(View.VISIBLE);
             postJobButton.setVisibility(View.GONE);
             search.setVisibility(View.VISIBLE);
+            myApplicationsButton.setVisibility(View.VISIBLE);
             buttonViewJobs.setVisibility(View.GONE);
             moveToSearchPage(search);
             moveToMyApplications(myApplicationsButton);
@@ -274,6 +275,7 @@ public class DashboardActivity extends AppCompatActivity {
             jobsDisplay.setVisibility(View.GONE);
             postJobButton.setVisibility(View.VISIBLE);
             search.setVisibility(View.GONE);
+            myApplicationsButton.setVisibility(View.GONE);
             buttonViewJobs.setVisibility(View.VISIBLE);
             moveToPostJobPage(postJobButton);
         }
