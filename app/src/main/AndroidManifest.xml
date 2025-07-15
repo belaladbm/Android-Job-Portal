@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
-
+        <activity
+            android:name=".view.MyApplicationsActivity"
+            android:exported="false" />
         <activity
             android:name=".view.JobDetailsActivity"
             android:exported="true" />
@@ -59,6 +61,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -66,7 +69,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB8QToIrkOsNRBXnDAj39TBp5iOT9Lao4w" />
-
     </application>
 
 </manifest>
