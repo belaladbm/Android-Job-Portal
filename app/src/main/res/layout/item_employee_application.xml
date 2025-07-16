@@ -69,6 +69,13 @@
             android:maxLines="3"
             android:ellipsize="end" />
 
+        <Button
+            android:id="@+id/markCompletedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mark as Completed"
+            android:layout_marginTop="8dp" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
