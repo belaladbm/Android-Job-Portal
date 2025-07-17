@@ -3,13 +3,17 @@ package com.example.group14_projectiteration1_quickcash.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Application;
 import com.example.group14_projectiteration1_quickcash.model.Job;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 import java.util.Map;
@@ -70,6 +74,23 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
         holder.applicationStatus.setText(application.getStatus() != null ? "Status: " + application.getStatus() : "");
         holder.coverLetter.setText(application.getCoverLetter() != null ? "Cover Letter: " + application.getCoverLetter() : "");
 
+        if ("accepted".equalsIgnoreCase(application.getStatus())) {
+            holder.markCompletedButton.setVisibility(View.VISIBLE);
+            holder.markCompletedButton.setOnClickListener(v -> {
+                // Update status in Firebase
+                FirebaseDatabase.getInstance()
+                        .getReference("Applications:")
+                        .child(application.getId())
+                        .child("status")
+                        .setValue("Completed")
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(holder.itemView.getContext(), "Marked as Completed", Toast.LENGTH_SHORT).show();
+                        });
+            });
+        } else {
+            holder.markCompletedButton.setVisibility(View.GONE);
+        }
+
         // Handle item click
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -102,6 +123,7 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
         TextView employerEmail;
         TextView applicationStatus;
         TextView coverLetter;
+        Button markCompletedButton;
 
         public EmployeeApplicationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -111,6 +133,7 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
             employerEmail = itemView.findViewById(R.id.applicationEmployerEmail);
             applicationStatus = itemView.findViewById(R.id.applicationStatus);
             coverLetter = itemView.findViewById(R.id.applicationCoverLetter);
+            markCompletedButton = itemView.findViewById(R.id.markCompletedButton);
         }
     }
 }
