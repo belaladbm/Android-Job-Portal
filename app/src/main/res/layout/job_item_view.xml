@@ -52,6 +52,14 @@
             android:layout_height="wrap_content"
             android:text="Apply Now" />
 
+        <TextView
+            android:id="@+id/appliedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Applied"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </LinearLayout>
 
