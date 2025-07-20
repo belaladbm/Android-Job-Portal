@@ -42,7 +42,7 @@ public class EditJobJUnitTest {
     @Test
     public void testUpdateJobDescription() {
         job.setDescription("New Description");
-        assertEquals("New description", job.getDescription());
+        assertEquals("New Description", job.getDescription());
     }
 
     /**
