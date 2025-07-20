@@ -10,11 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
+import com.example.group14_projectiteration1_quickcash.model.Application;
 import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.example.group14_projectiteration1_quickcash.view.JobDetailsActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Adapter class for displaying a list of jobs in a RecyclerView.
@@ -31,6 +38,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     private List<Job> jobList;
     private OnJobClickListener listener;
     private String userEmail;
+    private Set<String> appliedJobIds;
+    private firebaseHelper firebase_helper;
 
     /**
      * Constructor used when map button click needs to be handled.
@@ -39,6 +48,10 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         this.jobList = jobList;
         this.listener = listener;
         this.userEmail = userEmail;
+        this.appliedJobIds = new HashSet<>();
+        this.firebase_helper = new firebaseHelper();
+        firebase_helper.connectFirebase();
+        checkAppliedJobs();
     }
 
     /**
@@ -47,6 +60,39 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     public JobAdapter(List<Job> jobList) {
         this.jobList = jobList;
         this.listener = null;
+        this.appliedJobIds = new HashSet<>();
+    }
+
+    /**
+     * Checks which jobs the current user has already applied to
+     */
+    private void checkAppliedJobs() {
+        if (userEmail == null || userEmail.isEmpty()) {
+            return;
+        }
+
+        firebase_helper.applydbref
+                .orderByChild("employeeEmail")
+                .equalTo(userEmail)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        appliedJobIds.clear();
+                        for (DataSnapshot applicationSnapshot : snapshot.getChildren()) {
+                            Application app = applicationSnapshot.getValue(Application.class);
+                            if (app != null && app.getJobId() != null) {
+                                appliedJobIds.add(app.getJobId());
+                            }
+                        }
+                        // Refresh the RecyclerView to update button states
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error silently
+                    }
+                });
     }
 
     @NonNull
@@ -71,13 +117,26 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             }
         });
 
-        // Handle "Apply Now" click
-        holder.applyNowButton.setOnClickListener(v -> {
-            Intent intent = new Intent(holder.itemView.getContext(), JobDetailsActivity.class);
-            intent.putExtra("job", job);
-            intent.putExtra("userEmail", userEmail);
-            holder.itemView.getContext().startActivity(intent);
-        });
+        // Check if user has already applied for this job
+        boolean hasApplied = appliedJobIds.contains(job.getJobId());
+
+        if (hasApplied) {
+            // Hide button and show "Applied" text
+            holder.applyNowButton.setVisibility(View.GONE);
+            holder.appliedTextView.setVisibility(View.VISIBLE);
+        } else {
+            // Show button and hide "Applied" text
+            holder.applyNowButton.setVisibility(View.VISIBLE);
+            holder.appliedTextView.setVisibility(View.GONE);
+
+            // Handle "Apply Now" click
+            holder.applyNowButton.setOnClickListener(v -> {
+                Intent intent = new Intent(holder.itemView.getContext(), JobDetailsActivity.class);
+                intent.putExtra("job", job);
+                intent.putExtra("userEmail", userEmail);
+                holder.itemView.getContext().startActivity(intent);
+            });
+        }
     }
 
     @Override
@@ -102,6 +161,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         TextView jobTitle;
         TextView jobLocation;
         TextView jobCategory;
+        TextView appliedTextView;
 
         public JobViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,6 +170,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             jobTitle = itemView.findViewById(R.id.jobTitleTextView);
             jobLocation = itemView.findViewById(R.id.jobLocationTextView);
             jobCategory = itemView.findViewById(R.id.jobCategoryTextView);
+            appliedTextView = itemView.findViewById(R.id.appliedTextView);
         }
     }
 }

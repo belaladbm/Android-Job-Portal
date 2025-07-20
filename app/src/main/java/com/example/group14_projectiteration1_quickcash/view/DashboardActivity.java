@@ -69,6 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
         Button buttonViewJobs = findViewById(R.id.buttonViewJobs);
         Button search = findViewById(R.id.search);
         Button settingsButton = findViewById(R.id.settingsButton);
+        Button myApplicationsButton = findViewById(R.id.myApplicationsButton);
 
         email = getIntent().getStringExtra(USER_EMAIL_KEY);
         if (email == null || email.isEmpty()) {
@@ -95,7 +96,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Role-specific dashboard setup
-        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search);
+        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
     }
 
     /** Initializes listener that runs when location changes */
@@ -136,6 +137,15 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToSearchPage(Button search) {
         search.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
+            intent.putExtra(USER_EMAIL_KEY, email);
+            startActivity(intent);
+        });
+    }
+
+    /** Goes to my Applications page (for employees) */
+    public void moveToMyApplications(Button myApplicationButton) {
+        myApplicationButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, MyApplicationsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
@@ -247,27 +257,31 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search, Button myApplicationsButton) {
         if ("Employee".equals(role)) {
             locationText.setVisibility(View.VISIBLE);
             nearbyJobsText.setVisibility(View.VISIBLE);
             jobsDisplay.setVisibility(View.VISIBLE);
             postJobButton.setVisibility(View.GONE);
             search.setVisibility(View.VISIBLE);
+            myApplicationsButton.setVisibility(View.VISIBLE);
             buttonViewJobs.setVisibility(View.GONE);
             moveToSearchPage(search);
+            moveToMyApplications(myApplicationsButton);
+
         } else if ("Employer".equals(role)) {
             locationText.setVisibility(View.GONE);
             nearbyJobsText.setVisibility(View.GONE);
             jobsDisplay.setVisibility(View.GONE);
             postJobButton.setVisibility(View.VISIBLE);
             search.setVisibility(View.GONE);
+            myApplicationsButton.setVisibility(View.GONE);
             buttonViewJobs.setVisibility(View.VISIBLE);
             moveToPostJobPage(postJobButton);
         }
     }
 
-    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search, Button myApplicationsButton) {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
         Query userQuery = dbRef.orderByChild("email").equalTo(email);
 
@@ -280,7 +294,7 @@ public class DashboardActivity extends AppCompatActivity {
                         String role = userSnapshot.child("role").getValue(String.class);
 
                         welcomeText.setText(getMessage(firstName, role));
-                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search);
+                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
                     }
                 } else {
                     welcomeText.setText(getDefaultMessage());
