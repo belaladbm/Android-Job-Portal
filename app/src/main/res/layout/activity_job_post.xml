@@ -75,6 +75,19 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp" />
 
+    <EditText
+        android:id="@+id/jobPay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Pay"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/locationEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
+
 
     <Button
         android:id="@+id/submitJobButton"
@@ -99,21 +112,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/submitJobButton" />
-
-    <EditText
-        android:id="@+id/jobPay"
-        android:layout_width="366dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginBottom="95dp"
-        android:ems="10"
-        android:hint="Pay"
-        android:inputType="numberDecimal"
-        app:layout_constraintBottom_toTopOf="@+id/submitJobButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationEditText" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
