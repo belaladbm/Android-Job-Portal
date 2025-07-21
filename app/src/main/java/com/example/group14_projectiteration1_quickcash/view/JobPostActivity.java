@@ -32,6 +32,7 @@ public class JobPostActivity extends AppCompatActivity {
     private EditText jobNameEditText;
     private EditText jobDescriptionEditText;
     private EditText locationEditText;
+    private EditText jobPay;
     private Spinner categorySpinner;
     private firebaseHelper firebase_helper;
 
@@ -57,6 +58,7 @@ public class JobPostActivity extends AppCompatActivity {
         jobDescriptionEditText = findViewById(R.id.jobDescriptionEditText);
         locationEditText = findViewById(R.id.locationEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
+        jobPay = findViewById(R.id.jobPay);
         Button submitJobButton = findViewById(R.id.submitJobButton);
         Button backToDashboard = findViewById(R.id.backButton);
 
