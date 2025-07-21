@@ -115,6 +115,23 @@ public class JobPostActivity extends AppCompatActivity {
             Toast.makeText(this, "Job Posting Failed!, Please enter a location", Toast.LENGTH_SHORT).show();
             return;
         }
+        /*Job Pay*/
+        String payInput = jobPay.getText().toString().trim();
+        if (TextUtils.isEmpty(payInput)) {
+            jobPay.setError("Pay is required");
+            Toast.makeText(this, "Job Posting Failed!, Please enter pay", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double payForJob;
+        try {
+            payForJob = Double.parseDouble(payInput);
+        } catch (NumberFormatException e) {
+            jobPay.setError("Invalid number format");
+            Toast.makeText(this, "Job Posting Failed!, Pay must be a valid number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         // Create Job object from input
         Job job = new Job(
@@ -122,6 +139,7 @@ public class JobPostActivity extends AppCompatActivity {
                 jobDescriptionEditText.getText().toString(),
                 category,
                 locationEditText.getText().toString(),
+                payForJob,
                 getIntent().getStringExtra("userEmail")
         );
 
