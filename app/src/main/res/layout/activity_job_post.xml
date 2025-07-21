@@ -110,7 +110,7 @@
         android:layout_marginBottom="95dp"
         android:ems="10"
         android:hint="Pay"
-        android:inputType="text"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/submitJobButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
