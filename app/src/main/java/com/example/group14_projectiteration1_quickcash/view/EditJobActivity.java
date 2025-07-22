@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class EditJobActivity extends AppCompatActivity {
 
-    private EditText titleEdit, descriptionEdit, locationEdit;
+    private EditText titleEdit, descriptionEdit, locationEdit, jobPayEdit;
     private Spinner categorySpinner;
     private Button saveButton, cancelButton;
     private Job job;
@@ -44,6 +44,7 @@ public class EditJobActivity extends AppCompatActivity {
         titleEdit = findViewById(R.id.editJobTitle);
         descriptionEdit = findViewById(R.id.editJobDescription);
         locationEdit = findViewById(R.id.editJobLocation);
+        jobPayEdit = findViewById(R.id.editJobPay);
         categorySpinner = findViewById(R.id.editJobCategorySpinner);
         saveButton = findViewById(R.id.saveJobButton);
         cancelButton = findViewById(R.id.cancelEditButton);
@@ -102,6 +103,7 @@ public class EditJobActivity extends AppCompatActivity {
         titleEdit.setText(job.getTitle());
         descriptionEdit.setText(job.getDescription());
         locationEdit.setText(job.getLocation());
+        jobPayEdit.setText((String.format("Pay: $%.2f", job.getJobPay())));
     }
 
     /**
@@ -125,6 +127,20 @@ public class EditJobActivity extends AppCompatActivity {
             locationEdit.setError("Need a job location");
             return;
         }
+
+        String payInput = jobPayEdit.getText().toString().trim();
+        if (TextUtils.isEmpty(payInput)) {
+            jobPayEdit.setError("Enter job pay");
+            return;
+        }
+        double jobPay;
+        try {
+            jobPay = Double.parseDouble(payInput);
+        } catch (NumberFormatException e) {
+            jobPayEdit.setError("Invalid pay format");
+            return;
+        }
+
         if (newCategory == null || newCategory.isEmpty()) {
             Toast.makeText(this, "Please make sure you select a category", Toast.LENGTH_SHORT).show();
             return;
@@ -134,6 +150,7 @@ public class EditJobActivity extends AppCompatActivity {
         job.setTitle(newTitle);
         job.setDescription(newDescription);
         job.setLocation(newLocation);
+        job.setJobPay(jobPay);
         job.setCategory(newCategory);
 
         // Update Firebase job node
