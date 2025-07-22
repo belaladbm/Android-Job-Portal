@@ -39,6 +39,14 @@
             android:layout_height="wrap_content"
             android:inputType="textPostalAddress" />
 
+        <EditText
+            android:id="@+id/editJobPay"
+            android:hint="Job Pay ($)"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
         <Button
             android:id="@+id/saveJobButton"
             android:text="Save"
