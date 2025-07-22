@@ -63,10 +63,12 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
             holder.jobLocation.setText(job.getLocation() != null ? "Location: " + job.getLocation() : "");
             holder.jobCategory.setText(job.getCategory() != null ? "Category: " + job.getCategory() : "");
             holder.employerEmail.setText(job.getEmployerEmail() != null ? "Employer: " + job.getEmployerEmail() : "");
+            holder.jobPay.setText((String.format("Pay: $%.2f", job.getJobPay())));
         } else {
             holder.jobTitle.setText("Job details not available");
             holder.jobLocation.setText("");
             holder.jobCategory.setText("");
+            holder.jobPay.setText("$");
             holder.employerEmail.setText("");
         }
 
@@ -119,6 +121,7 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
     static class EmployeeApplicationViewHolder extends RecyclerView.ViewHolder {
         TextView jobTitle;
         TextView jobLocation;
+        TextView jobPay;
         TextView jobCategory;
         TextView employerEmail;
         TextView applicationStatus;
@@ -129,6 +132,7 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
             super(itemView);
             jobTitle = itemView.findViewById(R.id.applicationJobTitle);
             jobLocation = itemView.findViewById(R.id.applicationJobLocation);
+            jobPay = itemView.findViewById(R.id.applicationJobPay);
             jobCategory = itemView.findViewById(R.id.applicationJobCategory);
             employerEmail = itemView.findViewById(R.id.applicationEmployerEmail);
             applicationStatus = itemView.findViewById(R.id.applicationStatus);
