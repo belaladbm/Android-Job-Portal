@@ -54,6 +54,9 @@
             android:name=".view.JobApplicationsActivity"
             android:exported="true" />
         <activity
+            android:name=".view.JobActionsActivity"
+            android:exported="true"/>
+        <activity
             android:name=".view.ApplicationDetailsActivity"
             android:exported="true" />
         <activity
