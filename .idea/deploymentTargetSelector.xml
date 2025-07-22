@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="NewPasswordActivityTest">
+      <SelectionState runConfigName="MyApplicationsActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationTest">
+      <SelectionState runConfigName="testMyApplicationsUI()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testSuccessfulRegistration()">
+      <SelectionState runConfigName="testTitleIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SettingsActivityTest">
+      <SelectionState runConfigName="testMarkCompletedButtonVisibleForAcceptedStatus()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DashboardTest">
+      <SelectionState runConfigName="testMarkCompletedButtonNotVisibleForNonAcceptedStatus()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
