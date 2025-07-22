@@ -39,6 +39,15 @@
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray" />
 
+        <TextView
+            android:id="@+id/jobPayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Pay: $0.00"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
+
         <Button
             android:id="@+id/btnViewOnMap"
             android:layout_width="wrap_content"
