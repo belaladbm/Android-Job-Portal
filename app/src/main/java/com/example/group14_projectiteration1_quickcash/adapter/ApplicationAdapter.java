@@ -30,6 +30,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         void onApplicationClick(Application application);
         void onAccept(Application application);
         void onDecline(Application application);
+        void onApprove(Application application);
     }
 
     /**
@@ -69,6 +70,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         holder.itemView.setOnClickListener(v -> listener.onApplicationClick(application));
         holder.acceptButton.setOnClickListener(v -> listener.onAccept(application));
         holder.declineButton.setOnClickListener(v -> listener.onDecline(application));
+        holder.approveButton.setOnClickListener(v -> listener.onApprove(application));
 
         // Disable buttons if already accepted/declined
         if (application.getStatus().equalsIgnoreCase("completed")) {
