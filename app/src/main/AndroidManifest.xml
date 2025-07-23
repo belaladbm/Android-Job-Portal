@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
         <activity
+            android:name=".view.PaypalActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.MyApplicationsActivity"
             android:exported="false" />
         <activity
@@ -46,16 +49,16 @@
             android:exported="true" />
         <activity
             android:name=".view.EmployerJobDetailsActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.EditJobActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.JobApplicationsActivity"
             android:exported="true" />
         <activity
             android:name=".view.JobActionsActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.ApplicationDetailsActivity"
             android:exported="true" />
