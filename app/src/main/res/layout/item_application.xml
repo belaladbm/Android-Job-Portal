@@ -47,7 +47,13 @@
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
                 android:text="Decline" />
-
+            <Button
+                android:id="@+id/approveBTN"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Approve"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
