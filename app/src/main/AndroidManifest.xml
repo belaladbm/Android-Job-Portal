@@ -17,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
+
+        <service android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+
         <activity
             android:name=".view.PaypalActivity"
             android:exported="false" />
