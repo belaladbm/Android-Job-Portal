@@ -17,7 +17,7 @@ public class ApplicationTest {
      */
     @Test
     public void testApplicationCreation() {
-        Application app = new Application("job123", "user@test.com", "I'm interested");
+        Application app = new Application("job123", "user@test.com", "I'm interested", 30, "Test1");
 
         assertEquals("job123", app.getJobId());
         assertEquals("user@test.com", app.getEmployeeEmail());
@@ -34,7 +34,7 @@ public class ApplicationTest {
         job.generateId();  // Ensure jobId is not null
         assertNotNull(job.getJobId());
 
-        Application app = new Application(job.getJobId(), "user@test.com", "Cover letter");
+        Application app = new Application(job.getJobId(), "user@test.com", "Cover letter", 20, "Test2");
         job.getApplications().put("user@test.com", app);
 
         assertEquals(1, job.getApplications().size());

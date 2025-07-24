@@ -148,8 +148,8 @@ public class DashboardTest {
         scenario.onActivity(activity -> {
             // Creating test jobs
             List<Job> testJobs = new ArrayList<>();
-            Job job1 = new Job("Test Job 1", "Description 1", "Category 1", "Halifax", "test@email.com");
-            Job job2 = new Job("Test Job 2", "Description 2", "Category 2", "Halifax", "test2@email.com");
+            Job job1 = new Job("Test Job 1", "Description 1", "Category 1", "Halifax", 10,"test@email.com");
+            Job job2 = new Job("Test Job 2", "Description 2", "Category 2", "Halifax", 10.1, "test2@email.com");
             testJobs.add(job1);
             testJobs.add(job2);
 

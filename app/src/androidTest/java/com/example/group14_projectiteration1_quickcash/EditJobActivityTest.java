@@ -33,6 +33,7 @@ public class EditJobActivityTest {
                 "Test Description",
                 "IT & Software",
                 "Test Location",
+                40.5,
                 "employer@email.com"
         );
         job.setJobId("mockJobId");
@@ -67,6 +68,7 @@ public class EditJobActivityTest {
                 "Random Description",
                 "IT & Software",
                 "Random Location",
+                50,
                 "employer@email.com"
         );
         job.setJobId("mockJobId");
