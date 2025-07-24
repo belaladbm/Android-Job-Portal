@@ -62,5 +62,17 @@ public class PaypalActivityTest {
         }
     }
 
+    @Test
+    public void testPayButtonTextIsCorrect() {
+        Application application = applicationForTesting();
+        Intent intent = new Intent(getApplicationContext(), PaypalActivity.class);
+        intent.putExtra("application", application);
+
+        try (ActivityScenario<PaypalActivity> scenario = ActivityScenario.launch(intent)) {
+            onView(withId(R.id.payNowBtn))
+                    .check(matches(withText("Pay with PayPal")));
+        }
+    }
+
 
 }
