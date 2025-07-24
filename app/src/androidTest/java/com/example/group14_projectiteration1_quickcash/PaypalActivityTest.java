@@ -32,6 +32,8 @@ public class PaypalActivityTest {
         return newApp;
     }
 
+    /**
+     * this checks if UI is there and is displayed*/
     @Test
     public void checkIfUIExistsAndDisplayed(){
         Application application = applicationForTesting();
@@ -46,6 +48,9 @@ public class PaypalActivityTest {
         }
     }
 
+    /**
+     * this checks is UI shows and it displays correct information
+     * */
     @Test
     public void checkIfUIShowsCorrectDetails(){
         Application application = applicationForTesting();
@@ -62,6 +67,9 @@ public class PaypalActivityTest {
         }
     }
 
+    /**
+     * this check is button's text is correct
+     * */
     @Test
     public void testPayButtonTextIsCorrect() {
         Application application = applicationForTesting();
