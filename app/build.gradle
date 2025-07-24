@@ -10,6 +10,13 @@ def credentialsProperties = new Properties()
 //input the file
 credentialsProperties.load(new FileInputStream(credentialsPropertiesFile))
 
+//accessing file
+def defaultCredentialsPropertiesFile = rootProject.file("local.defaults.properties")
+// properties object to access key value
+def defaultCredentialsProperties = new Properties()
+//input the file
+defaultCredentialsProperties.load(new FileInputStream(credentialsPropertiesFile))
+
 
 android {
     namespace 'com.example.group14_projectiteration1_quickcash'
@@ -24,7 +31,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //        accessing variable -  type, name of variable, concat with string format (adding "")
-        buildConfigField "String", "PAYPAL_CLIENT_ID", ("\"".concat(credentialsProperties["PAYPAL_CLIENT_ID"]).concat("\""))
+
+        if(credentialsProperties["PAYPAL_CLIENT_ID"] != null){
+            buildConfigField "String", "PAYPAL_CLIENT_ID", ("\"".concat(credentialsProperties["PAYPAL_CLIENT_ID"]).concat("\""))
+        } else if(defaultCredentialsProperties["PAYPAL_CLIENT_ID"] != null){
+            buildConfigField "String", "PAYPAL_CLIENT_ID", ("\"".concat(defaultCredentialsProperties["PAYPAL_CLIENT_ID"]).concat("\""))
+        }
 
         android.buildFeatures.buildConfig = true
 
