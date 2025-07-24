@@ -7,7 +7,6 @@
     android:padding="16dp"
     android:gravity="center">
 
-    <!-- Job Details -->
     <TextView
         android:id="@+id/jobDetailsTV"
         android:layout_width="match_parent"
@@ -16,14 +15,12 @@
         android:textAlignment="center"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Payment Amount Label -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Payment Amount:"
         android:textSize="20sp"/>
 
-    <!-- Payment Amount Value -->
     <TextView
         android:id="@+id/amountTV"
         android:layout_width="wrap_content"
@@ -32,7 +29,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="32dp"/>
 
-    <!-- Pay Button -->
     <Button
         android:id="@+id/payNowBtn"
         android:layout_width="match_parent"
@@ -43,7 +39,6 @@
         android:textColor="@color/white"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Payment Status -->
     <TextView
         android:id="@+id/paymentStatusTV"
         android:layout_width="match_parent"
@@ -51,5 +46,13 @@
         android:textSize="16sp"
         android:textAlignment="center"
         android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/backToDashboardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to Dashboard"
+        android:layout_margin="16dp"
+        android:textColor="@color/white"/>
 
 </LinearLayout>

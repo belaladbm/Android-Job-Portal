@@ -196,6 +196,12 @@ public class PaypalActivity extends AppCompatActivity {
     }
 
     private void goToDashboarButton(){
+        Button backToDashboardButton = findViewById(R.id.backToDashboardButton);
+        backToDashboardButton.setOnClickListener(v -> backToDashboard());
+    }
 
+    private void backToDashboard(){
+        Intent intent = new Intent(this, DashboardActivity.class);
+        startActivity(intent);
     }
 }
