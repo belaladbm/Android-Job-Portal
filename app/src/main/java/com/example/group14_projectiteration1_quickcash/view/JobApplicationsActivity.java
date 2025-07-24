@@ -29,6 +29,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
     private firebaseHelper fbHelper;
     private String jobId;
     private String jobTitle;
+    private String userEmail;
 
     /**
      * Called when the activity is first created.
@@ -40,6 +41,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
 
         jobId = getIntent().getStringExtra("jobId");
         jobTitle = getIntent().getStringExtra("jobTitle");
+        userEmail = getIntent().getStringExtra("userEmail");
 
         recyclerView = findViewById(R.id.recyclerViewApplications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -133,6 +135,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
 public void onApprove(Application application) {
     Intent intent = new Intent(this, PaypalActivity.class);
     intent.putExtra("application", application);
+    intent.putExtra("userEmail", userEmail);
     startActivity(intent);
 }
 

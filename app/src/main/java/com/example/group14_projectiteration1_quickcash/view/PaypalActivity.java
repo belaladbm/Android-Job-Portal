@@ -51,6 +51,8 @@ public class PaypalActivity extends AppCompatActivity {
     private TextView paymentStatusTV;
     private TextView jobDetailsTV;
 
+    private String userEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,8 @@ public class PaypalActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        userEmail = getIntent().getStringExtra("userEmail");
 
         firebaseHelper = new firebaseHelper();
         firebaseHelper.connectFirebase();
@@ -202,6 +206,7 @@ public class PaypalActivity extends AppCompatActivity {
 
     private void backToDashboard(){
         Intent intent = new Intent(this, DashboardActivity.class);
+        intent.putExtra("userEmail", userEmail);
         startActivity(intent);
     }
 }
