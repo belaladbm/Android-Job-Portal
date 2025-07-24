@@ -12,6 +12,7 @@ public class Application implements Serializable {
     private String id;
     private String jobId;
     private String employeeEmail;
+    private double jobPay;
     private String coverLetter;
     private String status;
 
@@ -28,10 +29,11 @@ public class Application implements Serializable {
      * @param employeeEmail Email of the employee applying
      * @param coverLetter   Cover letter/message from the employee
      */
-    public Application(String jobId, String employeeEmail, String coverLetter) {
+    public Application(String jobId, String employeeEmail, String coverLetter, double jobpay) {
         this.jobId = jobId;
         this.employeeEmail = employeeEmail;
         this.coverLetter = coverLetter;
+        this.jobPay = jobpay;
         this.status = "pending";
     }
 
@@ -77,7 +79,24 @@ public class Application implements Serializable {
         return status;
     }
 
+    /**
+     * Gets the current job's pay
+     * @return job pay
+     */
+    public double getJobPay() {
+        return jobPay;
+    }
+
+
     // --- Setters ---
+
+    /**
+     * Sets the job pay.
+     * @param jobPay job pay
+     */
+    public void setJobPay(double jobPay) {
+        this.jobPay = jobPay;
+    }
 
     /**
      * Sets the application ID.

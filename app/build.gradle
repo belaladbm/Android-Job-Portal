@@ -26,6 +26,8 @@ android {
         //        accessing variable -  type, name of variable, concat with string format (adding "")
         buildConfigField "String", "PAYPAL_CLIENT_ID", ("\"".concat(credentialsProperties["PAYPAL_CLIENT_ID"]).concat("\""))
 
+        android.buildFeatures.buildConfig = true
+
     }
 
     buildTypes {
