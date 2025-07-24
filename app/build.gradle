@@ -3,24 +3,36 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-//accessing file
-def credentialsPropertiesFile = rootProject.file("local.properties")
+
 // properties object to access key value
 def credentialsProperties = new Properties()
-//input the file
-credentialsProperties.load(new FileInputStream(credentialsPropertiesFile))
 
 //accessing file
-def defaultCredentialsPropertiesFile = rootProject.file("local.defaults.properties")
+def credentialsPropertiesFile = rootProject.file("local.properties")
+
+if(credentialsPropertiesFile.exists()) {
+//input the file
+    credentialsProperties.load(new FileInputStream(credentialsPropertiesFile))
+}
+
+
 // properties object to access key value
 def defaultCredentialsProperties = new Properties()
+//accessing file
+def defaultCredentialsPropertiesFile = rootProject.file("local.defaults.properties")
+
+if(defaultCredentialsPropertiesFile.exists()) {
 //input the file
-defaultCredentialsProperties.load(new FileInputStream(credentialsPropertiesFile))
+    defaultCredentialsProperties.load(new FileInputStream(defaultCredentialsPropertiesFile))
+}
 
 
 android {
     namespace 'com.example.group14_projectiteration1_quickcash'
     compileSdk 35
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId "com.example.group14_projectiteration1_quickcash"
@@ -37,9 +49,6 @@ android {
         } else if(defaultCredentialsProperties["PAYPAL_CLIENT_ID"] != null){
             buildConfigField "String", "PAYPAL_CLIENT_ID", ("\"".concat(defaultCredentialsProperties["PAYPAL_CLIENT_ID"]).concat("\""))
         }
-
-        android.buildFeatures.buildConfig = true
-
     }
 
     buildTypes {
