@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,6 +63,9 @@ public class PaypalActivity extends AppCompatActivity {
 
         // Initialize UI and PayPal
         initUI();
+        configPayPal();
+        initActivityLauncher();
+        setListeners();
     }
 
     private void initUI() {
@@ -72,5 +74,82 @@ public class PaypalActivity extends AppCompatActivity {
         payNowBtn = findViewById(R.id.payNowBtn);
         paymentStatusTV = findViewById(R.id.paymentStatusTV);
         jobDetailsTV = findViewById(R.id.jobDetailsTV);
+
+        // Set payment amount from application
+        amountTV.setText(String.format("$%.2f", application.getJobPay()));
+
+        // Set job details from application
+        String details = String.format("Payment for: %s\nEmployee: %s",
+                application.getJobTitle(), application.getEmployeeEmail());
+        jobDetailsTV.setText(details);
+    }
+
+    private void configPayPal() {
+        // Configure PayPal with sandbox environment and client ID
+        payPalConfig = new PayPalConfiguration()
+                .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+                .clientId(BuildConfig.PAYPAL_CLIENT_ID);
+
+        // Start PayPal service
+        Intent service = new Intent(this, PayPalService.class);
+        service.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, payPalConfig);
+        startService(service);
+    }
+
+    private void initActivityLauncher() {
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            PaymentConfirmation confirmation =
+                                    data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+
+                            if (confirmation != null) {
+                                try {
+                                    // Get payment details
+                                    String paymentDetails = confirmation.toJSONObject().toString(4);
+
+                                    // Extract payment info
+                                    JSONObject payObj = new JSONObject(paymentDetails);
+                                    String payID = payObj.getJSONObject("response").getString("id");
+                                    String state = payObj.getJSONObject("response").getString("state");
+
+                                    paymentStatusTV.setText(
+                                            String.format("Payment %s%nPayment ID: %s", state, payID)
+                                    );
+
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "Payment confirmation error: ", e);
+                                    paymentStatusTV.setText("Payment confirmation error");
+                                }
+                            }
+                        }
+                    } else if (result.getResultCode() == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                        paymentStatusTV.setText("Invalid payment");
+                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+                        paymentStatusTV.setText("Payment canceled");
+                    }
+                });
+    }
+
+    private void setListeners() {
+        payNowBtn.setOnClickListener(v -> processPayment());
+    }
+
+    private void processPayment() {
+        PayPalPayment payment = new PayPalPayment(
+                new BigDecimal(application.getJobPay()),
+                "CAD",
+                "Job Payment: " + application.getJobTitle(),
+                PayPalPayment.PAYMENT_INTENT_SALE
+        );
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, payPalConfig);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
+
+        activityResultLauncher.launch(intent);
     }
 }
