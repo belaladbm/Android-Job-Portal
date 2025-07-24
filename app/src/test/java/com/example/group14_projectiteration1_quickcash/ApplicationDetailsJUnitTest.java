@@ -18,7 +18,7 @@ public class ApplicationDetailsJUnitTest {
      */
     @Before
     public void setup() {
-        application = new Application("id111", "employee@email.com", "test");
+        application = new Application("id111", "employee@email.com", "test", 20, "Test1");
         application.setStatus("pending");
     }
 

@@ -17,7 +17,7 @@ public class EmployerJobsJUnitTest {
      */
     @Before
     public void setup() {
-        job = new Job("Pilot", "Pilot airplanes", "Aviation", "Halifax", "employer@email.com");
+        job = new Job("Pilot", "Pilot airplanes", "Aviation", "Halifax",30,  "employer@email.com");
     }
 
     /**
