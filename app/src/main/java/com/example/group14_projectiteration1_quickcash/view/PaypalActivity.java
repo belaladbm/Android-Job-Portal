@@ -16,8 +16,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.group14_projectiteration1_quickcash.BuildConfig;
+import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Application;
+import com.google.firebase.database.DatabaseReference;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -40,6 +42,8 @@ public class PaypalActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> activityResultLauncher;
     private PayPalConfiguration payPalConfig;
     private Application application;
+    private firebaseHelper firebaseHelper;
+    private DatabaseReference applicationRef;
 
     // UI Elements
     private TextView amountTV;
@@ -58,6 +62,10 @@ public class PaypalActivity extends AppCompatActivity {
             return insets;
         });
 
+        firebaseHelper = new firebaseHelper();
+        firebaseHelper.connectFirebase();
+        applicationRef = firebaseHelper.applydbref;
+
         // Get application from intent
         application = (Application) getIntent().getSerializableExtra("application");
 
@@ -66,6 +74,9 @@ public class PaypalActivity extends AppCompatActivity {
         configPayPal();
         initActivityLauncher();
         setListeners();
+
+        checkPaymentStatus();
+        goToDashboarButton();
     }
 
     private void initUI() {
@@ -120,6 +131,11 @@ public class PaypalActivity extends AppCompatActivity {
                                             String.format("Payment %s%nPayment ID: %s", state, payID)
                                     );
 
+                                    if ("approved".equals(state)) {
+                                        updatePaymentStatus();
+                                        updateUIForPaidStatus();
+                                    }
+
                                 } catch (JSONException e) {
                                     Log.e(TAG, "Payment confirmation error: ", e);
                                     paymentStatusTV.setText("Payment confirmation error");
@@ -151,5 +167,35 @@ public class PaypalActivity extends AppCompatActivity {
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payment);
 
         activityResultLauncher.launch(intent);
+    }
+
+    private void checkPaymentStatus() {
+        if ("paid".equals(application.getStatus())) {
+            updateUIForPaidStatus();
+        }
+    }
+
+    private void updateUIForPaidStatus() {
+        payNowBtn.setEnabled(false);
+        payNowBtn.setText("Already Paid");
+        paymentStatusTV.setText("Payment already completed");
+    }
+
+
+    private void updatePaymentStatus(){
+        application.setStatus("paid");
+
+        // Updating Firebase using firebase helper
+        if (application.getId() != null) {
+            applicationRef.child(application.getId()).child("status").setValue("paid")
+                    .addOnSuccessListener(aVoid ->
+                            Log.d(TAG, "Payment status updated successfully"))
+                    .addOnFailureListener(e ->
+                            Log.e(TAG, "Failed to update payment status", e));
+        }
+    }
+
+    private void goToDashboarButton(){
+
     }
 }
