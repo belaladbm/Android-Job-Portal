@@ -13,19 +13,16 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="MyApplicationsActivityTest">
+      <SelectionState runConfigName="EditJobActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testMyApplicationsUI()">
+      <SelectionState runConfigName="EmployerJobDetailsActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testTitleIsDisplayed()">
+      <SelectionState runConfigName="JobApplicationsActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testMarkCompletedButtonVisibleForAcceptedStatus()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testMarkCompletedButtonNotVisibleForNonAcceptedStatus()">
+      <SelectionState runConfigName="JobApplicationsActivity (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

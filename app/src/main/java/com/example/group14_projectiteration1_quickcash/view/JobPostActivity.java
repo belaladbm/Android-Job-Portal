@@ -123,13 +123,21 @@ public class JobPostActivity extends AppCompatActivity {
                 getIntent().getStringExtra("userEmail")
         );
 
-        // Save job in Firebase database
-        firebase_helper.jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
+        // Get new reference and key for job editing purposes
+        String key = firebase_helper.jobsdbRef.push().getKey();
+        if (key == null) {
+            Toast.makeText(this, "Job Posting Failed: Could not generate ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Set jobId in object before saving
+        job.setJobId(key);
+        firebase_helper.jobsdbRef.child(key).setValue(job).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(this, "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Congrats! You've posted a new job.", Toast.LENGTH_SHORT).show();
                 redirectingToDashboard();
             } else {
-                Toast.makeText(this, "Job Posting Failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error. Could not post the job", Toast.LENGTH_SHORT).show();
             }
         });
     }
