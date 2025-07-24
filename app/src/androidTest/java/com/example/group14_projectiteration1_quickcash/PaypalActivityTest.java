@@ -6,6 +6,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.*;
 
 import android.content.Intent;
@@ -41,6 +43,22 @@ public class PaypalActivityTest {
             onView(withId(R.id.amountTV)).check(matches(isDisplayed()));
             onView(withId(R.id.payNowBtn)).check(matches(isDisplayed()));
             onView(withId(R.id.paymentStatusTV)).check(matches(isDisplayed()));
+        }
+    }
+
+    @Test
+    public void checkIfUIShowsCorrectDetails(){
+        Application application = applicationForTesting();
+        Intent intent = new Intent(getApplicationContext(), PaypalActivity.class);
+        intent.putExtra("application", application);
+
+        try (ActivityScenario<PaypalActivity> scenario = ActivityScenario.launch(intent)) {
+            onView(withId(R.id.amountTV))
+                    .check(matches(withText("$20.35")));
+
+            onView(withId(R.id.jobDetailsTV))
+                    .check(matches(withText(containsString("Payment for: Tester"))))
+                    .check(matches(withText(containsString("Employee: testing@gmail.com"))));
         }
     }
 
