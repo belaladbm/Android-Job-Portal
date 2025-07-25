@@ -58,6 +58,9 @@
             android:name=".view.EditJobActivity"
             android:exported="true" />
         <activity
+            android:name=".view.JobActionsActivity"
+            android:exported="true"/>
+        <activity
             android:name=".view.JobApplicationsActivity"
             android:exported="true" />
         <activity
