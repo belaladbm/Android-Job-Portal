@@ -26,6 +26,7 @@ public class JobDetailsActivityTest {
                 "Walk the dog every morning",
                 "Pet Care",
                 "Halifax",
+                30,
                 "employer@example.com"
         );
 

@@ -109,6 +109,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         holder.jobTitle.setText(job.getTitle());
         holder.jobLocation.setText("Location: " + job.getLocation());
         holder.jobCategory.setText("Category: " + job.getCategory());
+        holder.jobPay.setText("Job Pay: $" + job.getJobPay());
 
         // Handle "View on Map" click
         holder.btnViewOnMap.setOnClickListener(v -> {
@@ -161,6 +162,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         TextView jobTitle;
         TextView jobLocation;
         TextView jobCategory;
+        TextView jobPay;
         TextView appliedTextView;
 
         public JobViewHolder(@NonNull View itemView) {
@@ -170,6 +172,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             jobTitle = itemView.findViewById(R.id.jobTitleTextView);
             jobLocation = itemView.findViewById(R.id.jobLocationTextView);
             jobCategory = itemView.findViewById(R.id.jobCategoryTextView);
+            jobPay = itemView.findViewById(R.id.jobPayTextView);
             appliedTextView = itemView.findViewById(R.id.appliedTextView);
         }
     }

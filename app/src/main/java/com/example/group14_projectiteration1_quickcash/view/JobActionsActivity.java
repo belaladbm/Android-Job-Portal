@@ -41,6 +41,7 @@ public class JobActionsActivity extends AppCompatActivity {
             Intent intent = new Intent(this, JobApplicationsActivity.class);
             intent.putExtra("jobId", job.getJobId());
             intent.putExtra("jobTitle", job.getTitle());
+            intent.putExtra("userEmail", userEmail);
             startActivity(intent);
         });
 

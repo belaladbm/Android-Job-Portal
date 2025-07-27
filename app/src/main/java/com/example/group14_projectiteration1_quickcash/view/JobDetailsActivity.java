@@ -148,7 +148,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         }
 
         // Create application and store it
-        Application application = new Application(selectedJob.getJobId(), employeeEmail, coverLetter);
+        Application application = new Application(selectedJob.getJobId(), employeeEmail, coverLetter, selectedJob.getJobPay(), selectedJob.getTitle());
         selectedJob.getApplications().put(employeeEmail, application);
 
         firebase_helper.applydbref.push().setValue(application)

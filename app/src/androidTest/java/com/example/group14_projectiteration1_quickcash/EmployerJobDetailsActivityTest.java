@@ -31,6 +31,7 @@ public class EmployerJobDetailsActivityTest {
                 "Gardening gardens",
                 "Landscaping & Gardening",
                 "Halifax",
+                45.5,
                 "employer@email.com"
         );
         job.setJobId("mockJobId");
@@ -65,6 +66,7 @@ public class EmployerJobDetailsActivityTest {
                 "Description",
                 "Cleaning & Housekeeping",
                 "Halifax",
+                20,
                 "employer@email.com"
         );
         job.setJobId("mockJobId");

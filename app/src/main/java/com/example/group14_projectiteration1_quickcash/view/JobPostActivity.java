@@ -32,6 +32,7 @@ public class JobPostActivity extends AppCompatActivity {
     private EditText jobNameEditText;
     private EditText jobDescriptionEditText;
     private EditText locationEditText;
+    private EditText jobPay;
     private Spinner categorySpinner;
     private firebaseHelper firebase_helper;
 
@@ -57,6 +58,7 @@ public class JobPostActivity extends AppCompatActivity {
         jobDescriptionEditText = findViewById(R.id.jobDescriptionEditText);
         locationEditText = findViewById(R.id.locationEditText);
         categorySpinner = findViewById(R.id.categorySpinner);
+        jobPay = findViewById(R.id.jobPay);
         Button submitJobButton = findViewById(R.id.submitJobButton);
         Button backToDashboard = findViewById(R.id.backButton);
 
@@ -113,6 +115,23 @@ public class JobPostActivity extends AppCompatActivity {
             Toast.makeText(this, "Job Posting Failed!, Please enter a location", Toast.LENGTH_SHORT).show();
             return;
         }
+        /*Job Pay*/
+        String payInput = jobPay.getText().toString().trim();
+        if (TextUtils.isEmpty(payInput)) {
+            jobPay.setError("Pay is required");
+            Toast.makeText(this, "Job Posting Failed!, Please enter pay", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double payForJob;
+        try {
+            payForJob = Double.parseDouble(payInput);
+        } catch (NumberFormatException e) {
+            jobPay.setError("Invalid number format");
+            Toast.makeText(this, "Job Posting Failed!, Pay must be a valid number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         // Create Job object from input
         Job job = new Job(
@@ -120,6 +139,7 @@ public class JobPostActivity extends AppCompatActivity {
                 jobDescriptionEditText.getText().toString(),
                 category,
                 locationEditText.getText().toString(),
+                payForJob,
                 getIntent().getStringExtra("userEmail")
         );
 

@@ -22,6 +22,7 @@ public class EmployerJobDetailsJUnitTest {
                 "Tutoring French for kids",
                 "Childcare & Education",
                 "Halifax",
+                20,
                 "employer@email.com"
         );
         job.setJobId("job213");

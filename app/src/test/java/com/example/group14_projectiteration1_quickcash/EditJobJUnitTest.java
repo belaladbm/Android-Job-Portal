@@ -22,6 +22,7 @@ public class EditJobJUnitTest {
                 "Old Description",
                 "IT & Software",
                 "Old Location",
+                30,
                 "employer@email.com"
         );
         job.setJobId("job123");
