@@ -20,6 +20,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.adapter.JobAdapter;
@@ -35,6 +37,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DashboardActivity is the home screen after login.
@@ -54,6 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
     private String email;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private final Set<String> alertedJobIds = new HashSet<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,37 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Role-specific dashboard setup
         fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
+    }
+    private void checkNearbyJobAlerts(Location userLocation) {
+        DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
+        jobsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot jobSnapshot : snapshot.getChildren()) {
+                    Job job = jobSnapshot.getValue(Job.class);
+                    if (job != null && job.getLatitude() != null && job.getLongitude() != null) {
+                        float[] results = new float[1];
+                        Location.distanceBetween(
+                                userLocation.getLatitude(),
+                                userLocation.getLongitude(),
+                                Double.parseDouble(job.getLatitude()),
+                                Double.parseDouble(job.getLongitude()),
+                                results
+                        );
+                        float distanceInMeters = results[0];
+                        if (distanceInMeters <= 10000 && !alertedJobIds.contains(job.getJobId())) {
+                            Toast.makeText(DashboardActivity.this, "New nearby job: " + job.getTitle(), Toast.LENGTH_LONG).show();
+                            alertedJobIds.add(job.getJobId());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(DashboardActivity.this, "Failed to check job alerts.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /** Initializes listener that runs when location changes */
@@ -183,6 +221,7 @@ public class DashboardActivity extends AppCompatActivity {
                 String userCity = add.getLocality();
                 locationText.setText(LOCATION_LABEL + userCity);
                 fetchNearbyJobs(userCity);
+                checkNearbyJobAlerts(loc);
             } else {
                 locationText.setText(LOCATION_LABEL + loc.getLongitude() + ", " + loc.getLatitude());
             }

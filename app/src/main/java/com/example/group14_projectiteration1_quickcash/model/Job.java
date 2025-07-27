@@ -17,6 +17,8 @@ public class Job implements Serializable {
     private String location;
     private String employerEmail;
     private double jobPay;
+    private String latitude;
+    private String longitude;
     private HashMap<String, Application> applications;
 
     /**
@@ -188,4 +190,19 @@ public class Job implements Serializable {
         }
         return applications;
     }
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
 }
