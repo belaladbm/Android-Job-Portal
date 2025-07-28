@@ -281,9 +281,17 @@ public class DashboardActivity extends AppCompatActivity {
                     Job job = jobSnapshot.getValue(Job.class);
                     if (job != null && job.getLocation() != null &&
                             job.getLocation().toLowerCase().contains(userCity.toLowerCase())) {
+
                         jobList.add(job);
                         jobsFound = true;
+
+                        if (!alertedJobIds.contains(job.getJobId())) {
+                            displayNearbyJobAlert(job);
+                            alertedJobIds.add(job.getJobId());
+                        }
                     }
+
+
                 }
 
                 if (jobsFound) {
