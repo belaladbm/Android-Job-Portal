@@ -105,6 +105,12 @@ public class DashboardActivity extends AppCompatActivity {
         // Role-specific dashboard setup
         fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
     }
+    public void displayNearbyJobAlert(Job job) {
+        Toast.makeText(this, "New job near you: " + job.getTitle(), Toast.LENGTH_SHORT).show();
+    }
+
+
+
     private void checkNearbyJobAlerts(Location userLocation) {
         DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
         jobsRef.addListenerForSingleValueEvent(new ValueEventListener() {

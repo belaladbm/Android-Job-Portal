@@ -80,9 +80,12 @@ dependencies {
     //paypal dependencies
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
     implementation libs.play.services.location
+    implementation libs.ext.junit
 
     testImplementation libs.junit
     testImplementation libs.core
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+
 }
