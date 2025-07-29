@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
     implementation libs.play.services.location
     implementation libs.ext.junit
+    implementation libs.firebase.messaging
 
     testImplementation libs.junit
     testImplementation libs.core
