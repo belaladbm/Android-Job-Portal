@@ -179,6 +179,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Medium_Phone_API_36.0" value="120" />
+                  <entry key="Pixel_2_Google_Play" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>
@@ -277,6 +278,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-531423296">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_Google_Play" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-446586777">
           <value>
             <AndroidTestResultsTableState>
@@ -335,6 +349,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_Google_Play" value="120" />
                   <entry key="Pixel_7" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -441,6 +456,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Medium_Phone_API_35" value="120" />
+                  <entry key="Pixel_2_Google_Play" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
               </option>

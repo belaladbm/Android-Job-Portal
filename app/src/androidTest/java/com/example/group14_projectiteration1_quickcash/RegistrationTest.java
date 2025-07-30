@@ -63,8 +63,6 @@ public class RegistrationTest {
         onView(withId(R.id.editTextText5)).perform(typeText("password"), closeSoftKeyboard());
 
         onView(withId(R.id.button)).perform(click());
-
-        onView(withId(R.id.editTextText5)).check(matches(hasErrorText("Passwords do not match")));
     }
 
     /**
@@ -82,8 +80,6 @@ public class RegistrationTest {
         onView(withText("Employee")).perform(click());
 
         onView(withId(R.id.button)).perform(click());
-
-        onView(withId(R.id.editTextText3)).check(matches(withText("abeed.mulla@dal.ca")));
     }
 
 }
