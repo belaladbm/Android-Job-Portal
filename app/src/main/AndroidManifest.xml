@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
 
     <application
         android:allowBackup="true"
@@ -18,12 +22,22 @@
         android:theme="@style/Theme.Group14_ProjectIteration1_QuickCash"
         tools:targetApi="31">
 
-        <service android:name="com.paypal.android.sdk.payments.PayPalService"
+        <service
+            android:name="com.paypal.android.sdk.payments.PayPalService"
             android:exported="false" />
 
         <activity
             android:name=".view.PaypalActivity"
             android:exported="false" />
+
+        <service
+            android:name=".notification.MyFirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".view.MyApplicationsActivity"
             android:exported="false" />
@@ -59,7 +73,7 @@
             android:exported="true" />
         <activity
             android:name=".view.JobActionsActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".view.JobApplicationsActivity"
             android:exported="true" />
