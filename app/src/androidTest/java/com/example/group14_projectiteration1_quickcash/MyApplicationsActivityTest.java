@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MyApplicationsActivityTest {
-    git
     @Rule
     public ActivityScenarioRule<MyApplicationsActivity> activityRule =
             new ActivityScenarioRule<>(MyApplicationsActivity.class);
