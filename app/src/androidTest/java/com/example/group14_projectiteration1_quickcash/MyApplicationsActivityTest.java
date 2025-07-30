@@ -57,7 +57,7 @@ public class MyApplicationsActivityTest {
     @Test
     public void testRecyclerViewIsDisplayed() {
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MyApplicationsActivity.class);
-        intent.putExtra("userEmail", "abeed@gmail.com");
+        intent.putExtra("userEmail", "againn@gmail.com");
         ActivityScenario.launch(intent);
 
         onView(withId(R.id.myApplicationsRecyclerView))
