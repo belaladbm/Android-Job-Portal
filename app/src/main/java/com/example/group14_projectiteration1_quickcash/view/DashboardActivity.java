@@ -331,7 +331,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setupJobClickListener() {
-        jobAdapter = new JobAdapter(jobList, job -> {
+        jobAdapter = new JobAdapter(this, jobList, job -> {
             if (job.getLocation() != null && !job.getLocation().isEmpty()) {
                 showJobOnMap(job);
             } else {

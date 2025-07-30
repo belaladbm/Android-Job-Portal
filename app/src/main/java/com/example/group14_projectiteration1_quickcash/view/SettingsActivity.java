@@ -39,6 +39,9 @@ public class SettingsActivity extends AppCompatActivity {
         Button backToDashboard = findViewById(R.id.backButton);
         resetPasswordButton = findViewById(R.id.resetButton);
 
+        // AT-16 — Find the new favorites button
+        Button viewFavoritesButton = findViewById(R.id.viewFavoritesButton);
+
         // Get email passed from Dashboard
         currentUserEmail = getIntent().getStringExtra("userEmail");
 
@@ -63,6 +66,13 @@ public class SettingsActivity extends AppCompatActivity {
         //redirecting to reset password page after clicking on the appropriate button
         resetPasswordButton.setOnClickListener(view -> {
             Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
+            startActivity(intent);
+        });
+
+        // Navigate to FavoriteJobActivity
+        viewFavoritesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, FavoritesJobActivity.class);
+            intent.putExtra("userEmail", currentUserEmail);
             startActivity(intent);
         });
     }

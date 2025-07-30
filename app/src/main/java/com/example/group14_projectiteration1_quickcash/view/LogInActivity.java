@@ -19,10 +19,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
 
+import com.example.group14_projectiteration1_quickcash.model.CurrentUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import com.example.group14_projectiteration1_quickcash.model.User;
 
 /**
  * Handles users Login process.
@@ -107,12 +110,21 @@ public class LogInActivity extends AppCompatActivity {
         emailQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                System.out.println("Login attempt");
                 if (snapshot.exists()) {
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         String storedPassword = userSnapshot.child("password").getValue(String.class);
 
                         if (password.equals(storedPassword)) {
+                            System.out.println("Login successful");
+                            // Retrieve the full User object
+                            User user = userSnapshot.getValue(User.class);
+                            if (user != null) {
+                                user.setUserId(userSnapshot.getKey()); // set userId field
+                                CurrentUser.getInstance().setCurrentUser(user);
+                            }
                             onLoginSuccess(email);
+                            System.out.println("Current user: " + CurrentUser.getInstance().getCurrentUser().getUserId());
                             return;
                         }
                     }

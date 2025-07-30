@@ -20,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.User;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.Arrays;
 import java.util.List;
@@ -128,8 +129,12 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
+        // Saving the user to database and capturing the userId (Firebase key)
+        DatabaseReference newUserRef = firebase_helper.dbref.push();
+        String userId = newUserRef.getKey(); // This is the user ID
         //Creating a user object with the input data
         User user = new User(
+                userId,
                 firstName.getText().toString(),
                 lastName.getText().toString(),
                 email.getText().toString(),

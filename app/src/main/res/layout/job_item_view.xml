@@ -55,11 +55,30 @@
             android:text="View on Map"
             android:layout_marginTop="8dp"/>
 
+
         <Button
             android:id="@+id/applyNowButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Apply Now" />
+        <Button
+            android:id="@+id/favoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="☆"
+            android:textSize="24sp"
+            android:background="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="8dp" />
+
+
+        <Button
+            android:id="@+id/removeFavoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove from Favorites"
+            android:visibility="gone" />
+
 
         <TextView
             android:id="@+id/appliedTextView"
