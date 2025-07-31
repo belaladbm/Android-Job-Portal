@@ -1,7 +1,9 @@
 package com.example.group14_projectiteration1_quickcash.view;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,13 +12,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -45,9 +51,17 @@ public class JobDetailsActivity extends AppCompatActivity {
         Button applyNowButton = findViewById(R.id.applyNowButton);
         Button backButton = findViewById(R.id.backButton);
 
-        // Get job and user email from intent
+        // Get job from intent
         selectedJob = (Job) getIntent().getSerializableExtra("job");
-        String employeeEmail = getIntent().getStringExtra("userEmail");
+
+        String emailFromIntent = getIntent().getStringExtra("userEmail");
+        if (emailFromIntent == null || emailFromIntent.isEmpty()) {
+            SharedPreferences sharedPreferences = getSharedPreferences("Employee_Email", Context.MODE_PRIVATE);
+            emailFromIntent = sharedPreferences.getString("userEmail", null);
+        }
+        final String employeeEmail = emailFromIntent;
+
+
 
         firebase_helper = new firebaseHelper();
 
@@ -59,10 +73,13 @@ public class JobDetailsActivity extends AppCompatActivity {
             if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty()) {
                 selectedJob.generateId();
             }
-            titleText.setText(selectedJob.getTitle());
-            descriptionText.setText(selectedJob.getDescription());
-            categoryText.setText("Category: " + selectedJob.getCategory());
-            locationText.setText("Location: " + selectedJob.getLocation());
+            setUpJobDetailsUI(titleText, descriptionText, categoryText, locationText);
+        }
+        else{
+            String jobId = getIntent().getStringExtra("job_id");
+            if (jobId != null && !jobId.isEmpty()) {
+                fetchJobFromFirebase(jobId, titleText, descriptionText, categoryText, locationText, applyNowButton);
+            }
         }
 
         // Check if user is logged in
@@ -159,5 +176,41 @@ public class JobDetailsActivity extends AppCompatActivity {
                         Toast.makeText(this, "Application failed. Please try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void fetchJobFromFirebase(String jobId, TextView titleText, TextView descriptionText,
+                                      TextView categoryText, TextView locationText, Button applyNowButton) {
+        DatabaseReference jobRef = FirebaseDatabase.getInstance().getReference("Jobs:").child(jobId);
+        jobRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                selectedJob = snapshot.getValue(Job.class);
+                if (selectedJob != null) {
+                    // Ensure job ID is set
+                    if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty()) {
+                        selectedJob.setJobId(jobId);
+                    }
+                    setUpJobDetailsUI(titleText, descriptionText, categoryText, locationText);
+                } else {
+                    Toast.makeText(JobDetailsActivity.this, "Job not found", Toast.LENGTH_SHORT).show();
+                    applyNowButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(JobDetailsActivity.this, "Error loading job", Toast.LENGTH_SHORT).show();
+                applyNowButton.setEnabled(false);
+            }
+        });
+    }
+
+    private void setUpJobDetailsUI(TextView titleText, TextView descriptionText,TextView categoryText, TextView locationText){
+        if (selectedJob != null) {
+            titleText.setText(selectedJob.getTitle());
+            descriptionText.setText(selectedJob.getDescription());
+            categoryText.setText("Category: " + selectedJob.getCategory());
+            locationText.setText("Location: " + selectedJob.getLocation());
+        }
     }
 }

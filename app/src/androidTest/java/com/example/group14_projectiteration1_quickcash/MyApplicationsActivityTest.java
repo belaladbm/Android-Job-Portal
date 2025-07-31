@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 public class MyApplicationsActivityTest {
-
     @Rule
     public ActivityScenarioRule<MyApplicationsActivity> activityRule =
             new ActivityScenarioRule<>(MyApplicationsActivity.class);
@@ -57,7 +56,7 @@ public class MyApplicationsActivityTest {
     @Test
     public void testRecyclerViewIsDisplayed() {
         Intent intent = new Intent(ApplicationProvider.getApplicationContext(), MyApplicationsActivity.class);
-        intent.putExtra("userEmail", "abeed@gmail.com");
+        intent.putExtra("userEmail", "againn@gmail.com");
         ActivityScenario.launch(intent);
 
         onView(withId(R.id.myApplicationsRecyclerView))
