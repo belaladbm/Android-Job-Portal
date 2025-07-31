@@ -63,7 +63,7 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
             holder.jobLocation.setText(job.getLocation() != null ? "Location: " + job.getLocation() : "");
             holder.jobCategory.setText(job.getCategory() != null ? "Category: " + job.getCategory() : "");
             holder.employerEmail.setText(job.getEmployerEmail() != null ? "Employer: " + job.getEmployerEmail() : "");
-            holder.jobPay.setText((String.format("Pay: $%.2f", job.getJobPay())));
+            holder.jobPay.setText(String.format("Pay: $%.2f", job.getJobPay()));
         } else {
             holder.jobTitle.setText("Job details not available");
             holder.jobLocation.setText("");
@@ -78,26 +78,22 @@ public class EmployeeApplicationAdapter extends RecyclerView.Adapter<EmployeeApp
 
         if ("accepted".equalsIgnoreCase(application.getStatus())) {
             holder.markCompletedButton.setVisibility(View.VISIBLE);
-            holder.markCompletedButton.setOnClickListener(v -> {
-                // Update status in Firebase
-                FirebaseDatabase.getInstance()
-                        .getReference("Applications:")
-                        .child(application.getId())
-                        .child("status")
-                        .setValue("Completed")
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(holder.itemView.getContext(), "Marked as Completed", Toast.LENGTH_SHORT).show();
-                        });
-            });
+            holder.markCompletedButton.setOnClickListener(v ->
+                    FirebaseDatabase.getInstance()
+                            .getReference("Applications:")
+                            .child(application.getId())
+                            .child("status")
+                            .setValue("Completed")
+                            .addOnSuccessListener(aVoid ->
+                                    Toast.makeText(holder.itemView.getContext(), "Marked as Completed", Toast.LENGTH_SHORT).show())
+            );
         } else {
             holder.markCompletedButton.setVisibility(View.GONE);
         }
 
         // Handle item click
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onApplicationClick(application);
-            }
+            if (listener != null) listener.onApplicationClick(application);
         });
     }
 
