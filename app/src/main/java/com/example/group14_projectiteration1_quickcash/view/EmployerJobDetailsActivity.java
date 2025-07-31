@@ -63,9 +63,4 @@ public class EmployerJobDetailsActivity extends AppCompatActivity {
         categoryText.setText("Category: " + job.getCategory());
         locationText.setText("Location: " + job.getLocation());
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }

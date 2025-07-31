@@ -54,7 +54,7 @@ public class Job implements Serializable {
         this.jobId = UUID.randomUUID().toString();
     }
 
-    //Getters
+    // Getters
 
     /**
      * Gets the job ID.
@@ -112,7 +112,15 @@ public class Job implements Serializable {
         return employerEmail;
     }
 
-    //Setters
+    /**
+     * Gets the map of applications submitted to this job.
+     * @return Map of applications (email → Application)
+     */
+    public HashMap<String, Application> getApplications() {
+        return applications;
+    }
+
+    // Setters
 
     /**
      * Sets the job ID.
@@ -176,16 +184,5 @@ public class Job implements Serializable {
      */
     public void setApplications(HashMap<String, Application> applications) {
         this.applications = applications;
-    }
-
-    /**
-     * Gets the map of applications submitted to this job.
-     * @return Map of applications (email → Application)
-     */
-    public HashMap<String, Application> getApplications() {
-        if (applications == null) {
-            applications = new HashMap<>();
-        }
-        return applications;
     }
 }

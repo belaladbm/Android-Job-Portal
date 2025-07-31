@@ -27,11 +27,12 @@ import java.util.Set;
 public class FavoritesJobActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    public JobAdapter adapter;
-    public final List<Job> favoriteJobs = new ArrayList<>();
-    public String userId;
-    public final Set<String> favoriteJobIds = new HashSet<>();
+    private JobAdapter adapter;
+    private final List<Job> favoriteJobs = new ArrayList<>();
+    private final Set<String> favoriteJobIds = new HashSet<>();
+    private String userId;
     private Button removeAllFavoritesButton;
+    private DatabaseReference favRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class FavoritesJobActivity extends AppCompatActivity {
         removeAllFavoritesButton = findViewById(R.id.removeAllFavoritesButton); // AT-16
 
         userId = CurrentUser.getInstance().getCurrentUser().getUserId();
+        favRef = FirebaseDatabase.getInstance().getReference("Favorites").child(userId);
 
         adapter = new JobAdapter(this, favoriteJobs, null, null, userId, favoriteJobIds);
         recyclerView.setAdapter(adapter);
@@ -51,29 +53,21 @@ public class FavoritesJobActivity extends AppCompatActivity {
         loadFavoritesFromFirebase();
 
         // Remove all favorites when button clicked
-        removeAllFavoritesButton.setOnClickListener(v -> {
-            DatabaseReference favRef = FirebaseDatabase.getInstance()
-                    .getReference("Favorites")
-                    .child(userId);
-
-            favRef.removeValue().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    favoriteJobs.clear();
-                    favoriteJobIds.clear();
-                    adapter.updateJobs(favoriteJobs);
-                    Toast.makeText(this, "All favorite jobs removed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Failed to remove favorites", Toast.LENGTH_SHORT).show();
-                }
-            });
-        });
+        removeAllFavoritesButton.setOnClickListener(v ->
+                favRef.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        favoriteJobs.clear();
+                        favoriteJobIds.clear();
+                        adapter.updateJobs(favoriteJobs);
+                        Toast.makeText(this, "All favorite jobs removed", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to remove favorites", Toast.LENGTH_SHORT).show();
+                    }
+                })
+        );
     }
 
     private void loadFavoritesFromFirebase() {
-        DatabaseReference favRef = FirebaseDatabase.getInstance()
-                .getReference("Favorites")
-                .child(userId);
-
         favRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -91,7 +85,9 @@ public class FavoritesJobActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(FavoritesJobActivity.this, "Failed to load favorites: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(FavoritesJobActivity.this,
+                        "Failed to load favorites: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

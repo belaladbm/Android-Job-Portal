@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Form for the employer t modify the information of a job he has posted.
+ * Form for the employer to modify the information of a job he has posted.
  */
 public class EditJobActivity extends AppCompatActivity {
 
@@ -91,9 +91,7 @@ public class EditJobActivity extends AppCompatActivity {
 
         // Set current category
         int index = categories.indexOf(job.getCategory());
-        if (index >= 0) {
-            categorySpinner.setSelection(index);
-        }
+        if (index >= 0) categorySpinner.setSelection(index);
     }
 
     /**
@@ -103,7 +101,7 @@ public class EditJobActivity extends AppCompatActivity {
         titleEdit.setText(job.getTitle());
         descriptionEdit.setText(job.getDescription());
         locationEdit.setText(job.getLocation());
-        jobPayEdit.setText((String.format("Pay: $%.2f", job.getJobPay())));
+        jobPayEdit.setText(String.format("%.2f", job.getJobPay()));
     }
 
     /**
@@ -157,12 +155,12 @@ public class EditJobActivity extends AppCompatActivity {
         fbHelper.jobsdbRef.child(job.getJobId())
                 .setValue(job)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful())
                         Toast.makeText(this, "Job updated successfully!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
+                    else
                         Toast.makeText(this, "Failed to update job. Try again.", Toast.LENGTH_SHORT).show();
-                    }
+
+                    finish();
                 });
     }
 }

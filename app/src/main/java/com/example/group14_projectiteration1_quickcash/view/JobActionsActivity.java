@@ -27,7 +27,8 @@ public class JobActionsActivity extends AppCompatActivity {
         job = (Job) getIntent().getSerializableExtra("job");
         userEmail = getIntent().getStringExtra("userEmail");
 
-        if (job == null || userEmail == null) {
+        if (job == null || userEmail == null)
+        {
             Toast.makeText(this, "Missing job or user data", Toast.LENGTH_SHORT).show();
             finish();
             return;

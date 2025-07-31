@@ -32,7 +32,7 @@ import java.util.HashMap;
 public class JobDetailsActivity extends AppCompatActivity {
 
     private Job selectedJob;
-    private firebaseHelper firebase_helper;
+    private firebaseHelper firebaseHelper;
 
     /**
      * Called when the activity is first created.
@@ -61,21 +61,18 @@ public class JobDetailsActivity extends AppCompatActivity {
         }
         final String employeeEmail = emailFromIntent;
 
-
-
-        firebase_helper = new firebaseHelper();
+        firebaseHelper = new firebaseHelper();
 
         // Back to dashboard button
         moveToDashboard(backButton, employeeEmail);
 
         // Display job details
         if (selectedJob != null) {
-            if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty()) {
+            if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty())
                 selectedJob.generateId();
-            }
+
             setUpJobDetailsUI(titleText, descriptionText, categoryText, locationText);
-        }
-        else{
+        } else {
             String jobId = getIntent().getStringExtra("job_id");
             if (jobId != null && !jobId.isEmpty()) {
                 fetchJobFromFirebase(jobId, titleText, descriptionText, categoryText, locationText, applyNowButton);
@@ -130,7 +127,7 @@ public class JobDetailsActivity extends AppCompatActivity {
                 coverLetterInput.setError("Please enter a message or cover letter");
                 return;
             }
-            firebase_helper.connectFirebase();
+            firebaseHelper.connectFirebase();
             submitApplication(employeeEmail, coverLetter);
             dialog.dismiss();
         });
@@ -168,7 +165,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         Application application = new Application(selectedJob.getJobId(), employeeEmail, coverLetter, selectedJob.getJobPay(), selectedJob.getTitle());
         selectedJob.getApplications().put(employeeEmail, application);
 
-        firebase_helper.applydbref.push().setValue(application)
+        firebaseHelper.applydbref.push().setValue(application)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Application sent successfully!", Toast.LENGTH_SHORT).show();
@@ -186,10 +183,9 @@ public class JobDetailsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 selectedJob = snapshot.getValue(Job.class);
                 if (selectedJob != null) {
-                    // Ensure job ID is set
-                    if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty()) {
+                    if (selectedJob.getJobId() == null || selectedJob.getJobId().isEmpty())
                         selectedJob.setJobId(jobId);
-                    }
+
                     setUpJobDetailsUI(titleText, descriptionText, categoryText, locationText);
                 } else {
                     Toast.makeText(JobDetailsActivity.this, "Job not found", Toast.LENGTH_SHORT).show();
@@ -205,7 +201,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpJobDetailsUI(TextView titleText, TextView descriptionText,TextView categoryText, TextView locationText){
+    private void setUpJobDetailsUI(TextView titleText, TextView descriptionText, TextView categoryText, TextView locationText) {
         if (selectedJob != null) {
             titleText.setText(selectedJob.getTitle());
             descriptionText.setText(selectedJob.getDescription());

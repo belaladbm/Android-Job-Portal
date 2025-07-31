@@ -3,17 +3,19 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.adapter.ApplicationAdapter;
 import com.example.group14_projectiteration1_quickcash.model.Application;
-import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,14 +132,14 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
 
     /**
      * Handles approve logic which would allow user to make payment
-     * */
-   @Override
-public void onApprove(Application application) {
-    Intent intent = new Intent(this, PaypalActivity.class);
-    intent.putExtra("application", application);
-    intent.putExtra("userEmail", userEmail);
-    startActivity(intent);
-}
+     */
+    @Override
+    public void onApprove(Application application) {
+        Intent intent = new Intent(this, PaypalActivity.class);
+        intent.putExtra("application", application);
+        intent.putExtra("userEmail", userEmail);
+        startActivity(intent);
+    }
 
     /**
      * Updates the status of an application in Firebase database.
