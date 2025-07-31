@@ -3,6 +3,7 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,6 +24,22 @@ import com.example.group14_projectiteration1_quickcash.model.Job;
 import java.util.Arrays;
 import java.util.List;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.group14_projectiteration1_quickcash.notification.AccessTokenListener;
+import com.google.auth.oauth2.GoogleCredentials;
+import org.json.JSONObject;
+import org.json.JSONException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
 /**
  * JobPostActivity allows employers to post a job by filling in the job title,
  * description, category, and location. The job is then stored in Firebase.
@@ -35,6 +52,7 @@ public class JobPostActivity extends AppCompatActivity {
     private EditText jobPay;
     private Spinner categorySpinner;
     private firebaseHelper firebase_helper;
+    private static final String CREDENTIALS_FILE_PATH = "key.json";
 
     /**
      * Called when the activity is first created.
@@ -150,6 +168,18 @@ public class JobPostActivity extends AppCompatActivity {
             return;
         }
 
+        getAccessToken(new AccessTokenListener() {
+            @Override
+            public void onAccessTokenReceived(String token) {
+                sendNotification(token, locationEditText.getText().toString(), key, getIntent().getStringExtra("userEmail"));
+            }
+
+            @Override
+            public void onAccessTokenError(Exception exception) {
+                Toast.makeText(JobPostActivity.this, "Token Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Set jobId in object before saving
         job.setJobId(key);
         firebase_helper.jobsdbRef.child(key).setValue(job).addOnCompleteListener(task -> {
@@ -161,6 +191,69 @@ public class JobPostActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void getAccessToken(AccessTokenListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                InputStream stream = getAssets().open(CREDENTIALS_FILE_PATH);
+                GoogleCredentials credentials = GoogleCredentials
+                        .fromStream(stream)
+                        .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+                credentials.refreshIfExpired();
+                String token = credentials.getAccessToken().getTokenValue();
+                listener.onAccessTokenReceived(token);
+            } catch (Exception e) {
+                listener.onAccessTokenError(e);
+            }
+        });
+        executor.shutdown();
+    }
+
+    private void sendNotification(String token, String jobLocation, String jobId, String userEmail) {
+        String endpoint = "https://fcm.googleapis.com/v1/projects/group-14-project-quickca-c43bd/messages:send";
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        try {
+            JSONObject notification = new JSONObject();
+            notification.put("title", "New Job Created");
+            notification.put("body", "A new job has been posted in " + jobLocation);
+
+            JSONObject data = new JSONObject();
+            data.put("jobLocation", jobLocation);
+            data.put("job_id", jobId);
+            data.put("userEmail", userEmail);
+
+
+            JSONObject message = new JSONObject();
+            message.put("topic", "jobs");
+            message.put("notification", notification);
+            message.put("data", data);
+
+            JSONObject body = new JSONObject();
+            body.put("message", message);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, endpoint, body,
+                    response -> Log.d("FCM", "Notification sent: " + response),
+                    error -> {
+                        Log.e("FCM", "Error sending notification", error);
+                    }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
+
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Fills the job category spinner with predefined values.

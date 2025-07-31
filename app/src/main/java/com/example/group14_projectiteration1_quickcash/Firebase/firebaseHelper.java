@@ -2,6 +2,7 @@ package com.example.group14_projectiteration1_quickcash.Firebase;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * Helper firebase class to provide firebase database connection
@@ -30,4 +31,11 @@ public class firebaseHelper {
         jobsdbRef = firebaseDatabase.getReference("Jobs:");
         applydbref = firebaseDatabase.getReference("Applications:");
     }
+
+    public void getJobById(String jobId, ValueEventListener listener) {
+        DatabaseReference jobRef = FirebaseDatabase.getInstance().getReference("jobs");
+        jobRef.orderByChild("jobId").equalTo(jobId).addListenerForSingleValueEvent(listener);
+    }
+
+
 }

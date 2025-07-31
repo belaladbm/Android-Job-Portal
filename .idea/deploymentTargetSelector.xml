@@ -13,22 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="checkIfUIExistsAndDisplayed()">
+      <SelectionState runConfigName="ApplicationTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PaypalActivityTest">
+      <SelectionState runConfigName="DashboardTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="checkIfUIShowsCorrectDetails()">
+      <SelectionState runConfigName="EditJobActivityTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testPayButtonTextIsCorrect()">
+      <SelectionState runConfigName="Tests in 'com.example.group14_projectiteration1_quickcash'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="JobApplicationsActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="JobApplicationsActivity (1)">
+      <SelectionState runConfigName="RegistrationTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
