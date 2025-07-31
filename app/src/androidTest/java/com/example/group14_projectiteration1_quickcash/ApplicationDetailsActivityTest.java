@@ -11,13 +11,6 @@ import com.example.group14_projectiteration1_quickcash.view.ApplicationDetailsAc
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 /**
  * Instrumented test for ApplicationDetailsActivity.
  * Verifies UI components are visible and interactable.
@@ -38,10 +31,10 @@ public class ApplicationDetailsActivityTest {
         intent.putExtra("applicationId", TEST_APPLICATION_ID);
         intent.putExtra("jobId", TEST_JOB_ID);
 
-        ActivityScenario<ApplicationDetailsActivity> scenario = ActivityScenario.launch(intent);
+        ActivityScenario.launch(intent);
 
         // The activity should launch, even if it finishes due to missing Firebase data
-        // We can verify that the activity was created
+        // We can verify that the activity was created by simply launching it
     }
 
     /**
@@ -53,7 +46,7 @@ public class ApplicationDetailsActivityTest {
         intent.putExtra("applicationId", TEST_APPLICATION_ID);
         intent.putExtra("jobId", TEST_JOB_ID);
 
-        ActivityScenario<ApplicationDetailsActivity> scenario = ActivityScenario.launch(intent);
+        ActivityScenario.launch(intent);
 
         // Check if the activity layout elements exist (they may not be visible due to Firebase data)
         // This test verifies the layout structure is correct
@@ -68,7 +61,7 @@ public class ApplicationDetailsActivityTest {
         intent.putExtra("applicationId", "valid_test_id");
         intent.putExtra("jobId", "valid_job_id");
 
-        ActivityScenario<ApplicationDetailsActivity> scenario = ActivityScenario.launch(intent);
+        ActivityScenario.launch(intent);
 
         // The activity should launch with valid extras
         // Note: UI elements may not be visible if Firebase data doesn't exist
