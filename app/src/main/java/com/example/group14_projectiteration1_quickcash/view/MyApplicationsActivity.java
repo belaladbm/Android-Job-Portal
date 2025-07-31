@@ -44,10 +44,10 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_applications);
 
-        // Get user email from intent
+        // Retrieve the logged-in user's email from the intent
         userEmail = getIntent().getStringExtra(USER_EMAIL_KEY);
 
-        // Initialize Firebase references
+        // Initialize Firebase database references
         applicationsRef = FirebaseDatabase.getInstance().getReference("Applications:");
         jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
@@ -55,24 +55,26 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
         applicationsRecyclerView = findViewById(R.id.myApplicationsRecyclerView);
         emptyStateText = findViewById(R.id.emptyStateText);
 
-        // Setup RecyclerView
+        // Set up RecyclerView and adapter
         applicationList = new ArrayList<>();
         jobMap = new HashMap<>();
         applicationAdapter = new EmployeeApplicationAdapter(applicationList, jobMap, this);
         applicationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         applicationsRecyclerView.setAdapter(applicationAdapter);
 
-        // Load applications
+        // Load applications for the current user
         loadMyApplications();
     }
 
+    // Required by the adapter for click events, currently unused
     @Override
     public void onApplicationClick(Application application) {}
 
+    // Load applications submitted by the current user from Firebase
     private void loadMyApplications() {
         if (userEmail == null || userEmail.isEmpty()) {
             Toast.makeText(this, "User email not found", Toast.LENGTH_SHORT).show();
-            finish();
+            finish(); // Close activity if email is not found
             return;
         }
 
@@ -81,28 +83,29 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 applicationList.clear();
 
-                // Get all applications for this user
+                // Filter applications that belong to the current user
                 for (DataSnapshot applicationSnapshot : dataSnapshot.getChildren()) {
                     Application application = applicationSnapshot.getValue(Application.class);
 
                     if (application != null && userEmail.equals(application.getEmployeeEmail())) {
-                        application.setId(applicationSnapshot.getKey());
+                        application.setId(applicationSnapshot.getKey()); // Set application ID
                         applicationList.add(application);
                     }
                 }
 
-                // If no applications found
+                // If no applications found, show empty state
                 if (applicationList.isEmpty()) {
                     applicationsRecyclerView.setVisibility(View.GONE);
                     emptyStateText.setVisibility(View.VISIBLE);
                 } else {
-                    // Fetch job details for each application
+                    // If applications found, load corresponding job details
                     fetchJobDetailsForApplications();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error when loading applications
                 Toast.makeText(MyApplicationsActivity.this,
                         "Error loading applications: " + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
@@ -110,12 +113,14 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
         });
     }
 
+    // Load job details for each application from Firebase
     private void fetchJobDetailsForApplications() {
         jobsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 jobMap.clear();
 
+                // Store job details using jobId as key
                 for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
                     Job job = jobSnapshot.getValue(Job.class);
                     if (job != null && job.getJobId() != null) {
@@ -123,7 +128,7 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
                     }
                 }
 
-                // Update adapter with both applications and job details
+                // Update RecyclerView with applications and job info
                 applicationsRecyclerView.setVisibility(View.VISIBLE);
                 emptyStateText.setVisibility(View.GONE);
                 applicationAdapter.updateData(applicationList, jobMap);
@@ -131,6 +136,7 @@ public class MyApplicationsActivity extends AppCompatActivity implements Employe
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                // Handle error when loading jobs
                 Toast.makeText(MyApplicationsActivity.this,
                         "Error loading job details: " + error.getMessage(),
                         Toast.LENGTH_SHORT).show();
