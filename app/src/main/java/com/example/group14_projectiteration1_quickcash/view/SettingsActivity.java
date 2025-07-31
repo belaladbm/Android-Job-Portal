@@ -3,6 +3,7 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -68,6 +69,14 @@ public class SettingsActivity extends AppCompatActivity {
             Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
             startActivity(intent);
         });
+
+        String role = getIntent().getStringExtra("role");
+
+        if ("Employee".equalsIgnoreCase(role)) {
+            viewFavoritesButton.setVisibility(View.VISIBLE);
+        } else {
+            viewFavoritesButton.setVisibility(View.GONE);
+        }
 
         // Navigate to FavoriteJobActivity
         viewFavoritesButton.setOnClickListener(v -> {
