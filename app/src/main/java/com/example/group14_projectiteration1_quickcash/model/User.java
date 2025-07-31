@@ -1,11 +1,14 @@
 package com.example.group14_projectiteration1_quickcash.model;
 
+import androidx.annotation.NonNull;
+
 /**
  * Represents a user in the system.
  * Stores basic user information like name, email, password, and role.
  */
 public class User {
 
+    private String userId; // Add this field
     private String firstName;
     private String lastName;
     private String email;
@@ -29,7 +32,8 @@ public class User {
      * @param confirmPassword Password confirmation
      * @param role            Role of the user (e.g., "Employer", "Employee")
      */
-    public User(String firstName, String lastName, String email, String password, String confirmPassword, String role) {
+    public User(String userId, String firstName, String lastName, String email, String password, String confirmPassword, String role) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -38,7 +42,37 @@ public class User {
         this.role = role;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
     //Getters
+
+    /**
+     * Gets the user's ID.
+     * @return User ID
+     */
+    public String getUserId() {
+        return userId;
+    }
+
+    /**
+     * Sets the user's ID.
+     * @param userId User ID
+     */
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     /**
      * Gets the user's first name.

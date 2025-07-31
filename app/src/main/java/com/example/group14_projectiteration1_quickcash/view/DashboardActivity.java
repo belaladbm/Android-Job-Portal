@@ -58,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
     private String email;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private String currentUserRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +133,7 @@ public class DashboardActivity extends AppCompatActivity {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
+            intent.putExtra("role", currentUserRole);
             startActivity(intent);
         });
     }
@@ -309,6 +311,8 @@ public class DashboardActivity extends AppCompatActivity {
                         String firstName = userSnapshot.child("firstName").getValue(String.class);
                         String role = userSnapshot.child("role").getValue(String.class);
 
+                        currentUserRole = role;
+
                         welcomeText.setText(getMessage(firstName, role));
                         setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
                     }
@@ -347,7 +351,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setupJobClickListener() {
-        jobAdapter = new JobAdapter(jobList, job -> {
+        jobAdapter = new JobAdapter(this, jobList, job -> {
             if (job.getLocation() != null && !job.getLocation().isEmpty()) {
                 showJobOnMap(job);
             } else {

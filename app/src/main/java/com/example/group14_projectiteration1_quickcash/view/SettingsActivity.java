@@ -3,6 +3,7 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,6 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
         Button backToDashboard = findViewById(R.id.backButton);
         resetPasswordButton = findViewById(R.id.resetButton);
 
+        // AT-16 — Find the new favorites button
+        Button viewFavoritesButton = findViewById(R.id.viewFavoritesButton);
+
         // Get email passed from Dashboard
         currentUserEmail = getIntent().getStringExtra("userEmail");
 
@@ -63,6 +67,21 @@ public class SettingsActivity extends AppCompatActivity {
         //redirecting to reset password page after clicking on the appropriate button
         resetPasswordButton.setOnClickListener(view -> {
             Intent intent = new Intent(SettingsActivity.this, ResetPasswordAndSwitchRoleActivity.class);
+            startActivity(intent);
+        });
+
+        String role = getIntent().getStringExtra("role");
+
+        if ("Employee".equalsIgnoreCase(role)) {
+            viewFavoritesButton.setVisibility(View.VISIBLE);
+        } else {
+            viewFavoritesButton.setVisibility(View.GONE);
+        }
+
+        // Navigate to FavoriteJobActivity
+        viewFavoritesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SettingsActivity.this, FavoritesJobActivity.class);
+            intent.putExtra("userEmail", currentUserEmail);
             startActivity(intent);
         });
     }

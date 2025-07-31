@@ -1,11 +1,15 @@
 package com.example.group14_projectiteration1_quickcash.adapter;
 
+import com.example.group14_projectiteration1_quickcash.R;
+
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,10 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.model.Application;
+import com.example.group14_projectiteration1_quickcash.model.CurrentUser;
 import com.example.group14_projectiteration1_quickcash.model.Job;
 import com.example.group14_projectiteration1_quickcash.view.JobDetailsActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashSet;
@@ -38,17 +45,21 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     private List<Job> jobList;
     private OnJobClickListener listener;
     private String userEmail;
-    private Set<String> appliedJobIds;
+    private Set<String> appliedJobIds = new HashSet<>();
+    private final String userId = CurrentUser.getInstance().getCurrentUser().getUserId();
+    private Set<String> favoriteJobIds = new HashSet<>();
+    private boolean isFavoritesPage;
+    private final Context context;
     private firebaseHelper firebase_helper;
 
     /**
      * Constructor used when map button click needs to be handled.
      */
-    public JobAdapter(List<Job> jobList, OnJobClickListener listener, String userEmail) {
+    public JobAdapter(@NonNull Context ctx, List<Job> jobList, OnJobClickListener listener, String userEmail) {
+        this.context = ctx;
         this.jobList = jobList;
         this.listener = listener;
         this.userEmail = userEmail;
-        this.appliedJobIds = new HashSet<>();
         this.firebase_helper = new firebaseHelper();
         firebase_helper.connectFirebase();
         checkAppliedJobs();
@@ -57,12 +68,20 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
     /**
      * Basic constructor without listener.
      */
-    public JobAdapter(List<Job> jobList) {
+    public JobAdapter(@NonNull Context context, List<Job> jobList, OnJobClickListener listener, String userEmail, String userId, Set<String> favoriteJobIds) {
+        this.context = context;
+        this.jobList = jobList;
+        this.listener = listener;
+        this.userEmail = userEmail;
+        this.favoriteJobIds = favoriteJobIds;
+    }
+
+    public JobAdapter(@NonNull Context ctx, List<Job> jobList) {
+        this.context = ctx;
         this.jobList = jobList;
         this.listener = null;
         this.appliedJobIds = new HashSet<>();
     }
-
     /**
      * Checks which jobs the current user has already applied to
      */
@@ -138,6 +157,54 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
                 holder.itemView.getContext().startActivity(intent);
             });
         }
+
+        // Favorite button ★
+        if (favoriteJobIds.contains(job.getJobId())) {
+            holder.favoriteButton.setText("★"); // filled star
+        } else {
+            holder.favoriteButton.setText("☆"); // empty star
+        }
+
+        holder.favoriteButton.setOnClickListener(v -> {
+            if (userId == null || userId.isEmpty()) {
+                Toast.makeText(context, "User not logged in", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (job == null || job.getJobId() == null) {
+                Toast.makeText(context, "Invalid job data", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            DatabaseReference favRef = FirebaseDatabase.getInstance()
+                    .getReference("Favorites")
+                    .child(userId)
+                    .child(job.getJobId());
+
+            if (favoriteJobIds.contains(job.getJobId())) {
+                // Remove favorite
+                favRef.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        favoriteJobIds.remove(job.getJobId());
+                        holder.favoriteButton.setText("☆"); // empty star
+                        Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Failed to remove favorite", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Add favorite
+                favRef.setValue(job).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        favoriteJobIds.add(job.getJobId());
+                        holder.favoriteButton.setText("★"); // filled star
+                        Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Failed to add favorite", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -162,6 +229,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         TextView jobTitle;
         TextView jobLocation;
         TextView jobCategory;
+        Button favoriteButton; // <--- added favorite button here
         TextView jobPay;
         TextView appliedTextView;
 
@@ -171,6 +239,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
             applyNowButton = itemView.findViewById(R.id.applyNowButton);
             jobTitle = itemView.findViewById(R.id.jobTitleTextView);
             jobLocation = itemView.findViewById(R.id.jobLocationTextView);
+            favoriteButton = itemView.findViewById(R.id.favoriteButton); // initialize favorite button
             jobCategory = itemView.findViewById(R.id.jobCategoryTextView);
             jobPay = itemView.findViewById(R.id.jobPayTextView);
             appliedTextView = itemView.findViewById(R.id.appliedTextView);

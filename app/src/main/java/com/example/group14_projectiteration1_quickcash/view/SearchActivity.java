@@ -62,7 +62,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
 
         setupCategorySpinner();
         recyclerViewJobs.setLayoutManager(new LinearLayoutManager(this));
-        jobAdapter = new JobAdapter(jobList, this, email);
+        jobAdapter = new JobAdapter(this, jobList, this, email);
         recyclerViewJobs.setAdapter(jobAdapter);
 
         btnSearch.setOnClickListener(v -> searchJobs());
