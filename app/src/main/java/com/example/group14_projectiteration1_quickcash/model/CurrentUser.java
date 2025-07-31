@@ -1,27 +1,23 @@
 package com.example.group14_projectiteration1_quickcash.model;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
-
 /**
- * Singleton class to store the currently logged-in user.
+ * This is a Singleton class that keeps track of the user who is logged in.
+ * It makes sure there's only one copy of this class so the app always knows who the current user is.
+ * Other parts of the app can use this to get or set the logged-in user anytime.
  */
+
 public class CurrentUser {
 
-    // Tag for logging
-    private static final String TAG = "CurrentUser";
-
-    // Volatile ensures visibility across threads
+    // The only instance of this class
     private static volatile CurrentUser instance;
+
+    // This holds the user who is currently logged in
     private User currentUser;
 
-    // Private constructor to prevent external instantiation
+    // Private constructor so no one else can make a new version of this class
     private CurrentUser() {}
-
-    /**
-     * Returns the singleton instance of CurrentUser.
-     * Uses double-checked locking for thread safety and performance.
-     */
+    // This gives you the only CurrentUser object used everywhere in the app
     public static CurrentUser getInstance() {
         if (instance == null) {
             synchronized (CurrentUser.class) {
@@ -33,27 +29,20 @@ public class CurrentUser {
         return instance;
     }
 
-    /**
-     * Sets the current user and logs the operation.
-     * @param user The user to set as current.
-     */
+    // Set who the current user is
     public void setCurrentUser(User user) {
-        Log.d(TAG, "Setting current user: " + user);
+        System.out.println("\n\n\n\n\n\n\nSetting current user: " + user + "\n\n\n\n\n\n\n");
         this.currentUser = user;
     }
 
-    /**
-     * Returns the current logged-in user.
-     * @return The current User instance.
-     * @throws IllegalStateException if user is not set.
-     */
+    // Get the current user is
     public User getCurrentUser() {
         if (currentUser == null) {
             throw new IllegalStateException("Current user not set");
         }
         return currentUser;
     }
-
+    // Show the current user as a string
     @NonNull
     @Override
     public String toString() {
