@@ -30,6 +30,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         void onApplicationClick(Application application);
         void onAccept(Application application);
         void onDecline(Application application);
+        void onApprove(Application application);
     }
 
     /**
@@ -64,18 +65,33 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         holder.applicantEmail.setText(application.getEmployeeEmail());
         holder.status.setText("Status: " + application.getStatus());
 
+
         // Handle click actions
         holder.itemView.setOnClickListener(v -> listener.onApplicationClick(application));
         holder.acceptButton.setOnClickListener(v -> listener.onAccept(application));
         holder.declineButton.setOnClickListener(v -> listener.onDecline(application));
+        holder.approveButton.setOnClickListener(v -> listener.onApprove(application));
 
         // Disable buttons if already accepted/declined
-        if (!application.getStatus().equalsIgnoreCase("pending")) {
+        if (application.getStatus().equalsIgnoreCase("completed")) {
+            holder.acceptButton.setEnabled(false);
+            holder.acceptButton.setVisibility(View.GONE);
+            holder.declineButton.setEnabled(false);
+            holder.declineButton.setVisibility(View.GONE);
+            holder.approveButton.setEnabled(true);
+            holder.approveButton.setVisibility(View.VISIBLE);
+        } else if (!application.getStatus().equalsIgnoreCase("pending")) {
             holder.acceptButton.setEnabled(false);
             holder.declineButton.setEnabled(false);
+            holder.approveButton.setEnabled(false);
+            holder.approveButton.setVisibility(View.GONE);
         } else {
             holder.acceptButton.setEnabled(true);
+            holder.acceptButton.setVisibility(View.VISIBLE);
             holder.declineButton.setEnabled(true);
+            holder.declineButton.setVisibility(View.VISIBLE);
+            holder.approveButton.setEnabled(false);
+            holder.approveButton.setVisibility(View.GONE);
         }
     }
 
@@ -92,6 +108,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
         TextView status;
         Button acceptButton;
         Button declineButton;
+        Button approveButton;
 
         public ApplicationViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,6 +116,7 @@ public class ApplicationAdapter extends RecyclerView.Adapter<ApplicationAdapter.
             status = itemView.findViewById(R.id.status);
             acceptButton = itemView.findViewById(R.id.acceptBTN);
             declineButton = itemView.findViewById(R.id.declineBTN);
+            approveButton = itemView.findViewById(R.id.approveBTN);
         }
     }
 }

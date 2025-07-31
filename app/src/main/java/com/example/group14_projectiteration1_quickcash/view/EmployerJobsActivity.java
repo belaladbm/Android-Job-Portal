@@ -98,10 +98,10 @@ public class EmployerJobsActivity extends AppCompatActivity implements EmployerJ
             Toast.makeText(this, "Error: Job ID not found", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Start JobApplicationsActivity for the selected job
-        Intent intent = new Intent(this, JobApplicationsActivity.class);
-        intent.putExtra("jobId", job.getJobId());
-        intent.putExtra("jobTitle", job.getTitle());
+        // Open job actions page to let the employer chose what to do
+        Intent intent = new Intent(this, JobActionsActivity.class);
+        intent.putExtra("job", job);
+        intent.putExtra("userEmail", employerEmail);
         startActivity(intent);
     }
 

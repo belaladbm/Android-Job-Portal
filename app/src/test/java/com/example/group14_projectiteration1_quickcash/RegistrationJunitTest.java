@@ -13,6 +13,7 @@ public class RegistrationJunitTest {
     @Test
     public void testValidUserCreation() {
         User user = new User(
+                "22",
                 "Abeed",
                 "Mulla",
                 "abeed.mulla@dal.ca",

@@ -16,6 +16,7 @@ public class Job implements Serializable {
     private String category;
     private String location;
     private String employerEmail;
+    private double jobPay;
     private HashMap<String, Application> applications;
 
     /**
@@ -35,12 +36,13 @@ public class Job implements Serializable {
      * @param employerEmail Email of the employer who posted the job
      */
     public Job(String title, String description, String category,
-               String location, String employerEmail) {
+               String location, double jobPay, String employerEmail) {
         this.title = title;
         this.description = description;
         this.category = category;
         this.location = location;
         this.employerEmail = employerEmail;
+        this.jobPay = jobPay;
         this.jobId = UUID.randomUUID().toString(); // Generates a unique ID
         this.applications = new HashMap<>();
     }
@@ -52,7 +54,7 @@ public class Job implements Serializable {
         this.jobId = UUID.randomUUID().toString();
     }
 
-    //Getters
+    // Getters
 
     /**
      * Gets the job ID.
@@ -95,6 +97,14 @@ public class Job implements Serializable {
     }
 
     /**
+     * Gets the job pay
+     * @return pay for the job
+     */
+    public double getJobPay() {
+        return jobPay;
+    }
+
+    /**
      * Gets the employer's email who posted the job.
      * @return Employer's email
      */
@@ -102,7 +112,15 @@ public class Job implements Serializable {
         return employerEmail;
     }
 
-    //Setters
+    /**
+     * Gets the map of applications submitted to this job.
+     * @return Map of applications (email → Application)
+     */
+    public HashMap<String, Application> getApplications() {
+        return applications;
+    }
+
+    // Setters
 
     /**
      * Sets the job ID.
@@ -145,6 +163,14 @@ public class Job implements Serializable {
     }
 
     /**
+     * Sets the job pay.
+     * @param jobPay Job pay
+     */
+    public void setJobPay(double jobPay) {
+        this.jobPay = jobPay;
+    }
+
+    /**
      * Sets the employer's email.
      * @param employerEmail Email of the employer
      */
@@ -158,16 +184,5 @@ public class Job implements Serializable {
      */
     public void setApplications(HashMap<String, Application> applications) {
         this.applications = applications;
-    }
-
-    /**
-     * Gets the map of applications submitted to this job.
-     * @return Map of applications (email → Application)
-     */
-    public HashMap<String, Application> getApplications() {
-        if (applications == null) {
-            applications = new HashMap<>();
-        }
-        return applications;
     }
 }

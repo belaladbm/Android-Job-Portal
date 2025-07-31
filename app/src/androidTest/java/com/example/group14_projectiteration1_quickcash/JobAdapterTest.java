@@ -2,10 +2,14 @@ package com.example.group14_projectiteration1_quickcash;
 
 import static org.junit.Assert.assertEquals;
 
+import android.content.Context;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.group14_projectiteration1_quickcash.adapter.JobAdapter;
+import com.example.group14_projectiteration1_quickcash.model.CurrentUser;
 import com.example.group14_projectiteration1_quickcash.model.Job;
+import com.example.group14_projectiteration1_quickcash.model.User;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +27,7 @@ public class JobAdapterTest {
 
     private JobAdapter jobAdapter;
     private List<Job> testJobList;
+    private Context ctx;
 
     /**
      * Sets up the adapter with a list of 3 test jobs.
@@ -31,12 +36,25 @@ public class JobAdapterTest {
     public void setUp() {
         testJobList = new ArrayList<>();
 
-        testJobList.add(new Job("Job 1", "Description 1", "Category 1", "Halifax", "test1@email.com"));
-        testJobList.add(new Job("Job 2", "Description 2", "Category 2", "Halifax", "test2@email.com"));
-        testJobList.add(new Job("Job 3", "Description 3", "Category 3", "Halifax", "test3@email.com"));
+        testJobList.add(new Job("Job 1", "Description 1", "Category 1", "Halifax", 20,"test1@email.com"));
+        testJobList.add(new Job("Job 2", "Description 2", "Category 2", "Halifax",30, "test2@email.com"));
+        testJobList.add(new Job("Job 3", "Description 3", "Category 3", "Halifax", 40, "test3@email.com"));
 
-        jobAdapter = new JobAdapter(testJobList);
+        CurrentUser.getInstance().setCurrentUser( new User(
+                "ID",
+                "Abeed",
+                "Mulla",
+                "abeed.mulla@dal.ca",
+                "password123",
+                "password123",
+                "Employee"
+        ));
+
+        jobAdapter = new JobAdapter(ctx, testJobList);
     }
+
+
+
 
     /**
      * Checks that the adapter returns the correct item count.

@@ -2,17 +2,21 @@ package com.example.group14_projectiteration1_quickcash.view;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +58,7 @@ public class DashboardActivity extends AppCompatActivity {
     private String email;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private String currentUserRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +74,20 @@ public class DashboardActivity extends AppCompatActivity {
         Button buttonViewJobs = findViewById(R.id.buttonViewJobs);
         Button search = findViewById(R.id.search);
         Button settingsButton = findViewById(R.id.settingsButton);
+        Button myApplicationsButton = findViewById(R.id.myApplicationsButton);
 
         email = getIntent().getStringExtra(USER_EMAIL_KEY);
         if (email == null || email.isEmpty()) {
             welcomeText.setText(getDefaultMessage());
         }
+        else if(email != null && !email.isEmpty()){
+            SharedPreferences.Editor spE = getSharedPreferences("Employee_Email", MODE_PRIVATE).edit();
+
+            spE.putString("userEmail", email);
+            spE.apply();
+        }
+
+        askForNotificationsPermission();
 
         // Setup RecyclerView
         jobList = new ArrayList<>();
@@ -95,7 +109,7 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Role-specific dashboard setup
-        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search);
+        fetchUserDetailsAndSetupUI(locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
     }
 
     /** Initializes listener that runs when location changes */
@@ -119,6 +133,7 @@ public class DashboardActivity extends AppCompatActivity {
         settingsPageButton.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
+            intent.putExtra("role", currentUserRole);
             startActivity(intent);
         });
     }
@@ -136,6 +151,15 @@ public class DashboardActivity extends AppCompatActivity {
     public void moveToSearchPage(Button search) {
         search.setOnClickListener(v -> {
             Intent intent = new Intent(DashboardActivity.this, SearchActivity.class);
+            intent.putExtra(USER_EMAIL_KEY, email);
+            startActivity(intent);
+        });
+    }
+
+    /** Goes to my Applications page (for employees) */
+    public void moveToMyApplications(Button myApplicationButton) {
+        myApplicationButton.setOnClickListener(v -> {
+            Intent intent = new Intent(DashboardActivity.this, MyApplicationsActivity.class);
             intent.putExtra(USER_EMAIL_KEY, email);
             startActivity(intent);
         });
@@ -247,27 +271,35 @@ public class DashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+    private void setupDashboardUI(String role, TextView locationText, Button postJobButton, Button buttonViewJobs, Button search, Button myApplicationsButton) {
         if ("Employee".equals(role)) {
+
+            FirebaseMessaging.getInstance().subscribeToTopic("jobs");
+
             locationText.setVisibility(View.VISIBLE);
             nearbyJobsText.setVisibility(View.VISIBLE);
             jobsDisplay.setVisibility(View.VISIBLE);
             postJobButton.setVisibility(View.GONE);
             search.setVisibility(View.VISIBLE);
+            myApplicationsButton.setVisibility(View.VISIBLE);
             buttonViewJobs.setVisibility(View.GONE);
             moveToSearchPage(search);
+            moveToMyApplications(myApplicationsButton);
+
         } else if ("Employer".equals(role)) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("jobs");
             locationText.setVisibility(View.GONE);
             nearbyJobsText.setVisibility(View.GONE);
             jobsDisplay.setVisibility(View.GONE);
             postJobButton.setVisibility(View.VISIBLE);
             search.setVisibility(View.GONE);
+            myApplicationsButton.setVisibility(View.GONE);
             buttonViewJobs.setVisibility(View.VISIBLE);
             moveToPostJobPage(postJobButton);
         }
     }
 
-    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search) {
+    private void fetchUserDetailsAndSetupUI(TextView locationText, Button postJobButton, Button buttonViewJobs, Button search, Button myApplicationsButton) {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("User details");
         Query userQuery = dbRef.orderByChild("email").equalTo(email);
 
@@ -279,8 +311,10 @@ public class DashboardActivity extends AppCompatActivity {
                         String firstName = userSnapshot.child("firstName").getValue(String.class);
                         String role = userSnapshot.child("role").getValue(String.class);
 
+                        currentUserRole = role;
+
                         welcomeText.setText(getMessage(firstName, role));
-                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search);
+                        setupDashboardUI(role, locationText, postJobButton, buttonViewJobs, search, myApplicationsButton);
                     }
                 } else {
                     welcomeText.setText(getDefaultMessage());
@@ -317,12 +351,20 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void setupJobClickListener() {
-        jobAdapter = new JobAdapter(jobList, job -> {
+        jobAdapter = new JobAdapter(this, jobList, job -> {
             if (job.getLocation() != null && !job.getLocation().isEmpty()) {
                 showJobOnMap(job);
             } else {
                 Toast.makeText(this, "Location not available for this job", Toast.LENGTH_SHORT).show();
             }
         }, email);
+    }
+
+    private void askForNotificationsPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
     }
 }

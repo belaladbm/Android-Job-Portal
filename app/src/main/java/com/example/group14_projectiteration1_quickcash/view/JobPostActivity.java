@@ -3,6 +3,7 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,12 +17,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.model.Job;
+import com.example.group14_projectiteration1_quickcash.notification.AccessTokenListener;
 
+import com.google.auth.oauth2.GoogleCredentials;
+
+import org.json.JSONObject;
+import org.json.JSONException;
+
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * JobPostActivity allows employers to post a job by filling in the job title,
@@ -32,8 +50,11 @@ public class JobPostActivity extends AppCompatActivity {
     private EditText jobNameEditText;
     private EditText jobDescriptionEditText;
     private EditText locationEditText;
+    private EditText jobPay;
     private Spinner categorySpinner;
-    private firebaseHelper firebase_helper;
+    private firebaseHelper firebaseHelper;
+
+    private static final String CREDENTIALS_FILE_PATH = "key.json";
 
     /**
      * Called when the activity is first created.
@@ -45,7 +66,7 @@ public class JobPostActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_job_post);
 
-        // Handle layout padding for system bars (status bar, nav bar)
+        // Handle layout padding for system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -56,12 +77,13 @@ public class JobPostActivity extends AppCompatActivity {
         jobNameEditText = findViewById(R.id.jobNameEditText);
         jobDescriptionEditText = findViewById(R.id.jobDescriptionEditText);
         locationEditText = findViewById(R.id.locationEditText);
+        jobPay = findViewById(R.id.jobPay);
         categorySpinner = findViewById(R.id.categorySpinner);
         Button submitJobButton = findViewById(R.id.submitJobButton);
         Button backToDashboard = findViewById(R.id.backButton);
 
         String email = getIntent().getStringExtra("userEmail");
-        firebase_helper = new firebaseHelper();
+        firebaseHelper = new firebaseHelper();
 
         // Populate spinner with job categories
         categorySpinner();
@@ -75,63 +97,151 @@ public class JobPostActivity extends AppCompatActivity {
 
         // Handle submit job button click
         submitJobButton.setOnClickListener(v -> {
-            firebase_helper.connectFirebase();
-            submitJob(); // Call method to validate and post job
+            firebaseHelper.connectFirebase();
+            submitJob();
         });
     }
 
     /**
      * Validates input and creates a new job entry in Firebase.
      */
-    private void submitJob(){
-
-        // Validation for job posting fields.
-        /* 1. Job title */
+    private void submitJob() {
         if (TextUtils.isEmpty(jobNameEditText.getText().toString().trim())) {
             jobNameEditText.setError("Job title is required");
             Toast.makeText(this, "Job Posting Failed!, Please enter a job title", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        /* 2. Description */
         if (TextUtils.isEmpty(jobDescriptionEditText.getText().toString().trim())) {
             jobDescriptionEditText.setError("Description is required");
             Toast.makeText(this, "Job Posting Failed!, Please enter a job description", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        /* 3. Category */
         String category = categorySpinner.getSelectedItem().toString();
         if (category.equals("Select job category")) {
             Toast.makeText(this, "Job Posting Failed!, Please select a category", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        /* 4. Location */
         if (TextUtils.isEmpty(locationEditText.getText().toString().trim())) {
             locationEditText.setError("Location is required");
             Toast.makeText(this, "Job Posting Failed!, Please enter a location", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create Job object from input
+        String payInput = jobPay.getText().toString().trim();
+        if (TextUtils.isEmpty(payInput)) {
+            jobPay.setError("Pay is required");
+            Toast.makeText(this, "Job Posting Failed!, Please enter pay", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double payForJob;
+        try {
+            payForJob = Double.parseDouble(payInput);
+        } catch (NumberFormatException e) {
+            jobPay.setError("Invalid number format");
+            Toast.makeText(this, "Job Posting Failed!, Pay must be a valid number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create job object
         Job job = new Job(
                 jobNameEditText.getText().toString(),
                 jobDescriptionEditText.getText().toString(),
                 category,
                 locationEditText.getText().toString(),
+                payForJob,
                 getIntent().getStringExtra("userEmail")
         );
 
-        // Save job in Firebase database
-        firebase_helper.jobsdbRef.push().setValue(job).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(this, "Job Posted Successfully!", Toast.LENGTH_SHORT).show();
-                redirectingToDashboard();
-            } else {
-                Toast.makeText(this, "Job Posting Failed!", Toast.LENGTH_SHORT).show();
+        // Push to Firebase
+        String key = firebaseHelper.jobsdbRef.push().getKey();
+        if (key == null) {
+            Toast.makeText(this, "Job Posting Failed: Could not generate ID", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        getAccessToken(new AccessTokenListener() {
+            @Override
+            public void onAccessTokenReceived(String token) {
+                sendNotification(token, locationEditText.getText().toString(), key, getIntent().getStringExtra("userEmail"));
+            }
+
+            @Override
+            public void onAccessTokenError(Exception exception) {
+                Toast.makeText(JobPostActivity.this, "Token Error", Toast.LENGTH_SHORT).show();
             }
         });
+
+        job.setJobId(key);
+        firebaseHelper.jobsdbRef.child(key).setValue(job).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "Congrats! You've posted a new job.", Toast.LENGTH_SHORT).show();
+                redirectingToDashboard();
+            } else {
+                Toast.makeText(this, "Error. Could not post the job", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getAccessToken(AccessTokenListener listener) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                InputStream stream = getAssets().open(CREDENTIALS_FILE_PATH);
+                GoogleCredentials credentials = GoogleCredentials
+                        .fromStream(stream)
+                        .createScoped(Collections.singletonList("https://www.googleapis.com/auth/firebase.messaging"));
+                credentials.refreshIfExpired();
+                String token = credentials.getAccessToken().getTokenValue();
+                listener.onAccessTokenReceived(token);
+            } catch (Exception e) {
+                listener.onAccessTokenError(e);
+            }
+        });
+        executor.shutdown();
+    }
+
+    private void sendNotification(String token, String jobLocation, String jobId, String userEmail) {
+        String endpoint = "https://fcm.googleapis.com/v1/projects/group-14-project-quickca-c43bd/messages:send";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        try {
+            JSONObject notification = new JSONObject();
+            notification.put("title", "New Job Created");
+            notification.put("body", "A new job has been posted in " + jobLocation);
+
+            JSONObject data = new JSONObject();
+            data.put("jobLocation", jobLocation);
+            data.put("job_id", jobId);
+            data.put("userEmail", userEmail);
+
+            JSONObject message = new JSONObject();
+            message.put("topic", "jobs");
+            message.put("notification", notification);
+            message.put("data", data);
+
+            JSONObject body = new JSONObject();
+            body.put("message", message);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, endpoint, body,
+                    response -> Log.d("FCM", "Notification sent: " + response),
+                    error -> Log.e("FCM", "Error sending notification", error)) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
+
+            requestQueue.add(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

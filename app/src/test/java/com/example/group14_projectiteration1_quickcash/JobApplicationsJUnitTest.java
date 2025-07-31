@@ -17,7 +17,7 @@ public class JobApplicationsJUnitTest {
      */
     @Before
     public void setup() {
-        application = new Application("id111", "employee@email.com", "cover letter template");
+        application = new Application("id111", "employee@email.com", "cover letter template", 20.2, "test1");
         application.setStatus("pending");
     }
 

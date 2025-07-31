@@ -3,9 +3,7 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,44 +30,58 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Search jobs by category, location, or keyword.
+ * Displays results using RecyclerView.
+ */
 public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJobClickListener {
 
     private Spinner spinnerCategory;
     private EditText editLocation, editKeyword;
     private JobAdapter jobAdapter;
-    private List<Job> jobList = new ArrayList<>();
+    private final List<Job> jobList = new ArrayList<>();
     private String email;
 
-    DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
+    private final DatabaseReference jobsRef = FirebaseDatabase.getInstance().getReference("Jobs:");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        // Get email passed from previous activity
+        email = getIntent().getStringExtra("userEmail");
+
+        // UI references
         spinnerCategory = findViewById(R.id.spinnerCategory);
         editLocation = findViewById(R.id.editLocation);
         editKeyword = findViewById(R.id.editKeyword);
         Button btnSearch = findViewById(R.id.btnSearch);
-        RecyclerView recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
         Button backToDashboard = findViewById(R.id.backButton);
-        email = getIntent().getStringExtra("userEmail");
+        RecyclerView recyclerViewJobs = findViewById(R.id.recyclerViewJobs);
+
+        // Back button action
         backToDashboard.setOnClickListener(v -> {
             Intent intent = new Intent(SearchActivity.this, DashboardActivity.class);
             intent.putExtra("userEmail", email);
             startActivity(intent);
         });
 
+        // Setup category list and recycler view
         setupCategorySpinner();
         recyclerViewJobs.setLayoutManager(new LinearLayoutManager(this));
-        jobAdapter = new JobAdapter(jobList, this, email);
+        jobAdapter = new JobAdapter(this, jobList, this, email);
         recyclerViewJobs.setAdapter(jobAdapter);
 
+        // Trigger search on button click
         btnSearch.setOnClickListener(v -> searchJobs());
     }
 
+    /**
+     * Loads predefined categories into the spinner.
+     */
     private void setupCategorySpinner() {
-        List<String> roles = Arrays.asList(
+        List<String> categories = Arrays.asList(
                 "Select job category",
                 "Construction & Labor",
                 "Cleaning & Housekeeping",
@@ -92,17 +104,20 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(
                 this,
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
-                roles
+                categories
         );
         spinnerCategory.setAdapter(spinnerAdapter);
     }
 
+    /**
+     * Searches jobs in Firebase based on selected category, location, or keyword.
+     * Updates the recycler view.
+     */
     private void searchJobs() {
         String category = spinnerCategory.getSelectedItem().toString().trim();
         String location = editLocation.getText().toString().trim();
         String keyword = editKeyword.getText().toString().trim();
-        // Handle "Select job category" option
-        boolean ignoreCategory = category.equals("Select job category");
+        boolean ignoreCategory = "Select job category".equals(category);
 
         jobsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -112,11 +127,9 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                     Job job = jobSnap.getValue(Job.class);
                     if (job == null) continue;
 
-                    // Case-insensitive matching
-                    boolean categoryMatch = ignoreCategory ||
-                            (job.getCategory() != null && job.getCategory().equalsIgnoreCase(category));
-                    boolean locationMatch = location.isEmpty() ||
-                            (job.getLocation() != null && job.getLocation().toLowerCase().contains(location.toLowerCase()));
+                    boolean categoryMatch = ignoreCategory || category.equalsIgnoreCase(job.getCategory());
+                    boolean locationMatch = location.isEmpty() || (job.getLocation() != null &&
+                            job.getLocation().toLowerCase().contains(location.toLowerCase()));
                     boolean keywordMatch = keyword.isEmpty() ||
                             (job.getTitle() != null && job.getTitle().toLowerCase().contains(keyword.toLowerCase())) ||
                             (job.getDescription() != null && job.getDescription().toLowerCase().contains(keyword.toLowerCase()));
@@ -129,9 +142,7 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
                 if (jobList.isEmpty()) {
                     Toast.makeText(SearchActivity.this, "No jobs found.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SearchActivity.this,
-                            "Found " + jobList.size() + " jobs",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, "Found " + jobList.size() + " jobs", Toast.LENGTH_SHORT).show();
                 }
 
                 jobAdapter.updateJobs(jobList);
@@ -146,7 +157,9 @@ public class SearchActivity extends AppCompatActivity implements JobAdapter.OnJo
         });
     }
 
-
+    /**
+     * Handles click on a job to open its location on a map.
+     */
     @Override
     public void onJobClick(Job job) {
         if (job.getLocation() != null && !job.getLocation().isEmpty()) {

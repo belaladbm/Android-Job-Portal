@@ -3,9 +3,11 @@ package com.example.group14_projectiteration1_quickcash.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.group14_projectiteration1_quickcash.R;
 import com.example.group14_projectiteration1_quickcash.Firebase.firebaseHelper;
 import com.example.group14_projectiteration1_quickcash.adapter.ApplicationAdapter;
@@ -13,6 +15,7 @@ import com.example.group14_projectiteration1_quickcash.model.Application;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
     private firebaseHelper fbHelper;
     private String jobId;
     private String jobTitle;
+    private String userEmail;
 
     /**
      * Called when the activity is first created.
@@ -39,6 +43,7 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
 
         jobId = getIntent().getStringExtra("jobId");
         jobTitle = getIntent().getStringExtra("jobTitle");
+        userEmail = getIntent().getStringExtra("userEmail");
 
         recyclerView = findViewById(R.id.recyclerViewApplications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -123,6 +128,17 @@ public class JobApplicationsActivity extends AppCompatActivity implements Applic
     @Override
     public void onDecline(Application application) {
         updateApplicationStatus(application, "rejected");
+    }
+
+    /**
+     * Handles approve logic which would allow user to make payment
+     */
+    @Override
+    public void onApprove(Application application) {
+        Intent intent = new Intent(this, PaypalActivity.class);
+        intent.putExtra("application", application);
+        intent.putExtra("userEmail", userEmail);
+        startActivity(intent);
     }
 
     /**

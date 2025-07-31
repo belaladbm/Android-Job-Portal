@@ -81,10 +81,9 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                             coverLetter.setText(application.getCoverLetter() != null ? application.getCoverLetter() : "N/A");
                             status.setText(application.getStatus() != null ? application.getStatus() : "Pending");
                             loadApplicantProfile(email);
-                        } else {
+                        } else
                             Toast.makeText(ApplicationDetailsActivity.this, "Application not found", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
+                        finish();
                     }
 
                     @Override
@@ -136,8 +135,8 @@ public class ApplicationDetailsActivity extends AppCompatActivity {
                             "You have rejected this application";
                     Toast.makeText(ApplicationDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(ApplicationDetailsActivity.this, "Failed to update status", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(ApplicationDetailsActivity.this, "Failed to update status", Toast.LENGTH_SHORT).show()
+                );
     }
 }

@@ -51,6 +51,7 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
         holder.jobTitle.setText(job.getTitle() != null ? job.getTitle() : "No Title");
         holder.jobLocation.setText(job.getLocation() != null ? "Location: " + job.getLocation() : "");
         holder.jobCategory.setText(job.getCategory() != null ? "Category: " + job.getCategory() : "");
+        holder.jobPay.setText("Job Pay: $" + job.getJobPay());
 
         // Handle item click
         holder.itemView.setOnClickListener(v -> {
@@ -80,12 +81,13 @@ public class EmployerJobAdapter extends RecyclerView.Adapter<EmployerJobAdapter.
         TextView jobTitle;
         TextView jobLocation;
         TextView jobCategory;
-
+        TextView jobPay;
         public EmployerJobViewHolder(@NonNull View itemView) {
             super(itemView);
             jobTitle = itemView.findViewById(R.id.jobTitle);
             jobLocation = itemView.findViewById(R.id.jobLocation);
             jobCategory = itemView.findViewById(R.id.jobCategory);
+            jobPay = itemView.findViewById(R.id.jobPay);
         }
     }
 }

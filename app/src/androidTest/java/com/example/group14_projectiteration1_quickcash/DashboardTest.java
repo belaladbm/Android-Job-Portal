@@ -21,10 +21,13 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
+import com.example.group14_projectiteration1_quickcash.model.CurrentUser;
 import com.example.group14_projectiteration1_quickcash.model.Job;
+import com.example.group14_projectiteration1_quickcash.model.User;
 import com.example.group14_projectiteration1_quickcash.view.DashboardActivity;
 
-import org.junit.Rule;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,8 +35,26 @@ import java.util.List;
 
 public class DashboardTest {
 
-    @Rule
-    public ActivityScenarioRule<DashboardActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(DashboardActivity.class);
+    private ActivityScenario<DashboardActivity> scenario;
+
+    @Before
+    public void setUp() {
+        User mockUser = new User();
+        mockUser.setUserId("test_user_id");
+        mockUser.setEmail("test@example.com");
+        mockUser.setFirstName("Test");
+        mockUser.setLastName("User");
+        mockUser.setRole("Employee");
+
+        CurrentUser.getInstance().setCurrentUser(mockUser);
+
+        scenario = ActivityScenario.launch(DashboardActivity.class);
+    }
+
+    @After
+    public void tearDown() {
+        scenario.close();
+    }
 
     /**
      * Test to check if dashboard Text view is being displayed.
@@ -148,8 +169,8 @@ public class DashboardTest {
         scenario.onActivity(activity -> {
             // Creating test jobs
             List<Job> testJobs = new ArrayList<>();
-            Job job1 = new Job("Test Job 1", "Description 1", "Category 1", "Halifax", "test@email.com");
-            Job job2 = new Job("Test Job 2", "Description 2", "Category 2", "Halifax", "test2@email.com");
+            Job job1 = new Job("Test Job 1", "Description 1", "Category 1", "Halifax", 10,"test@email.com");
+            Job job2 = new Job("Test Job 2", "Description 2", "Category 2", "Halifax", 10.1, "test2@email.com");
             testJobs.add(job1);
             testJobs.add(job2);
 
